@@ -1,0 +1,68 @@
+:root {
+  --public_chart_config_width: 300px;
+  --public_chart_main_padding: 10px;
+  --public_theme_dark_color: #f3f3f3;
+  --left_nav_width: 200px;
+  --project_options_width: 280px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 12px !important;
+}
+scroller {
+  width: 300px;
+  height: 100px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+.position-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.position-container .el-input {
+  flex: 1;
+}
+.position-container .el-input .el-input__wrapper {
+  padding: 0;
+}
+::v-deep .el-form-item {
+  margin-bottom: 2px !important;
+}
+::v-deep .el-tabs {
+  --el-tabs-header-height: 20px;
+}
+::v-deep .el-tabs__nav-wrap .is-top {
+  border-bottom: 1px solid red;
+}
+::v-deep .el-tabs--left .el-tabs__item.is-left {
+  height: 30px;
+}
+::v-deep .el-tabs__item {
+  padding: 0 10px;
+}
+::v-deep .el-divider--horizontal {
+  margin: 10px 0 !important;
+}
+::v-deep .el-input__inner {
+  text-align: center !important;
+}
+::v-deep .el-input__wrapper {
+  padding: 0 !important;
+  height: 25px !important;
+}
+::v-deep .el-select {
+  height: 25px !important;
+}
+::v-deep .el-select__wrapper {
+  padding: 0 5px !important;
+}
+::v-deep .el-color-picker {
+  width: 25px !important;
+  height: 25px !important;
+}
+::v-deep .el-form-item__content {
+  padding: 0 !important;
+  height: 25px !important;
+}
