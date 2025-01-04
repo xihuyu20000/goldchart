@@ -12,7 +12,6 @@
             <div>
               <div>
                 数据文件
-
                 <el-select v-model="activeDatafile" style="width: 150px">
                   <el-option
                     v-for="item in datafilecols"
@@ -26,7 +25,7 @@
                 X轴
                 <el-select v-model="activeXCols" multiple style="width: 150px">
                   <el-option
-                    :value="item.id"
+                    :value="item.colname"
                     v-for="(item, i) in coldata"
                     :key="i"
                     :label="item.colname"
@@ -37,7 +36,7 @@
                 Y轴
                 <el-select v-model="activeYCols" multiple style="width: 150px">
                   <el-option
-                    :value="item.id"
+                    :value="item.colname"
                     v-for="(item, i) in coldata"
                     :key="i"
                     :label="item.colname"
@@ -104,9 +103,7 @@
 </template>
 <script setup>
 import * as utils from "@/utils/utils";
-import * as echarts from "echarts";
 import $ from "jquery";
-import { ref } from "vue";
 const route = useRoute();
 const globalStore = useGlobalStore();
 // 5-1 图像id
@@ -147,12 +144,39 @@ onMounted(async () => {
   // 6-5 保存到全局store中
   globalStore.setOption(chart_option);
 });
+// 监视数据文件变化
 watch(
   () => activeDatafile.value,
   (newVal, oldVal) => {
     const aaa = datafilecols.value.filter((item, index) => item.id === newVal);
     coldata.value = aaa[0].cols;
   }
+);
+// 监视X轴变化
+watch(
+  () => activeXCols.value,
+  (newVal, oldVal) => {
+    //TODO 当字段变化时，查询数据后更新option
+    chart_option.xAxis[0].data = newVal;
+  }
+);
+// 监视Y轴变化
+watch(
+  () => activeYCols.value,
+  (newVal, oldVal) => {
+    // TODO 当字段变化时，查询数据后更新option
+    chart_option.series[0].data = newVal.map((item) => item.colname);
+  }
+);
+// 监视图表配置变化
+watch(
+  () => chart_option,
+  (newVal, oldVal) => {
+    // 6-6 保存到全局store中
+    globalStore.setOption(newVal);
+    console.log("chart_option", chart_option);
+  },
+  { deep: true }
 );
 </script>
 <style lang="less" scoped>
@@ -180,33 +204,6 @@ watch(
         width: 280px;
         font-weight: bolder;
       }
-    }
-    :deep(.el-collapse-item__header) {
-      height: 30px;
-      border: 0;
-      background-color: rgba(230, 250, 230, 0.5);
-
-      font-size: 12px;
-      padding-left: 5px;
-    }
-    :deep(.el-collapse-item__content) {
-      padding-bottom: 0;
-      background-color: rgba(230, 250, 230, 0.2);
-    }
-    :deep(.el-divider) {
-      margin: 0;
-    }
-    :deep(.el-form-item) {
-      height: 25px;
-      margin-bottom: 8px;
-    }
-
-    :deep(.el-tabs__header-vertical) {
-      width: 50px;
-    }
-    :deep(.el-tabs__item) {
-      height: 30px;
-      width: 50px;
     }
     .chart-main {
       width: calc(100% - var(--public_chart_option_width));

@@ -24,6 +24,7 @@ export default defineConfig({
           "@/utils/http.js": ["$post", "$upload", "$chart"],
           "@/utils/logger.js": ["logger"],
           "@/utils/optionfactory.js": ["get_options"],
+          "@/utils/options.js": ["MyBaseOption"],
         },
       ],
       dirs: [
