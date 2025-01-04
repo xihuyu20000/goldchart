@@ -3,53 +3,100 @@
     <el-container class="chart-container">
       <el-aside class="chart-option">
         <ToggleButton :min="10" :max="300"></ToggleButton>
-        <div>
-          <select v-model="activeDatafile">
-            <option :value="item.id" v-for="(item, i) in datafilecols" :key="i">
-              {{ item.rawname }}
-            </option>
-          </select>
-        </div>
+
         <div class="chart-title">
           {{ $route.meta.title }}
         </div>
-        <el-tabs tab-position="left" model-value="title">
-          <el-tab-pane label="标题" name="title">
-            <EchartTitle />
+        <el-tabs tab-position="top">
+          <el-tab-pane label="数据">
+            <div>
+              <div>
+                数据文件
+
+                <el-select v-model="activeDatafile" style="width: 150px">
+                  <el-option
+                    v-for="item in datafilecols"
+                    :key="i"
+                    :label="item.rawname"
+                    :value="item.id"
+                  />
+                </el-select>
+              </div>
+              <div>
+                X轴
+                <el-select v-model="activeXCols" multiple style="width: 150px">
+                  <el-option
+                    :value="item.id"
+                    v-for="(item, i) in coldata"
+                    :key="i"
+                    :label="item.colname"
+                  />
+                </el-select>
+              </div>
+              <div>
+                Y轴
+                <el-select v-model="activeYCols" multiple style="width: 150px">
+                  <el-option
+                    :value="item.id"
+                    v-for="(item, i) in coldata"
+                    :key="i"
+                    :label="item.colname"
+                  />
+                </el-select>
+              </div>
+            </div>
           </el-tab-pane>
-          <el-tab-pane label="画布" name="grid" v-if="'grid' in chart_option">
-            <EchartGrid />
-          </el-tab-pane>
-          <el-tab-pane label="主题" name="color">
-            <EchartTheme />
-          </el-tab-pane>
-          <el-tab-pane
-            label="图例"
-            name="legend"
-            v-if="'legend' in chart_option"
-          >
-            <EchartLegend />
-          </el-tab-pane>
-          <el-tab-pane label="X轴" name="xAxis" v-if="'xAxis' in chart_option">
-            <EchartXAxis />
-          </el-tab-pane>
-          <el-tab-pane label="Y轴" name="yAxis" v-if="'yAxis' in chart_option">
-            <EchartYAxis />
-          </el-tab-pane>
-          <el-tab-pane
-            label="数据"
-            name="series"
-            v-if="'series' in chart_option"
-          >
-            <EchartSeriesLine />
+          <el-tab-pane label="属性">
+            <el-tabs tab-position="left" model-value="title">
+              <el-tab-pane label="标题" name="title">
+                <EchartTitle />
+              </el-tab-pane>
+              <el-tab-pane
+                label="画布"
+                name="grid"
+                v-if="'grid' in chart_option"
+              >
+                <EchartGrid />
+              </el-tab-pane>
+              <el-tab-pane label="主题" name="color">
+                <EchartTheme />
+              </el-tab-pane>
+              <el-tab-pane
+                label="图例"
+                name="legend"
+                v-if="'legend' in chart_option"
+              >
+                <EchartLegend />
+              </el-tab-pane>
+              <el-tab-pane
+                label="X轴"
+                name="xAxis"
+                v-if="'xAxis' in chart_option"
+              >
+                <EchartXAxis />
+              </el-tab-pane>
+              <el-tab-pane
+                label="Y轴"
+                name="yAxis"
+                v-if="'yAxis' in chart_option"
+              >
+                <EchartYAxis />
+              </el-tab-pane>
+              <el-tab-pane
+                label="数据"
+                name="series"
+                v-if="'series' in chart_option"
+              >
+                <EchartSeriesLine />
+              </el-tab-pane>
+            </el-tabs>
           </el-tab-pane>
         </el-tabs>
+
         <UpdateOption />
       </el-aside>
       <el-main class="chart-main">
-        <div id="chartviewer-page">
-          <div :id="chartid" class="chartviewer-chart"></div>
-        </div>
+        <ChartViewer />
       </el-main>
     </el-container>
   </div>
@@ -72,23 +119,15 @@ let chart_option = reactive({});
 const activeDatafile = ref("");
 // 5-5 图表文件列数据
 const datafilecols = ref([]);
+const activeXCols = ref("");
+const activeYCols = ref("");
+
 // 5-6 列数据
 const coldata = ref([]);
 
-const init_chart_size = () => {
-  // 2-1 初始化窗口大小
-  const h = document.getElementById("chartviewer-page").offsetHeight;
-  const w = document.getElementById("chartviewer-page").offsetWidth;
-  // 2-2 基于准备好的dom，初始化echarts实例
-  myChart.value = echarts.init(document.getElementById(chartid.value), null, {
-    width: w,
-    height: h,
-  });
-};
-
 // 加载数据文件列表
 const load_datafilecols = async () => {
-  const resp = await $post("/api/datafile/loadall", {
+  const resp = await $post("/api/datafile/loadallcols", {
     user_id: sessionStorage.getItem("token"),
   });
   if (resp.code === 200) {
@@ -107,21 +146,12 @@ onMounted(async () => {
   Object.assign(chart_option, dataset);
   // 6-5 保存到全局store中
   globalStore.setOption(chart_option);
-  // 6-6 初始化图表大小
-  init_chart_size();
 });
 watch(
   () => activeDatafile.value,
   (newVal, oldVal) => {
-    globalStore.setActiveDatafile(datafilecols.value);
     const aaa = datafilecols.value.filter((item, index) => item.id === newVal);
     coldata.value = aaa[0].cols;
-  }
-);
-watch(
-  () => globalStore.option,
-  (newVal, oldVal) => {
-    myChart.value.setOption(newVal);
   }
 );
 </script>

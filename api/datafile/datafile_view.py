@@ -28,7 +28,21 @@ def datafiles_loadall(req_data):
     data = {'code': 200, 'data': datafiles}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-
+@datafile_page.post('/datafile/loadallcols')
+@webargs.flaskparser.use_args(user_id_schema, location='json')
+def datafiles_loadallcols(req_data):
+    """
+    加载当前用户的所有数据文件和对应的列名，需要user_id字段
+    :param req_data:
+    :return:
+    """
+    user_id = req_data['user_id']
+    datafiles = datafile_dao.load_datafiles(user_id)
+    for datafile in datafiles:
+        datafile['cols'] = column_dao.load_by_datafile_id(datafile['id'])
+    data = {'code': 200, 'data': datafiles}
+    json_response = json.dumps(data, ensure_ascii=False)
+    return Response(json_response, content_type='application/json')
 
 
 
