@@ -33,7 +33,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="default-tpl">
+  <div class="resize-tpl">
     <div id="left"><slot name="leftView" /></div>
     <div id="middle"></div>
     <div id="right"><slot name="rightView" /></div>
@@ -41,7 +41,7 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-.default-tpl {
+.resize-tpl {
   width: 100wh;
   height: 100vh;
   display: flex;

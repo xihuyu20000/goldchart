@@ -65,9 +65,9 @@ const colstyleEditRender = reactive({
 
 const saveMetadata = async () => {
   // 发送请求
-  const resp = await $post("/api/datafiles/savemetadata", {
+  const resp = await $post("/api/column/save", {
     datafile_id: datafile_id,
-    metadata: metaDataTable.value,
+    columns: metaDataTable.value,
   });
   if (resp.code === 200) {
     console.log(resp.data);
@@ -81,7 +81,7 @@ const saveMetadata = async () => {
 onMounted(() => {
   emitter.on("show-popup-event", async (rowid) => {
     datafile_id = rowid;
-    const resp = await $post("/api/datafiles/loadmetadata", {
+    const resp = await $post("/api/column/load", {
       datafile_id: datafile_id,
     });
     if (resp.code === 200) {

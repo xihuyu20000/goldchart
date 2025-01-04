@@ -72,7 +72,9 @@ const uploadHttp = (url, data) => {
 
 // 封装查询数据的post请求
 const chartHttp = (data) => {
+  data.token = sessionStorage.getItem("token");
   logger.debug("[chartHttp]", "参数", JSON.stringify(data));
+
   return http.post("/api/chart_getdata", data, {
     headers: {
       "Content-Type": "application/json",

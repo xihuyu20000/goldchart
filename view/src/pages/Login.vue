@@ -34,6 +34,7 @@ const handleLogin = async () => {
   });
   if (resp.code === 200) {
     sessionStorage.setItem(utils.StorageKeys.token, resp.data.token);
+    sessionStorage.setItem("user", JSON.stringify(resp.data.user));
     // 登录成功，跳转到主页或者之前尝试访问的页面
     router.push("/Home");
   } else {

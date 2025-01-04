@@ -10,6 +10,11 @@
       <vxe-column type="seq" width="50"></vxe-column>
       <vxe-column field="rawname" title="文件名称" min-width="100"></vxe-column>
       <vxe-column field="fpath" title="文件路径" min-width="200"></vxe-column>
+      <vxe-column
+        field="project_name"
+        title="所属项目"
+        min-width="200"
+      ></vxe-column>
       <vxe-column field="active" title="按钮" width="200">
         <template #default="{ row }">
           <vxe-button
@@ -59,8 +64,8 @@ const removeCurrentRow = (row) => {
   // 删除当前行
   ElMessageBox.confirm("确认删除当前数据文件吗？").then(async (confirm) => {
     if (confirm) {
-      const resp = await $post("/api/datafiles/remove", {
-        file_id: row.id,
+      const resp = await $post("/api/datafile/remove", {
+        datafile_id: row.id,
       });
       if (resp.code === 200) {
         ElMessage({
@@ -77,7 +82,9 @@ const removeCurrentRow = (row) => {
 
 onMounted(async () => {
   // 3-1 获取数据文件列表
-  const resp = await $post("/api/datafiles/loadall");
+  const resp = await $post("/api/datafile/loadall", {
+    user_id: sessionStorage.getItem("token"),
+  });
   if (resp.code === 200) {
     tableData.value = resp.data;
   }

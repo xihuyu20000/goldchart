@@ -71,6 +71,7 @@ from flask import Flask, g, jsonify, request
 
 from api.auth.auth_view import auth_page
 from api.chart.chart_view import chart_page
+from api.column.column_view import column_page
 from api.config.config_view import config_page
 from api.datafile.datafile_view import datafile_page
 from api.project.project_view import project_page
@@ -80,11 +81,12 @@ def register_db(app, db):
     db.connect()
 
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS config (user_id TEXT, key TEXT, value TEXT)")
-    db.cs.execute(f"CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, password TEXT)")
+    db.cs.execute(f"CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, labelname TEXT, password TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS projects (id TEXT, name TEXT, user_id TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS datafiles (id TEXT, rawname TEXT, fpath TEXT, user_id TEXT, project_id TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS charts (id TEXT, name TEXT, fpath TEXT, user_id TEXT, project_id TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS columns (id TEXT, colname TEXT, coltype TEXT, colstyle TEXT, datafile_id TEXT)")
+    db.cs.execute(f"CREATE TABLE IF NOT EXISTS logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, ffrom TEXT, tto TEXT, logtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
 
     db.close()
 
@@ -92,11 +94,12 @@ def register_db(app, db):
 
 
 def register_routers(app):
-    app.register_blueprint(auth_page)
-    app.register_blueprint(chart_page)
-    app.register_blueprint(config_page)
-    app.register_blueprint(datafile_page)
-    app.register_blueprint(project_page)
+    app.register_blueprint(auth_page, url_prefix='/api')
+    app.register_blueprint(chart_page, url_prefix='/api')
+    app.register_blueprint(column_page, url_prefix='/api')
+    app.register_blueprint(config_page, url_prefix='/api')
+    app.register_blueprint(datafile_page, url_prefix='/api')
+    app.register_blueprint(project_page, url_prefix='/api')
 
 
 def create_app(config_name=''):
@@ -109,16 +112,14 @@ def create_app(config_name=''):
     register_db(app, db)
     register_routers(app)
 
-
-
     @app.before_request
-    def _db_connect():
+    def _before_request():
         g.db = db
         g.db.connect()
-        mylogger.debug(f'start request  {request.get_json()}')
+        mylogger.debug(f'start request  {request.get_json() if request.is_json else request.form}')
 
     @app.teardown_request
-    def _db_close(env):
+    def _teardown_request(env):
         g.db.close()
         mylogger.debug('end request')
 

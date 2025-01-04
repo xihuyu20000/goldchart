@@ -6,8 +6,6 @@ from base import mylogger
 
 
 def save_config(user_id: str, data: typing.Dict[str, str]):
-    assert user_id
-    assert data
     mylogger.debug(f"保存配置 {user_id=} {data=}")
 
     for key, value in data.items():

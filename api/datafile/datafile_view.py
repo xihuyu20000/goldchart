@@ -1,81 +1,72 @@
 import json
 import os
 
-import pandas as pd
 import webargs
-from flask import Blueprint, jsonify, Response
+from flask import Blueprint, Response, request
 
-from api.column import column_dao
-from api.column.column_model import Column
+from api.chart import chart_dao
+from api.chart.chart_model import Chart
 from api.datafile import datafile_dao
-from api.datafile.datafile_schema import datafiles_loadmetadata_schema, datafiles_remove_schema, datafile_load_schema, datafiles_savemetadata_schema
+from api.datafile.datafile_schema import user_id_schema, file_id_schema, upload_schema
+
 from base import basepath, uuidid, mylogger
 
 datafile_page = Blueprint('datafile_page', __name__)
 
 
-@datafile_page.post('/api/datafiles/loadall')
-def datafiles_loadall():
-    datafiles = datafile_dao.load_datafiles()
+@datafile_page.post('/datafile/loadall')
+@webargs.flaskparser.use_args(user_id_schema, location='json')
+def datafiles_loadall(req_data):
+    """
+    加载当前用户的所有数据文件，需要user_id字段
+    :param req_data:
+    :return:
+    """
+    user_id = req_data['user_id']
+    datafiles = datafile_dao.load_datafiles(user_id)
     data = {'code': 200, 'data': datafiles}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
 
 
-@datafile_page.post('/api/datafile/load')
-@webargs.flaskparser.use_args(datafile_load_schema, location='json')
-def datafile_load(req_data):
-    chart_id = req_data['chart_id']
-    mylogger.debug(f"{chart_id=}")
-    data = pd.read_excel('dist/1.xlsx')
-    data = data.to_json(orient='records', force_ascii=False)
-    json_response = {'code': 200, 'data': data}
-    # json_response = json.dumps(data, ensure_ascii=False)
-    return jsonify(json_response)
 
 
-@datafile_page.post('/api/datafiles/remove')
-@webargs.flaskparser.use_args(datafiles_remove_schema, location='json')
+@datafile_page.post('/datafile/remove')
+@webargs.flaskparser.use_args(file_id_schema, location='json')
 def datafiles_remove(req_data):
-    file_id = req_data['file_id']
-    datafile_path = os.path.join(basepath, 'dist', file_id)
+    """
+    根据datafile_id删除该文件
+    :param req_data:
+    :return:
+    """
+    datafile_id = req_data['datafile_id']
+    datafile_path = os.path.join(basepath, 'files', datafile_id)
+    # 1 判断删除文件
     if os.path.exists(datafile_path):
+        # 2 删除文件
         os.remove(datafile_path)
-        datafile_dao.delete_datafile(file_id)
+        # 3 删除数据库记录
+        datafile_dao.delete_datafile(datafile_id)
     data = {'code': 200, 'data': []}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
 
 
-@datafile_page.post('/api/datafiles/loadmetadata')
-@webargs.flaskparser.use_args(datafiles_loadmetadata_schema, location='json')
-def datafiles_loadmetadata(req_data):
-    datafile_id = req_data['datafile_id']
-    datafile_path = os.path.join(basepath, 'dist', datafile_id)
+@datafile_page.post('/datafile/upload')
+@webargs.flaskparser.use_args(upload_schema, location='form')
+def datafile_upload(req_data):
+    print('datafile_upload')
+    user_id = req_data['user_id']
+    project_id = req_data['project_id']
 
-    data = datafile_dao.load_metadata_by_datafile_id(datafile_id)
-    if not data:
-        data = [{'id': uuidid(), 'colname': col, 'coltype': 'text', 'colstyle': 'dimension', 'datafile_id': datafile_id, } for col in pd.read_excel(datafile_path).columns.tolist()]
-    data = {'code': 200, 'data': data}
-    json_response = json.dumps(data, ensure_ascii=False)
-    return Response(json_response, content_type='application/json')
+    f = request.files['file']
 
-
-@datafile_page.post('/api/datafiles/savemetadata')
-@webargs.flaskparser.use_args(datafiles_savemetadata_schema, location='json')
-def datafiles_savemetadata(req_data):
-    # 从request中取值
-    datafile_id = req_data['datafile_id']
-    metadata = req_data['metadata']
-
-    columns = [Column(**item) for item in metadata]
-    mylogger.debug(f"{datafile_id=}, {columns=}")
-    if columns:
-        # 2-1 删除数据
-        datafile_dao.delete_cols_by_datafile_id(datafile_id)
-        # 2-2 插入数据
-        column_dao.insert_cols(columns)
-
-    data = {'code': 200, 'data': []}
+    fname = f'datafile-{uuidid()}{f.filename}'
+    upload_path = os.path.join(basepath, 'files', fname)
+    f.save(upload_path)
+    mylogger.debug(f'upload file {fname}')
+    chart = Chart(id=fname, rawname=f.filename, fpath=fname, user_id=user_id, project_id=project_id)
+    datafile = chart_dao.insert_chart_data(chart)
+    data = {'code': 200, 'data': datafile}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')

@@ -1,8 +1,13 @@
 <template>
   <div class="chart-page">
     <el-container class="chart-container">
-      <el-aside class="chart-aside">
+      <el-aside class="chart-option">
         <ToggleButton :min="10" :max="300"></ToggleButton>
+        <div>
+          <select name="chart-type" id="">
+            <option value="line">折线图</option>
+          </select>
+        </div>
         <div class="chart-title">
           {{ $route.meta.title }}
         </div>
@@ -39,7 +44,7 @@
 </template>
 <script setup>
 import * as utils from "@/utils/utils.js";
-
+import $ from "jquery";
 const route = useRoute();
 const globalStore = useGlobalStore();
 
@@ -60,11 +65,17 @@ onMounted(async () => {
 .chart-page {
   height: 100%;
   background-color: rgba(230, 250, 230, 0.5);
+
   .chart-container {
     width: 100%;
     height: 100%;
-    .chart-aside {
-      width: var(--public_chart_config_width);
+    .chart-data {
+      width: var(--public_chart_data_width);
+      height: 100%;
+      padding: 10px;
+    }
+    .chart-option {
+      width: var(--public_chart_option_width);
       height: 100%;
       padding: 10px;
       position: relative;
@@ -104,7 +115,7 @@ onMounted(async () => {
       width: 50px;
     }
     .chart-main {
-      width: calc(100% - var(--public_chart_config_width));
+      width: calc(100% - var(--public_chart_option_width));
       height: 100%;
       padding: 5px;
       background-color: #d7d6d6;

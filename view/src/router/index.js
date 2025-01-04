@@ -1,13 +1,19 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 
-import { menu_configs } from "@/utils/menu.js";
+import { chart_menu_configs } from "@/utils/menu.js";
+import { path } from "d3";
+import { component } from "vxe-table";
 const dynamicSpaceRoutes = () => {
   /**
    * 我的空间路由
    */
   let modules = import.meta.glob(`@/pages/space/*.vue`);
   // 2-1 合并菜单配置
-  const combinedArray = Object.values(menu_configs)
+  const combinedArray = Object.values(chart_menu_configs)
     .filter((val) => Array.isArray(val))
     .reduce((acc, val) => acc.concat(val), []);
   // 2-2 动态路由，筛选style==='space'
@@ -30,7 +36,7 @@ const dynamicChartRoutes = () => {
    */
 
   // 2-1 合并菜单配置
-  const combinedArray = Object.values(menu_configs)
+  const combinedArray = Object.values(chart_menu_configs)
     .filter((val) => Array.isArray(val))
     .reduce((acc, val) => acc.concat(val), []);
   // 2-2 动态路由，筛选style==='chart'
@@ -55,14 +61,26 @@ const routes = [
     component: () => import("@/pages/Home.vue"),
     children: [
       {
-        path: "", // 首页，必须是空路径
-        name: "Welcome",
-        component: () => import("@/pages/Welcome.vue"),
+        path: "/Space",
+        name: "Space",
+        component: () => import("@/pages/Space/SpaceIndex.vue"),
+        children: dynamicSpaceRoutes(),
       },
-      ...dynamicSpaceRoutes(),
-      ...dynamicChartRoutes(),
+      {
+        path: "", // 首页，必须是空路径
+        name: "Default",
+        component: () => import("@/pages/Welcome.vue"),
+        children: [
+          {
+            path: "/Welcome", // 首页，必须是空路径
+            name: "Welcome",
+            component: () => import("@/pages/Welcome.vue"),
+          },
+        ],
+      },
     ],
   },
+  ...dynamicChartRoutes(),
   {
     path: "/Login",
     name: "Login",
@@ -71,7 +89,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 
@@ -86,6 +104,14 @@ router.beforeEach((to, from, next) => {
   // 3-2 判断是否登录
   let token = sessionStorage.getItem("token");
   if (token) {
+    fetch("/api/api/log", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: token, ffrom: from.path, tto: to.path }),
+    });
+
     next();
     return;
   }

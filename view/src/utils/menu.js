@@ -1,31 +1,31 @@
-export const menu_configs = {
-  我的空间: [
-    {
-      url: "/space/Projects",
-      label: "我的项目",
-      style: "space",
-    },
-    {
-      url: "/space/Datafiles",
-      label: "我的数据",
-      style: "space",
-    },
-    {
-      url: "/space/Charts",
-      label: "我的图表",
-      style: "space",
-    },
-    {
-      url: "/space/Setting",
-      label: "设置",
-      style: "space",
-    },
-    {
-      url: "/space/Profile",
-      label: "个人资料",
-      style: "space",
-    },
-  ],
+export const space_menu_configs = [
+  {
+    url: "/space/Projects",
+    label: "我的项目",
+    style: "space",
+  },
+  {
+    url: "/space/Datafiles",
+    label: "我的数据",
+    style: "space",
+  },
+  {
+    url: "/space/Charts",
+    label: "我的图表",
+    style: "space",
+  },
+  {
+    url: "/space/Setting",
+    label: "设置",
+    style: "space",
+  },
+  {
+    url: "/space/Profile",
+    label: "个人资料",
+    style: "space",
+  },
+];
+export const chart_menu_configs = {
   折线图: [
     { url: "/line/BasicLineChart", label: "基础折线图", style: "chart" },
     { url: "/line/BasicAreaChart", label: "基础面积图", style: "chart" },

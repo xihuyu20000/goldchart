@@ -78,13 +78,25 @@ const deleteApi = (removeRecords) => {
 };
 // 模拟接口
 const saveApi = (removeRecords, insertRecords, updateRecords) => {
+  const removeRecord2 = removeRecords.map((item) => {
+    delete item._X_ROW_KEY;
+    return item;
+  });
+  const insertRecord2 = insertRecords.map((item) => {
+    delete item._X_ROW_KEY;
+    return item;
+  });
+  const updateRecord2 = updateRecords.map((item) => {
+    delete item._X_ROW_KEY;
+    return item;
+  });
   return new Promise((resolve) => {
     setTimeout(async () => {
       const resp = await $post("/api/project/save", {
         user_id: sessionStorage.getItem("token"),
-        removeRecords: JSON.stringify(removeRecords),
-        insertRecords: JSON.stringify(insertRecords),
-        updateRecords: JSON.stringify(updateRecords),
+        removeRecords: JSON.stringify(removeRecord2),
+        insertRecords: JSON.stringify(insertRecord2),
+        updateRecords: JSON.stringify(updateRecord2),
       });
       resolve();
     }, 200);
@@ -154,7 +166,7 @@ const getFileData = (event) => {
 //////////////////////// 显示添加数据对话框 ////////////////////////
 const uploadDataFile = async () => {
   // 3-1 发送请求上传文件
-  const rept = await $upload("/api/project/uploadData", formData);
+  const rept = await $upload("/api/datafile/upload", formData);
   if (rept.code === 200) {
     // 3-2 关闭上传对话框
     isUploadDataDialog.value = false;

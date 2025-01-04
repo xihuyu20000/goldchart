@@ -4,7 +4,7 @@ from api.chart.chart_model import Chart
 from base import mylogger
 
 
-def load_charts_by_projectid(project_id):
+def select_by_projectid(project_id):
     """
     根据project_id查询
     :param project_id:
@@ -24,7 +24,7 @@ def insert_chart_data(chart: Chart):
     :param chart:
     :return:
     """
-    assert chart.id.startswith("data-")
+    assert chart.id.startswith("datafile-")
     assert chart.id == chart.fpath
 
     g.db.cs.execute("INSERT INTO datafiles VALUES (:id, :rawname, :fpath, :user_id, :project_id)", chart)
@@ -43,4 +43,5 @@ def delete_chart(chart_id: str):
     :return:
     """
     g.db.cs.execute("DELETE FROM charts WHERE id=?", (chart_id,))
+    mylogger.debug(f"删除图表 {chart_id=}")
     g.db.conn.commit()

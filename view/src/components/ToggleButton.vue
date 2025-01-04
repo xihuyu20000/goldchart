@@ -18,7 +18,9 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  const curr_width = localStorage.getItem(key.value);
+  // 3-1 读取本地存储的宽度，并设置当前宽度
+  const curr_width = localStorage.getItem(key);
+  // 3-2 设置图标
   if (curr_width == props.min) {
     $(tg.value)
       .children()
@@ -32,11 +34,13 @@ onMounted(() => {
       .removeClass("icon-xiangyoujiantou")
       .addClass("icon-xiangzuojiantou");
   }
+  // 3-3 设置当前宽度
   $(tg.value).parent().width(curr_width);
 });
 const toggle = (e) => {
+  // 3-1 获取父组件宽度
   let curr = $(tg.value).parent().width();
-
+  // 3-2 切换宽度，切换图标
   if (curr > props.min) {
     $(tg.value).parent().animate({ width: props.min }, 400);
     $(tg.value)
@@ -52,7 +56,8 @@ const toggle = (e) => {
       .removeClass("icon-xiangyoujiantou")
       .addClass("icon-xiangzuojiantou");
   }
-  localStorage.setItem(key.value, curr == 20 ? props.max : props.min);
+  // 3-3 保存当前宽度到本地存储
+  localStorage.setItem(key, curr < 100 ? props.max : props.min);
 };
 </script>
 <template>
