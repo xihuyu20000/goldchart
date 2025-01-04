@@ -4,21 +4,21 @@ import ecStat from "echarts-stat";
 echarts.registerTransform(ecStat.transform.clustering);
 echarts.registerTransform(ecStat.transform.regression);
 
-import * as line from "@/charts/line/index";
-import * as bar from "@/charts/bar/index";
-import * as pie from "@/charts/pie/index";
-import * as scatter from "@/charts/scatter/index";
-import * as radar from "@/charts/radar/index";
-import * as heatmap from "@/charts/heatmap/index";
-import * as graph from "@/charts/graph/index";
-import * as tree from "@/charts/tree/index";
-import * as parallel from "@/charts/parallel/index";
-import * as sankey from "@/charts/sankey/index";
-import * as funnel from "@/charts/funnel/index";
-import * as river from "@/charts/river/index";
-import * as wordcloud from "@/charts/wordcloud/index";
-import * as map from "@/charts/map/index";
-import * as polar from "@/charts/polar/index";
+import * as line from "@/pages/charts/line/index";
+import * as bar from "@/pages/charts/bar/index";
+import * as pie from "@/pages/charts/pie/index";
+import * as scatter from "@/pages/charts/scatter/index";
+import * as radar from "@/pages/charts/radar/index";
+import * as heatmap from "@/pages/charts/heatmap/index";
+import * as graph from "@/pages/charts/graph/index";
+import * as tree from "@/pages/charts/tree/index";
+import * as parallel from "@/pages/charts/parallel/index";
+import * as sankey from "@/pages/charts/sankey/index";
+import * as funnel from "@/pages/charts/funnel/index";
+import * as river from "@/pages/charts/river/index";
+import * as wordcloud from "@/pages/charts/wordcloud/index";
+import * as map from "@/pages/charts/map/index";
+import * as polar from "@/pages/charts/polar/index";
 
 const chart_types = {
   line,

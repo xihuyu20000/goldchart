@@ -2,44 +2,39 @@ export const space_menu_configs = [
   {
     url: "/space/Projects",
     label: "我的项目",
-    style: "space",
   },
   {
     url: "/space/Datafiles",
     label: "我的数据",
-    style: "space",
   },
   {
     url: "/space/Charts",
     label: "我的图表",
-    style: "space",
   },
   {
     url: "/space/Setting",
     label: "设置",
-    style: "space",
   },
   {
     url: "/space/Profile",
     label: "个人资料",
-    style: "space",
   },
 ];
 export const chart_menu_configs = {
   折线图: [
-    { url: "/line/BasicLineChart", label: "基础折线图", style: "chart" },
-    { url: "/line/BasicAreaChart", label: "基础面积图", style: "chart" },
-    { url: "/line/MultiLinesChart", label: "多折线图", style: "chart" },
-    { url: "/line/StackedAreaChart", label: "堆叠面积图", style: "chart" },
+    { url: "/line/BasicLineChart", label: "基础折线图" },
+    { url: "/line/BasicAreaChart", label: "基础面积图" },
+    { url: "/line/MultiLinesChart", label: "多折线图" },
+    { url: "/line/StackedAreaChart", label: "堆叠面积图" },
     {
       url: "/line/GradientStackedAreaChart",
       label: "渐变堆叠面积图",
       style: "chart",
     },
-    { url: "/line/BumpChart", label: "凹凸图", style: "chart" },
-    { url: "/line/TemperatureChangeChart", label: "气温变化", style: "chart" },
-    { url: "/line/AreaPiecesChart", label: "折线图高亮面积图", style: "chart" },
-    { url: "/line/GradientLineChart", label: "渐变折线图", style: "chart" },
+    { url: "/line/BumpChart", label: "凹凸图" },
+    { url: "/line/TemperatureChangeChart", label: "气温变化" },
+    { url: "/line/AreaPiecesChart", label: "折线图高亮面积图" },
+    { url: "/line/GradientLineChart", label: "渐变折线图" },
     {
       url: "/line/DistributionOfElectricityChart",
       label: "用电量分布图",
@@ -55,13 +50,13 @@ export const chart_menu_configs = {
       label: "降雨量和流量",
       style: "chart",
     },
-    { url: "/line/BeijingAQIChart", label: "Beijing AQI", style: "chart" },
+    { url: "/line/BeijingAQIChart", label: "Beijing AQI" },
   ],
   柱状图: [
-    { url: "/bar/BasicBarChart", label: "基础柱状图", style: "chart" },
-    { url: "/bar/BgcolorBarChart", label: "柱状图背景色", style: "chart" },
-    { url: "/bar/BarColorBarChart", label: "柱状图颜色", style: "chart" },
-    { url: "/bar/WaterfallChart", label: "瀑布图", style: "chart" },
+    { url: "/bar/BasicBarChart", label: "基础柱状图" },
+    { url: "/bar/BgcolorBarChart", label: "柱状图背景色" },
+    { url: "/bar/BarColorBarChart", label: "柱状图颜色" },
+    { url: "/bar/WaterfallChart", label: "瀑布图" },
     {
       url: "/bar/NegativeValueBarChart",
       label: "正负值柱状图",
@@ -77,25 +72,25 @@ export const chart_menu_configs = {
       label: "世界人口条状图",
       style: "chart",
     },
-    { url: "/bar/LabelBarChart", label: "柱状图标签", style: "chart" },
-    { url: "/bar/StackedColumnChart", label: "堆叠柱状图", style: "chart" },
+    { url: "/bar/LabelBarChart", label: "柱状图标签" },
+    { url: "/bar/StackedColumnChart", label: "堆叠柱状图" },
     {
       url: "/bar/StackedHorizontalBarChart",
       label: "堆叠条形图",
       style: "chart",
     },
-    { url: "/bar/MultipleYBarChart", label: "双Y轴折柱混合图", style: "chart" },
+    { url: "/bar/MultipleYBarChart", label: "双Y轴折柱混合图" },
   ],
 
   饼状图: [
-    { url: "/pie/BasicPieChart", label: "基础饼图", style: "chart" },
-    { url: "/pie/RoundedCornerPieChart", label: "圆角饼图", style: "chart" },
-    { url: "/pie/DoughnutChart", label: "甜甜圈图", style: "chart" },
-    { url: "/pie/HalfDoughnutChart", label: "半环图", style: "chart" },
-    { url: "/pie/RoseChart", label: "玫瑰图", style: "chart" },
+    { url: "/pie/BasicPieChart", label: "基础饼图" },
+    { url: "/pie/RoundedCornerPieChart", label: "圆角饼图" },
+    { url: "/pie/DoughnutChart", label: "甜甜圈图" },
+    { url: "/pie/HalfDoughnutChart", label: "半环图" },
+    { url: "/pie/RoseChart", label: "玫瑰图" },
   ],
   散点图: [
-    { url: "/scatter/BasicScatterChart", label: "基础散点图", style: "chart" },
+    { url: "/scatter/BasicScatterChart", label: "基础散点图" },
     {
       url: "/scatter/AnscombeQuartetChart",
       label: "安斯科目四重奏",
@@ -127,9 +122,7 @@ export const chart_menu_configs = {
       style: "chart",
     },
   ],
-  雷达图: [
-    { url: "/radar/BasicRadarChart", label: "基础雷达图", style: "chart" },
-  ],
+  雷达图: [{ url: "/radar/BasicRadarChart", label: "基础雷达图" }],
   热力图: [
     {
       url: "/heatmap/CalendarHeatmapChart",
@@ -138,7 +131,7 @@ export const chart_menu_configs = {
     },
   ],
   关系图: [
-    { url: "/graph/SimpleGraphChart", label: "基础关系图", style: "chart" },
+    { url: "/graph/SimpleGraphChart", label: "基础关系图" },
     {
       url: "/graph/CartesianGraphChart",
       label: "笛卡尔坐标关系图",
@@ -156,12 +149,12 @@ export const chart_menu_configs = {
     },
   ],
   树状图: [
-    { url: "/tree/l2rTreeChart", label: "从左到右树", style: "chart" },
-    { url: "/tree/r2lTreeChart", label: "从右到左树", style: "chart" },
-    { url: "/tree/t2bTreeChart", label: "从上到下树", style: "chart" },
-    { url: "/tree/b2tTreeChart", label: "从下到上树", style: "chart" },
-    { url: "/tree/PolylineTreeChart", label: "折线树图", style: "chart" },
-    { url: "/tree/RadialTreeChart", label: "径向树图", style: "chart" },
+    { url: "/tree/l2rTreeChart", label: "从左到右树" },
+    { url: "/tree/r2lTreeChart", label: "从右到左树" },
+    { url: "/tree/t2bTreeChart", label: "从上到下树" },
+    { url: "/tree/b2tTreeChart", label: "从下到上树" },
+    { url: "/tree/PolylineTreeChart", label: "折线树图" },
+    { url: "/tree/RadialTreeChart", label: "径向树图" },
   ],
   平行图: [
     {
@@ -193,18 +186,16 @@ export const chart_menu_configs = {
     },
   ],
   漏斗图: [
-    { url: "/funnel/SimpleFunnelChart", label: "基础漏斗图", style: "chart" },
+    { url: "/funnel/SimpleFunnelChart", label: "基础漏斗图" },
     {
       url: "/funnel/CustomizeFunnelChart",
       label: "订制漏斗图",
       style: "chart",
     },
-    { url: "/funnel/CompareFunnelChart", label: "对比漏斗图", style: "chart" },
-    { url: "/funnel/MultipleFunnelChart", label: "多个漏斗图", style: "chart" },
+    { url: "/funnel/CompareFunnelChart", label: "对比漏斗图" },
+    { url: "/funnel/MultipleFunnelChart", label: "多个漏斗图" },
   ],
-  河流图: [
-    { url: "/river/SimpleRiverChart", label: "基础河流图", style: "chart" },
-  ],
+  河流图: [{ url: "/river/SimpleRiverChart", label: "基础河流图" }],
   词云图: [
     {
       url: "/wordcloud/BasicWordCloudChart",
@@ -217,11 +208,9 @@ export const chart_menu_configs = {
       style: "chart",
     },
   ],
-  地图: [
-    { url: "/map/SimpleWorldMapChart", label: "基础世界地图", style: "chart" },
-  ],
+  地图: [{ url: "/map/SimpleWorldMapChart", label: "基础世界地图" }],
   极坐标图: [
-    { url: "/polar/RadialPolarBarChart", label: "极坐标柱图", style: "chart" },
+    { url: "/polar/RadialPolarBarChart", label: "极坐标柱图" },
     {
       url: "/polar/RadialPolarStackedBarChart",
       label: "极坐标堆叠图",

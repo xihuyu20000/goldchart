@@ -4,30 +4,25 @@ import {
   createWebHistory,
 } from "vue-router";
 
-import { chart_menu_configs } from "@/utils/menu.js";
-import { path } from "d3";
-import { component } from "vxe-table";
+import { space_menu_configs, chart_menu_configs } from "@/utils/menu.js";
+
 const dynamicSpaceRoutes = () => {
   /**
    * 我的空间路由
    */
   let modules = import.meta.glob(`@/pages/space/*.vue`);
   // 2-1 合并菜单配置
-  const combinedArray = Object.values(chart_menu_configs)
-    .filter((val) => Array.isArray(val))
-    .reduce((acc, val) => acc.concat(val), []);
-  // 2-2 动态路由，筛选style==='space'
-  const spaceRoutes = combinedArray
-    .filter((val) => val.style === "space")
-    .map((item) => ({
-      name: item.url,
-      path: item.url,
-      component: modules[`/src/pages${item.url}.vue`],
-      meta: {
-        title: item.label,
-        chartid: item.url,
-      },
-    }));
+
+  // 2-2 动态路由
+  const spaceRoutes = space_menu_configs.map((item) => ({
+    name: item.url,
+    path: item.url,
+    component: modules[`/src/pages${item.url}.vue`],
+    meta: {
+      title: item.label,
+      chartid: item.url,
+    },
+  }));
   return spaceRoutes;
 };
 const dynamicChartRoutes = () => {
@@ -40,17 +35,15 @@ const dynamicChartRoutes = () => {
     .filter((val) => Array.isArray(val))
     .reduce((acc, val) => acc.concat(val), []);
   // 2-2 动态路由，筛选style==='chart'
-  const chartRoutes = combinedArray
-    .filter((val) => val.style === "chart")
-    .map((item) => ({
-      name: item.url,
-      path: item.url,
-      component: () => import("@/charts/Chart.vue"),
-      meta: {
-        title: item.label,
-        chartid: item.url,
-      },
-    }));
+  const chartRoutes = combinedArray.map((item) => ({
+    name: item.url,
+    path: item.url,
+    component: () => import("@/pages/charts/ChartDesigner.vue"),
+    meta: {
+      title: item.label,
+      chartid: item.url,
+    },
+  }));
   return chartRoutes;
 };
 const routes = [
@@ -63,18 +56,18 @@ const routes = [
       {
         path: "/Space",
         name: "Space",
-        component: () => import("@/pages/Space/SpaceIndex.vue"),
+        component: () => import("@/pages/space/Index.vue"),
         children: dynamicSpaceRoutes(),
       },
       {
         path: "", // 首页，必须是空路径
         name: "Default",
-        component: () => import("@/pages/Welcome.vue"),
+        component: () => import("@/pages/charts/Welcome.vue"),
         children: [
           {
             path: "/Welcome", // 首页，必须是空路径
             name: "Welcome",
-            component: () => import("@/pages/Welcome.vue"),
+            component: () => import("@/pages/charts/Welcome.vue"),
           },
         ],
       },

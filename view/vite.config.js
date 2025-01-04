@@ -41,7 +41,7 @@ export default defineConfig({
     }),
     Components({
       resolvers: [ElementPlusResolver()],
-      dirs: ["src/components", "src/charts"],
+      dirs: ["src/pages"],
     }),
   ],
   resolve: {

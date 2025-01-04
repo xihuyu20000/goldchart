@@ -3,6 +3,7 @@
 loguru
 numpy
 pandas
+xlrd
 openpyxl
 flask
 Webargs

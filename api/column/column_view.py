@@ -26,7 +26,7 @@ def column_load(req_data):
 
     data = column_dao.load_by_datafile_id(datafile_id)
     if not data:
-        data = [{'id': 'col'-uuidid(), 'colname': col, 'coltype': 'text', 'colstyle': 'dimension', 'datafile_id': datafile_id, } for col in pd.read_excel(datafile_path).columns.tolist()]
+        data = [{'id': f'col-{uuidid()}', 'colname': col, 'coltype': 'text', 'colstyle': 'dimension', 'datafile_id': datafile_id } for col in pd.read_excel(datafile_path).columns.tolist()]
     data = {'code': 200, 'data': data}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
