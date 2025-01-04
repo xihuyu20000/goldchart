@@ -23,7 +23,9 @@ export const getLocalItem = async (key) => {
   }
   return "";
 };
-
+export function uid() {
+  return new Date().getTime() + Math.random().toString(32).slice(2, 10);
+}
 export function empty(e) {
   switch (e) {
     case "":

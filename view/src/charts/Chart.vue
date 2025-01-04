@@ -4,7 +4,7 @@
       <el-aside class="chart-option">
         <ToggleButton :min="10" :max="300"></ToggleButton>
         <div>
-          <select name="chart-type" id="">
+          <select name="chart-type" id="select-datafile">
             <option value="line">折线图</option>
           </select>
         </div>
@@ -41,6 +41,7 @@
       </el-main>
     </el-container>
   </div>
+  <!-- 添加这一行 -->
 </template>
 <script setup>
 import * as utils from "@/utils/utils.js";
