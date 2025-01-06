@@ -74,6 +74,7 @@ from api.chart.chart_view import chart_page
 from api.column.column_view import column_page
 from api.config.config_view import config_page
 from api.datafile.datafile_view import datafile_page
+from api.ins.ins_view import ins_page
 from api.project.project_view import project_page
 
 
@@ -84,7 +85,7 @@ def register_db(app, db):
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS users (id TEXT, username TEXT, labelname TEXT, password TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS projects (id TEXT, name TEXT, user_id TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS datafiles (id TEXT, rawname TEXT, fpath TEXT, user_id TEXT, project_id TEXT)")
-    db.cs.execute(f"CREATE TABLE IF NOT EXISTS charts (id TEXT, name TEXT, fpath TEXT, user_id TEXT, project_id TEXT)")
+    db.cs.execute(f"CREATE TABLE IF NOT EXISTS ins (id TEXT, user_id TEXT, config TEXT, option TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS columns (id TEXT, colname TEXT, coltype TEXT, colstyle TEXT, datafile_id TEXT)")
     db.cs.execute(f"CREATE TABLE IF NOT EXISTS logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, ffrom TEXT, tto TEXT, logtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
 
@@ -99,6 +100,7 @@ def register_routers(app):
     app.register_blueprint(column_page, url_prefix='/api')
     app.register_blueprint(config_page, url_prefix='/api')
     app.register_blueprint(datafile_page, url_prefix='/api')
+    app.register_blueprint(ins_page, url_prefix='/api')
     app.register_blueprint(project_page, url_prefix='/api')
 
 

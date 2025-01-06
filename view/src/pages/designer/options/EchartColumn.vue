@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="8">数据</el-col>
       <el-col :span="16">
-        <el-select v-model="globalStore.config.datafileId"> <el-option v-for="item in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
+        <el-select v-model="globalStore.config.datafile_id"> <el-option v-for="item in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
       ></el-col>
     </el-row>
     <el-row>
@@ -40,7 +40,7 @@ const coldata = ref([]);
 
 // 监视数据文件变化
 watch(
-  () => globalStore.config.datafileId,
+  () => globalStore.config.datafile_id,
   (nv, ov) => {
     const aaa = datafilecols.value.filter((item, index) => item.id === nv);
     if (aaa && aaa.length > 0) {

@@ -1,10 +1,8 @@
-import json
-
 import webargs
-from flask import Response, Blueprint, session
+from flask import Response, Blueprint
 
-from api.chart import chart_helper as ss, chart_dao
-from api.chart.chart_schema import project_id_schema, chart_id_schema, chart_token_schema
+from api.chart import chart_helper as ss
+from api.chart.chart_schema import chart_token_schema
 from api.config import config_dao
 from base import mylogger
 
@@ -27,7 +25,6 @@ def chart_getdata(req_data):
     json_response = ss.gendata('chart', chart_id, datafile_id)
     mylogger.debug(f"{json_response=}")
     return Response(json_response, content_type='application/json')
-
 
 # @chart_page.post('/chart/loadall')
 # @webargs.flaskparser.use_args(project_id_schema, location='json')

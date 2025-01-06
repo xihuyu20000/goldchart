@@ -4,7 +4,7 @@
       <el-aside class="chart-option">
         <ToggleButton :min="10" :max="200"></ToggleButton>
         <div class="chart-title">
-          {{ $route.meta.title }}
+          <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
         <el-tabs tab-position="top" :stretch="true">
           <el-tab-pane label="数据">
@@ -36,7 +36,9 @@
             </el-tabs>
           </el-tab-pane>
         </el-tabs>
-        <UpdateOption />
+        <div class="save-option">
+          <el-button type="primary" @click="saveOption">保存图表</el-button>
+        </div>
       </el-aside>
       <el-main class="chart-main">
         <ChartViewer />
@@ -48,7 +50,7 @@
 <script setup>
 import * as utils from "@/utils/utils";
 import $ from "jquery";
-import { toRaw } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 const route = useRoute();
 const globalStore = useGlobalStore();
 // 5-1 图像id
@@ -59,8 +61,27 @@ const myChart = ref({});
 onMounted(async () => {
   // 2-1 设置页面标题
   document.title = route.meta.title;
-  // 2-2 根据chartid调用对应的js文件，获取后台数据， 并保存到global的config和option中
-  get_options(route.meta.chartid);
+  // 2-2 如果ins_id为空，则为新建图表，否则为编辑图表
+  if (globalStore.ins_id === "") {
+    get_options(route.meta.chartid);
+  }
 });
+
+const saveOption = async () => {
+  const token = sessionStorage.getItem(utils.StorageKeys.token);
+  globalStore.config.user_id = token;
+  globalStore.config.chart_id = route.meta.chartid;
+  console.log("当前ins_id", globalStore.ins_id);
+  const resp = await $post("/api/ins/save", { ins_id: globalStore.ins_id, config: globalStore.config, option: globalStore.option });
+  if (resp.code === 200) {
+    // 保存成功后，更新ins_id，否则重复保存时，记录会重复
+    globalStore.ins_id = resp.data.ins_id;
+    globalStore.config.ins_id = resp.data.ins_id;
+    ElMessage({
+      type: "success",
+      message: "保存成功",
+    });
+  }
+};
 </script>
 <style lang="less" src="./ChartDesigner.less" scoped></style>

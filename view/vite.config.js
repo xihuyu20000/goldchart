@@ -19,7 +19,7 @@ export default defineConfig({
         "pinia",
         {
           "vue-router": ["useRouter", "useRoute"],
-          "@/utils/bus.js": ["emitter"],
+          "@/utils/bus.ts": ["emitter"],
           "@/utils/global.ts": ["useGlobalStore"],
           "@/utils/http.ts": ["$post", "$upload", "$chart"],
           "@/utils/logger.ts": ["logger"],

@@ -18,13 +18,11 @@
 </template>
 
 <script setup>
-import { emitter } from "@/utils/bus.js";
-import Metadata from "./components/Metadata.vue";
+import Metadata from "./Metadata.vue";
 import * as utils from "@/utils/utils.js";
-import { $post } from "@/utils/http.ts";
+
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";
-import { useRouter } from "vue-router";
 const router = useRouter();
 const xTable = ref(null);
 const tableData = ref([]);

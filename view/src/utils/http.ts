@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { logger } from "./logger.ts";
 
 // interface Response{
 //   code: number;
