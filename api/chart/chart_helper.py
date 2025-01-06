@@ -15,7 +15,7 @@ class LineChartData:
 
     def wrapper_chart(self, df):
         assert isinstance(df, pd.DataFrame)
-        data = {'index': df.index.tolist(), 'columns': df.columns.tolist(), 'values': df.T.values.tolist(), 'min': int(df.values.min()), 'max': int(df.values.max())}
+        data = {'index': df.index.tolist(), 'columns': df.columns.tolist(), 'values': df.T.values.tolist()}
         self.__check_data(data)
         data = {'code': 200, 'data': data}
         json_response = json.dumps(data, ensure_ascii=False)
@@ -34,7 +34,7 @@ class LineChartData:
         filepath = os.path.join(basepath, 'files', datafile_id)
         mylogger.debug(f'{filepath=}')
         df = pd.read_excel(filepath)
-        df.set_index(df.columns[0], inplace=True)
+        # df.set_index(df.columns[0], inplace=True)
         mylogger.debug(df)
         # df = pd.DataFrame(data={'销量': [150, 230, 224, 218, 135, 147, 260]}, index=["周一", "周二", "周三", "周四", "周五", "周六", "周日"])
         return df

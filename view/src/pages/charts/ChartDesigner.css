@@ -14,13 +14,14 @@
 .chart-page .chart-container .chart-option {
   width: var(--public_chart_option_width);
   height: 100%;
-  padding: 10px;
+  padding: 2px;
   position: relative;
 }
 .chart-page .chart-container .chart-option .chart-title {
   text-align: center;
   height: 30px;
-  width: 280px;
+  line-height: 30px;
+  width: 200px;
   font-weight: bolder;
 }
 .chart-page .chart-container .chart-main {

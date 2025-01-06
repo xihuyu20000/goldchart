@@ -25,6 +25,7 @@ def chart_getdata(req_data):
     datafile_id = config_dao.get_config(token, 'datafile_id')
     mylogger.debug(f"{chart_id=} {datafile_id=}")
     json_response = ss.gendata('chart', chart_id, datafile_id)
+    mylogger.debug(f"{json_response=}")
     return Response(json_response, content_type='application/json')
 
 

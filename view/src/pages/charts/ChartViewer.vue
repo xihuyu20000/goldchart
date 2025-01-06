@@ -6,6 +6,7 @@
 <script setup>
 import * as utils from "@/utils/utils";
 import * as echarts from "echarts";
+import { toRaw } from "vue";
 
 const uid = ref(utils.uid());
 const myChart = ref({});
@@ -29,6 +30,8 @@ const globalStore = useGlobalStore();
 watch(
   () => globalStore.option,
   (newVal, oldVal) => {
+    console.log("渲染前newVal", newVal);
+
     myChart.value.setOption(newVal);
   }
 );

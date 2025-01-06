@@ -2,24 +2,14 @@
 import { defineStore } from "pinia";
 
 export const useGlobalStore = defineStore("global", {
-  state: () => reactive({ activeLeftNav: "", option: {} }),
+  state: () => reactive({ config: {}, option: {} }),
   actions: {
-    setLeftNavActive(name) {
-      this.activeLeftNav = name;
-      sessionStorage.setItem("activeLeftNav", JSON.stringify(name));
+    setOption(nv) {
+      this.option = { ...this.option, ...nv };
     },
-    setOption(config) {
-      config["draggable"] = true;
-      this.option = { ...this.option, ...config };
+    setConfig(nv) {
+      this.config = { ...this.config, ...nv };
     },
   },
-  getters: {
-    getLeftNavActive: (state) => {
-      const activeLeftNav = sessionStorage.getItem("activeLeftNav");
-      if (activeLeftNav) {
-        return JSON.parse(activeLeftNav);
-      }
-      return "";
-    },
-  },
+  getters: {},
 });

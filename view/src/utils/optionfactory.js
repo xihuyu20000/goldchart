@@ -44,9 +44,7 @@ export const get_options = (chartid) => {
    * @param {string} chartid 图表的id，格式为"chart_style/subchart_name"，如"line/simple"
    * @returns {Promise<Object>} 返回一个Promise对象，resolve为echarts的option对象
    */
-  console.log(
-    `"文件utils/optionfactory.js 函数get_options 参数chartid 值${chartid}"`
-  );
+  console.log(`"文件utils/optionfactory.js 函数get_options 参数chartid 值${chartid}"`);
   // 1 去掉开头的"/"
   if (chartid.startsWith("/")) {
     chartid = chartid.slice(1);
@@ -60,7 +58,10 @@ export const get_options = (chartid) => {
   const chart_styles = chart_types[chart_style];
   const getOptionFunc = chart_styles[chart_name];
   // 3 调用图表的getOptionFunc函数，获取图表的option数据
-  let dataset = getOptionFunc();
-
-  return dataset;
+  const optionWrapper = getOptionFunc();
+  // 4 保存option数据到pinia中
+  const globalStore = useGlobalStore();
+  globalStore.setOption(optionWrapper.option);
+  // 5 返回option数据
+  return optionWrapper;
 };
