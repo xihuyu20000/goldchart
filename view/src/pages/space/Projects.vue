@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { $post, $upload } from "@/utils/http";
+import { $post, $upload } from "@/utils/http.ts";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";
 import { useRouter } from "vue-router";

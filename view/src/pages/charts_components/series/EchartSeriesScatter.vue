@@ -17,11 +17,7 @@
             <el-slider v-model="sub.label.fontSize" />
           </el-form-item>
           <el-form-item label="数值格式化">
-            <el-tooltip
-              raw-content
-              content="<p>模板变量有:</p><p>{a}：系列名。</p><p>{b}：数据名。</p><p>{c}：数据值。</p><p>{@xxx}：数据中名为 'xxx' 的维度的值，如 {@product} 表示名为 'product' 的维度的值。</p><p>{@[n]}：数据中维度 n 的值，如 {@[3]} 表示维度 3 的值，从 0 开始计数。</p>"
-              placement="right"
-            >
+            <el-tooltip raw-content content="<p>模板变量有:</p><p>{a}：系列名。</p><p>{b}：数据名。</p><p>{c}：数据值。</p><p>{@xxx}：数据中名为 'xxx' 的维度的值，如 {@product} 表示名为 'product' 的维度的值。</p><p>{@[n]}：数据中维度 n 的值，如 {@[3]} 表示维度 3 的值，从 0 开始计数。</p>" placement="right">
               <el-input v-model="sub.label.formatter" type="textarea" />
             </el-tooltip>
           </el-form-item>
@@ -29,12 +25,7 @@
         <template v-if="sub.itemStyle">
           <el-form-item label="描边类型">
             <el-select v-model="sub.itemStyle.borderType">
-              <el-option
-                v-for="item in seriesSymbols"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in seriesSymbols" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="图形颜色">

@@ -1,10 +1,6 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-} from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
-import { space_menu_configs, chart_menu_configs } from "@/utils/menu.js";
+import { space_menu_configs, chart_menu_configs } from "@/utils/menu.ts";
 
 const dynamicSpaceRoutes = () => {
   /**

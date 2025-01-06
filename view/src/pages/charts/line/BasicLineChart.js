@@ -1,12 +1,14 @@
 import * as utils from "@/utils/utils.js";
+import { reactive } from "vue";
 export async function BasicLineChart() {
   const resp = await $chart({ chart_id: "/line/BasicLineChart" });
-  const config = {
+  const config = reactive({
+    datafileId: "",
     xCols: [],
     yCols: [],
     columns: resp.data.columns,
     dataset: resp.data.values,
-  };
+  });
   const option = {
     title: [
       {

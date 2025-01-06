@@ -1,8 +1,14 @@
-import { logger } from "./logger";
-import axios from "axios";
-let http = axios.create({
+import axios, { AxiosInstance } from "axios";
+
+// interface Response{
+//   code: number;
+//   message: string;
+//   data: { [key: string]: string }[] | { [key: string]: string };
+// }
+
+let http: AxiosInstance = axios.create({
   baseURL: "/api",
-  timeOut: 10000,
+  timeout: 10000,
 });
 let LoadingInstance;
 http.interceptors.request.use(

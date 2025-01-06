@@ -15,12 +15,7 @@
         </el-form-item>
         <el-form-item label="标题对齐">
           <el-select v-model="sub.nameLocation">
-            <el-option
-              v-for="item in utils.xAxisNameLocations"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in utils.xAxisNameLocations" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="标题间隔">

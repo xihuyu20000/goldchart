@@ -1,34 +1,15 @@
 <template>
   <div>
-    <vxe-table
-      ref="xTable"
-      border
-      highlight-current-row
-      show-overflow
-      :data="tableData"
-    >
+    <vxe-table ref="xTable" border highlight-current-row show-overflow :data="tableData">
       <vxe-column type="seq" width="50"></vxe-column>
       <vxe-column field="rawname" title="文件名称" min-width="100"></vxe-column>
       <vxe-column field="fpath" title="文件路径" min-width="200"></vxe-column>
-      <vxe-column
-        field="project_name"
-        title="所属项目"
-        min-width="200"
-      ></vxe-column>
+      <vxe-column field="project_name" title="所属项目" min-width="200"></vxe-column>
       <vxe-column field="active" title="按钮" width="200">
         <template #default="{ row }">
-          <vxe-button
-            mode="text"
-            status="success"
-            @click="activateCurrentRow(row)"
-            >选中</vxe-button
-          >
-          <vxe-button mode="text" status="warning" @click="popupMetaData(row)"
-            >元数据</vxe-button
-          >
-          <vxe-button mode="text" status="error" @click="removeCurrentRow(row)"
-            >删除</vxe-button
-          >
+          <vxe-button mode="text" status="success" @click="activateCurrentRow(row)">选中</vxe-button>
+          <vxe-button mode="text" status="warning" @click="popupMetaData(row)">元数据</vxe-button>
+          <vxe-button mode="text" status="error" @click="removeCurrentRow(row)">删除</vxe-button>
         </template>
       </vxe-column>
     </vxe-table>
@@ -40,7 +21,7 @@
 import { emitter } from "@/utils/bus.js";
 import Metadata from "./components/Metadata.vue";
 import * as utils from "@/utils/utils.js";
-import { $post } from "@/utils/http";
+import { $post } from "@/utils/http.ts";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";
 import { useRouter } from "vue-router";
@@ -92,9 +73,7 @@ onMounted(async () => {
   const current_datafile_id = utils.getLocalItem("current_datafile_id");
   // 3-3 设置当前行
   if (current_datafile_id) {
-    const index = tableData.value.findIndex(
-      (item) => item.id === current_datafile_id
-    );
+    const index = tableData.value.findIndex((item) => item.id === current_datafile_id);
     xTable.value.setCurrentRow(tableData.value[index]);
   }
 });

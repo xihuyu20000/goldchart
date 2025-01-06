@@ -10,9 +10,9 @@
           <el-tab-pane label="数据">
             <div>
               <el-row>
-                <el-col :span="8">数据文件</el-col>
+                <el-col :span="8">数据</el-col>
                 <el-col :span="16">
-                  <el-select v-model="activeDatafile"> <el-option v-for="item in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
+                  <el-select v-model="chart_config.datafileId"> <el-option v-for="item in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
                 ></el-col>
               </el-row>
               <el-row>
@@ -59,6 +59,7 @@
             </el-tabs>
           </el-tab-pane>
         </el-tabs>
+        <UpdateOption />
       </el-aside>
       <el-main class="chart-main">
         <ChartViewer />
@@ -110,10 +111,12 @@ onMounted(async () => {
 });
 // 监视数据文件变化
 watch(
-  () => activeDatafile.value,
+  () => chart_config.datafileId,
   (newVal, oldVal) => {
     const aaa = datafilecols.value.filter((item, index) => item.id === newVal);
-    coldata.value = aaa[0].cols;
+    if (aaa && aaa.length > 0) {
+      coldata.value = aaa[0].cols;
+    }
   }
 );
 
@@ -127,7 +130,7 @@ watchEffect(() => {
     const obj = {
       show: true,
       type: "category",
-      name: "X轴",
+      name: xCol,
       nameLocation: "center",
       nameGap: 35,
       axisLabel: { show: true },
@@ -157,6 +160,7 @@ watch(
   () => chart_option,
   (newVal, oldVal) => {
     // 4 保存到全局store中
+    globalStore.setConfig(chart_config);
     globalStore.setOption(chart_option);
   },
   { deep: true }

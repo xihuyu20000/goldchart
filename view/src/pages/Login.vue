@@ -4,11 +4,7 @@
       <div class="login-form">
         <el-input v-model="eusername" placeholder="用户名"></el-input>
 
-        <el-input
-          v-model="epassword"
-          type="password"
-          placeholder="密码"
-        ></el-input>
+        <el-input v-model="epassword" type="password" placeholder="密码"></el-input>
 
         <button class="submit-btn" type="submit">登录</button>
       </div>
@@ -18,9 +14,7 @@
 
 <script setup>
 import * as utils from "@/utils/utils.js";
-import { $post } from "@/utils/http.js";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+
 const router = useRouter();
 
 const eusername = ref("");

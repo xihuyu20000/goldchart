@@ -24,20 +24,11 @@
         <el-color-picker v-model="title.textStyle.color" />
       </el-form-item>
       <el-form-item label="字体粗细" v-if="title.textStyle">
-        <el-slider
-          v-model="title.textStyle.fontWeight"
-          :min="100"
-          :max="900"
-          :step="100"
-        />
+        <el-slider v-model="title.textStyle.fontWeight" :min="100" :max="900" :step="100" />
       </el-form-item>
       <el-form-item label="字体类别" v-if="title.textStyle">
         <el-select v-model="title.textStyle.fontFamily">
-          <el-option
-            v-for="(item, i) in utils.titleTextStyleFontFamilies"
-            :key="i"
-            :label="item.label"
-            :value="item.value"
+          <el-option v-for="(item, i) in utils.titleTextStyleFontFamilies" :key="i" :label="item.label" :value="item.value"
             ><div :style="{ fontFamily: item.value }">
               {{ item.label }}
             </div></el-option
@@ -45,12 +36,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="字体大小" v-if="title.textStyle">
-        <el-slider
-          v-model="title.textStyle.fontSize"
-          :min="10"
-          :max="80"
-          :step="1"
-        />
+        <el-slider v-model="title.textStyle.fontSize" :min="10" :max="80" :step="1" />
       </el-form-item>
     </div>
   </el-form>

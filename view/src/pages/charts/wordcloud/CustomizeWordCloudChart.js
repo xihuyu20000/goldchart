@@ -116,25 +116,7 @@ export async function CustomizeWordCloudChart() {
         textStyle: {
           normal: {
             color: function () {
-              var colors = [
-                "#60ACFC",
-                "#27A1EA",
-                "#39B3EA",
-                "#35C5EA",
-                "#32D3EB",
-                "#4EBECD",
-                "#40CEC7",
-                "#63D5B2",
-                "#5BC49F",
-                "#9CDC82",
-                "#FFDA43",
-                "#FEB64D",
-                "#668ED6",
-                "#747BE1",
-                "#FF7B7B",
-                "#B55CBD",
-                "#FF9F69",
-              ];
+              var colors = ["#60ACFC", "#27A1EA", "#39B3EA", "#35C5EA", "#32D3EB", "#4EBECD", "#40CEC7", "#63D5B2", "#5BC49F", "#9CDC82", "#FFDA43", "#FEB64D", "#668ED6", "#747BE1", "#FF7B7B", "#B55CBD", "#FF9F69"];
               return colors[parseInt(Math.random() * 17)];
             },
           },

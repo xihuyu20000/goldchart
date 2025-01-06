@@ -1,6 +1,6 @@
 <script setup>
 import * as utils from "@/utils/utils";
-import { space_menu_configs } from "@/utils/menu";
+import { space_menu_configs } from "@/utils/menu.ts";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const activeMenu = ref("");

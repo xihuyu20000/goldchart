@@ -32,7 +32,7 @@ watch(
   (newVal, oldVal) => {
     console.log("渲染前newVal", newVal);
 
-    myChart.value.setOption(newVal);
+    myChart.value.setOption(newVal, { notMerge: true });
   }
 );
 </script>

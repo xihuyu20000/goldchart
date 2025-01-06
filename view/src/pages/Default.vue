@@ -29,7 +29,7 @@
 </template>
 <script setup>
 import * as utils from "@/utils/utils";
-import { chart_menu_configs } from "@/utils/menu";
+import { chart_menu_configs } from "@/utils/menu.ts";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const activeMenu = ref("");

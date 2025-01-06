@@ -103,15 +103,7 @@ export async function BasicWordCloudChart() {
           fontFamily: "sans-serif",
           // fontWeight: 'bold',
           color: function () {
-            return (
-              "rgb(" +
-              [
-                Math.round(Math.random() * 160),
-                Math.round(Math.random() * 160),
-                Math.round(Math.random() * 160),
-              ].join(",") +
-              ")"
-            );
+            return "rgb(" + [Math.round(Math.random() * 160), Math.round(Math.random() * 160), Math.round(Math.random() * 160)].join(",") + ")";
           },
         },
         data: fruits,

@@ -20,11 +20,10 @@ export default defineConfig({
         {
           "vue-router": ["useRouter", "useRoute"],
           "@/utils/bus.js": ["emitter"],
-          "@/utils/global.js": ["useGlobalStore"],
-          "@/utils/http.js": ["$post", "$upload", "$chart"],
-          "@/utils/logger.js": ["logger"],
+          "@/utils/global.ts": ["useGlobalStore"],
+          "@/utils/http.ts": ["$post", "$upload", "$chart"],
+          "@/utils/logger.ts": ["logger"],
           "@/utils/optionfactory.js": ["get_options"],
-          "@/utils/options.js": ["MyBaseOption"],
         },
       ],
       dirs: [
@@ -72,11 +71,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
+            return id.toString().split("node_modules/")[1].split("/")[0].toString();
           }
         },
       },

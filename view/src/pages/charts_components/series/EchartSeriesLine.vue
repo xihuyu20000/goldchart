@@ -4,7 +4,7 @@
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item :name="i" v-for="(sub, i) in globalStore.option.series">
         <template #title>
-          <h5>{{ globalStore.config }}</h5>
+          <h5>{{ globalStore.option.series[i].name }}</h5>
         </template>
         <el-form-item label="渐变色" v-if="sub.gradientColor">
           <el-select v-model="sub.gradientColor">

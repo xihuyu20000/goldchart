@@ -11,11 +11,7 @@
           <el-switch v-model="grid.show" />
         </el-form-item>
         <el-form-item label="尺寸">
-          <div class="position-container">
-            宽度<el-input v-model="grid.width" /> 高度<el-input
-              v-model="grid.height"
-            />
-          </div>
+          <div class="position-container">宽度<el-input v-model="grid.width" /> 高度<el-input v-model="grid.height" /></div>
         </el-form-item>
         <el-form-item label="位置">
           <div class="position-container">

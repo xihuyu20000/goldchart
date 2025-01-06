@@ -1,15 +1,15 @@
 <!--  -->
 <template>
   <div class="update-option">
-    <el-button type="primary" @click="saveOption">更新图表</el-button>
+    <el-button type="primary" @click="saveOption">保存图表</el-button>
   </div>
 </template>
 
 <script setup>
 const globalStore = useGlobalStore();
 function saveOption() {
+  console.log(globalStore.config);
   console.log(globalStore.option);
-  globalStore.setOption(globalStore.option);
 }
 </script>
 <style lang="less" scoped>
