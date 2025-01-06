@@ -34,7 +34,7 @@ const dynamicChartRoutes = () => {
   const chartRoutes = combinedArray.map((item) => ({
     name: item.url,
     path: item.url,
-    component: () => import("@/pages/charts/ChartDesigner.vue"),
+    component: () => import("@/pages/designer/ChartDesigner.vue"),
     meta: {
       title: item.label,
       chartid: item.url,

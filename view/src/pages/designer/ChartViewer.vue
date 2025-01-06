@@ -33,7 +33,8 @@ watch(
     console.log("渲染前newVal", newVal);
 
     myChart.value.setOption(newVal, { notMerge: true });
-  }
+  },
+  { deep: true }
 );
 </script>
 <style lang="less" scoped>

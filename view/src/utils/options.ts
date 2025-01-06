@@ -5,28 +5,29 @@ function assert(condition, message) {
 }
 
 export class MyBaseOption {
-  constructor(
-    datafile_id = undefined,
-    x_colnames = [],
-    y_colnames = [],
-    title_show = false,
-    title_text = undefined,
-    title_top = undefined,
-    title_left = undefined,
-    title_color = undefined,
-    title_fontSize = undefined,
-    title_fontFamily = undefined,
-    title_fontWeight = undefined,
-    grid_show = false,
-    grid_width = "auto",
-    grid_height = "auto",
-    grid_top = 60,
-    grid_left = "10%",
-    grid_bottom = 60,
-    grid_containLabel = true,
-    legend_show = false,
-    legend_fontSize = 18
-  ) {
+  datafile_id: string;
+  x_colnames: string[];
+  y_colnames: string[];
+  title_show: boolean;
+  title_text: string;
+  title_top: string;
+  title_left: string;
+  title_color: string;
+  title_fontSize: string;
+  title_fontFamily: string;
+  title_fontWeight: string;
+
+  grid_show: boolean;
+  grid_width: string;
+  grid_height: string;
+  grid_top: number;
+  grid_left: string;
+  grid_bottom: number;
+  grid_containLabel: boolean;
+
+  legend_show: boolean;
+  legend_fontSize: number;
+  constructor(datafile_id: string = "", x_colnames: string[] = [], y_colnames: string[] = [], title_show: boolean = false, title_text = "", title_top = undefined, title_left = undefined, title_color = undefined, title_fontSize = undefined, title_fontFamily = undefined, title_fontWeight = undefined, grid_show = false, grid_width = "auto", grid_height = "auto", grid_top = 60, grid_left = "10%", grid_bottom = 60, grid_containLabel = true, legend_show = false, legend_fontSize = 18) {
     this.datafile_id = datafile_id;
     this.x_colnames = x_colnames;
     this.y_colnames = y_colnames;

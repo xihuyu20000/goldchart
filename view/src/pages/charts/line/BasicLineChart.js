@@ -1,5 +1,6 @@
 import * as utils from "@/utils/utils.js";
 import { reactive } from "vue";
+const globalStore = useGlobalStore();
 export async function BasicLineChart() {
   const resp = await $chart({ chart_id: "/line/BasicLineChart" });
   const config = reactive({
@@ -49,16 +50,16 @@ export async function BasicLineChart() {
       lineStyle: {},
     },
     xAxis: [
-      //   // {
-      //   //   show: true,
-      //   //   type: "category",
-      //   //   name: "X轴",
-      //   //   nameLocation: "center",
-      //   //   nameGap: 35,
-      //   //   axisLabel: { show: true },
-      //   //   nameTextStyle: { fontSize: 20 },
-      //   //   data: [],
-      //   // },
+      // {
+      //   show: true,
+      //   type: "category",
+      //   name: "X轴",
+      //   nameLocation: "center",
+      //   nameGap: 35,
+      //   axisLabel: { show: true },
+      //   nameTextStyle: { fontSize: 20 },
+      //   data: [],
+      // },
     ],
 
     yAxis: [
@@ -72,18 +73,19 @@ export async function BasicLineChart() {
         nameTextStyle: { fontSize: 20 },
       },
     ],
-    // // series: resp.data.columns.map((curr, i, arr) => ({
-    // //   data: resp.data.values[i],
-    // //   type: "line",
-    // //   name: resp.data.columns[i],
-    // //   nameGap: 50,
-    // //   lineStyle: {},
-    // //   label: { show: true, fontSize: 12 },
-    // //   showSymbol: true,
-    // //   symbolSize: 8,
-    // // })),
+    // series: resp.data.columns.map((curr, i, arr) => ({
+    //   data: resp.data.values[i],
+    //   type: "line",
+    //   name: resp.data.columns[i],
+    //   nameGap: 50,
+    //   lineStyle: {},
+    //   label: { show: true, fontSize: 12 },
+    //   showSymbol: true,
+    //   symbolSize: 8,
+    // })),
     series: [],
   };
-
-  return { config, option };
+  console.log("调用BasicLineChart.js");
+  globalStore.setConfig(config);
+  globalStore.setOption(option);
 }
