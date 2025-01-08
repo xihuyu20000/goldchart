@@ -6,7 +6,7 @@ import typing
 import numpy as np
 import pandas as pd
 
-from base import mylogger, basepath
+from utils import mylogger, basepath
 
 
 class LineChartData:

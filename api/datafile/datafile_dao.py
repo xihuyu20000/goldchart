@@ -1,6 +1,6 @@
 from flask import g
 
-from base import mylogger
+from utils import mylogger
 
 
 def load_datafiles(user_id):
@@ -9,8 +9,8 @@ def load_datafiles(user_id):
     :param user_id:
     :return:
     """
-    g.db.cs.execute("SELECT df.*, p.name AS project_name FROM datafiles df LEFT JOIN projects p ON df.project_id=p.id WHERE df.user_id=?", (user_id,))
-    datafiles = g.db.cs.fetchall()
+    g.db.execute("SELECT df.*, p.name AS project_name FROM datafiles df LEFT JOIN projects p ON df.project_id=p.id WHERE df.user_id=?", (user_id,))
+    datafiles = g.db.fetchall()
     mylogger.debug(f"查询所有的数据文件 {datafiles=}")
     return datafiles
 
@@ -22,5 +22,5 @@ def delete_datafile(datafile_id: str):
     :return:
     """
 
-    g.db.cs.execute("DELETE FROM datafiles WHERE id=?", (datafile_id,))
-    g.db.conn.commit()
+    g.db.execute("DELETE FROM datafiles WHERE id=?", (datafile_id,))
+    g.db.commit()

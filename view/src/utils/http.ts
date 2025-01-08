@@ -16,9 +16,9 @@ http.interceptors.request.use(
   (config) => {
     // let token = XXX  // 获取token 进行验证
     // //定义请求或响应中媒体类型的信息
-    // config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+    // setting.headers['Content-Type'] = 'application/json;charset=UTF-8'
     // 在发送请求之前做些什么
-    // console.log('request', config)
+    // console.log('request', setting)
     return config;
   },
   (error) => {

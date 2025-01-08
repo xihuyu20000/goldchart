@@ -10,7 +10,7 @@ from api.column import column_dao
 from api.datafile import datafile_dao
 from api.datafile.datafile_schema import user_id_schema, file_id_schema, upload_schema
 
-from base import basepath, uuidid, mylogger
+from utils import basepath, uuidid, mylogger
 
 datafile_page = Blueprint('datafile_page', __name__)
 
@@ -28,24 +28,6 @@ def datafiles_loadall(req_data):
     data = {'code': 200, 'data': datafiles}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-@datafile_page.post('/datafile/loadallcols')
-@webargs.flaskparser.use_args(user_id_schema, location='json')
-def datafiles_loadallcols(req_data):
-    """
-    加载当前用户的所有数据文件和对应的列名，需要user_id字段
-    :param req_data:
-    :return:
-    """
-    user_id = req_data['user_id']
-    datafiles = datafile_dao.load_datafiles(user_id)
-    for datafile in datafiles:
-        datafile['cols'] = column_dao.load_by_datafile_id(datafile['id'])
-    data = {'code': 200, 'data': datafiles}
-    json_response = json.dumps(data, ensure_ascii=False)
-    return Response(json_response, content_type='application/json')
-
-
-
 
 @datafile_page.post('/datafile/remove')
 @webargs.flaskparser.use_args(file_id_schema, location='json')
@@ -77,7 +59,7 @@ def datafile_upload(req_data):
 
     f = request.files['file']
 
-    fname = f'datafile-{uuidid()}{f.filename}'
+    fname = f'datafile_{uuidid()}{f.filename}'
     upload_path = os.path.join(basepath, 'files', fname)
     f.save(upload_path)
     mylogger.debug(f'upload file {fname}')

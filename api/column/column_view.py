@@ -1,33 +1,32 @@
 import json
-import os
 
-import pandas as pd
 import webargs
 from flask import Blueprint, Response
 
 from api.column import column_dao
 from api.column.column_model import Column
-from api.column.column_schema import datafile_id_schema, column_schema
-from base import basepath, uuidid, mylogger
+from api.column.column_schema import dataset_id_schema, column_schema
+from api.dataset import dataset_dao
+from utils import uuidid, mylogger, DatasetReader
 
 column_page = Blueprint('column_page', __name__)
 
 
-@column_page.post('/column/load')
-@webargs.flaskparser.use_args(datafile_id_schema, location='json')
-def column_load(req_data):
+
+@column_page.post('/column/loadby')
+@webargs.flaskparser.use_args(dataset_id_schema, location='json')
+def column_loadby(req_data):
     """
-    根据datafile_id查询元数据
+    根据dataset_id查询元数据
     :param req_data:
     :return:
     """
-    datafile_id = req_data['datafile_id']
-    datafile_path = os.path.join(basepath, 'files', datafile_id)
 
-    data = column_dao.load_by_datafile_id(datafile_id)
-    if not data:
-        data = [{'id': f'col-{uuidid()}', 'colname': col, 'coltype': 'text', 'colstyle': 'dimension', 'datafile_id': datafile_id } for col in pd.read_excel(datafile_path).columns.tolist()]
-    data = {'code': 200, 'data': data}
+    dataset_id = req_data['dataset_id']
+    data = column_dao.load_by_dataset(dataset_id)
+    columns = [item['colname'] for item in data]
+    datas, _ = DatasetReader.read(dataset_id)
+    data = {'code': 200, 'data': {'columns': columns, 'datas': datas}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
 

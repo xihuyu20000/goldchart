@@ -2,7 +2,7 @@ import typing
 
 from flask import g
 
-from base import mylogger
+from utils import mylogger
 
 
 def check_login(username, password) -> typing.Dict[str, str]:
@@ -12,7 +12,7 @@ def check_login(username, password) -> typing.Dict[str, str]:
     :param password: 密码
     :return: 用户
     """
-    g.db.cs.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+    g.db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     user = g.db.cs.fetchone()
     user = user if user else {}
     mylogger.debug(f"查询用户信息 {username=} {password=}  {user=}")
@@ -27,5 +27,5 @@ def dolog(token, ffrom, tto):
     :param tto: 到那里去
     :return:
     """
-    g.db.cs.execute(f"INSERT INTO logs (user_id, ffrom, tto) VALUES ('{token}', '{ffrom}', '{tto}')")
-    g.db.conn.commit()
+    g.db.execute(f"INSERT INTO logs (user_id, ffrom, tto) VALUES ('{token}', '{ffrom}', '{tto}')")
+    g.db.commit()

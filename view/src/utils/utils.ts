@@ -12,14 +12,14 @@ class utils {
   static setLocalItem = async (data: { [key: string]: string }) => {
     const user_id = sessionStorage.getItem("token");
     logger.debug("[setLocalItem]", "参数", user_id, data);
-    await $post("/api/config/set", {
+    await $post("/api/setting/set", {
       user_id,
       data,
     });
   };
   static getLocalItem = async (key): Promise<string> => {
     logger.debug("[getLocalItem]", "参数", key);
-    const resp = await $post("/api/config/get", {
+    const resp = await $post("/api/setting/get", {
       user_id: sessionStorage.getItem("token"),
       key: key,
     });

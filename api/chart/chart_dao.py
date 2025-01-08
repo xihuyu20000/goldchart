@@ -1,7 +1,7 @@
 from flask import g
 
 from api.chart.chart_model import Chart
-from base import mylogger
+from utils import mylogger
 
 
 def select_by_projectid(project_id):
@@ -11,8 +11,8 @@ def select_by_projectid(project_id):
     :return:
     """
 
-    g.db.cs.execute("SELECT * FROM charts WHERE project_id=?", (project_id,))
-    charts = g.db.cs.fetchall()
+    g.db.execute("SELECT * FROM charts WHERE project_id=?", (project_id,))
+    charts = g.db.fetchall()
 
     mylogger.debug(f"查询所有的图表 {project_id=}")
     return charts
@@ -27,10 +27,10 @@ def insert_chart_data(chart: Chart):
     assert chart.id.startswith("datafile-")
     assert chart.id == chart.fpath
 
-    g.db.cs.execute("INSERT INTO datafiles VALUES (:id, :rawname, :fpath, :user_id, :project_id)", chart)
-    g.db.conn.commit()
+    g.db.execute("INSERT INTO datafiles(id, rawname, fpath, user_id, project_id) VALUES (:id, :rawname, :fpath, :user_id, :project_id)", chart)
+    g.db.commit()
     mylogger.debug(f"添加数据文件 {chart=}")
-    g.db.cs.execute("SELECT * FROM datafiles WHERE id=?", (chart.id,))
+    g.db.execute("SELECT * FROM datafiles WHERE id=?", (chart.id,))
     datafile = g.db.cs.fetchone()
 
     return datafile
@@ -42,6 +42,6 @@ def delete_chart(chart_id: str):
     :param chart_id:
     :return:
     """
-    g.db.cs.execute("DELETE FROM charts WHERE id=?", (chart_id,))
+    g.db.execute("DELETE FROM charts WHERE id=?", (chart_id,))
     mylogger.debug(f"删除图表 {chart_id=}")
-    g.db.conn.commit()
+    g.db.commit()

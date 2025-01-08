@@ -9,7 +9,7 @@ class Guard {
       globalStore.option.xAxis = [];
       for (const xCol of globalStore.config.xCols) {
         const index = globalStore.config.columns.findIndex((item) => item === xCol);
-        const data = globalStore.config.dataset[index];
+        const data = globalStore.config.datas.map((item) => item[index]);
         console.log("x轴", `索引 ${index}`, `数据 ${data}`);
         const obj: echarts.XAXisComponentOption = {
           show: true,
@@ -34,7 +34,7 @@ class Guard {
       globalStore.option.series = [];
       for (const yCol of globalStore.config.yCols) {
         const index = globalStore.config.columns.findIndex((item) => item === yCol);
-        const data = globalStore.config.dataset[index];
+        const data = globalStore.config.datas.map((item) => item[index]);
         console.log("系列", `索引 ${index}`, `数据 ${data}`);
         const obj: echarts.LineSeriesOption = {
           data: Array.isArray(data) ? data : [data],
@@ -53,6 +53,7 @@ class Guard {
     }
     console.warn("guard", is_xAxis_data, is_series_data);
     if (is_xAxis_data && is_series_data) {
+      console.warn("guard", "数据完整", toRaw(globalStore.option));
       return true;
     }
     return false;

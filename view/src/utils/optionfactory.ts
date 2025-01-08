@@ -1,6 +1,6 @@
 import * as echarts from "echarts";
 import "echarts-wordcloud";
-import ecStat from "echarts-stat";
+import * as ecStat from "echarts-stat";
 echarts.registerTransform(ecStat.transform.clustering);
 echarts.registerTransform(ecStat.transform.regression);
 
@@ -38,7 +38,7 @@ const chart_types = {
   polar,
 };
 
-export const get_options = (chartid: string): any => {
+export const get_options = (chartid: string): echarts.EChartsOption => {
   /**
    * 在echarts页面中，调用get_options函数，传入chartid
    * @param {string} chartid 图表的id，格式为"chart_style/subchart_name"，如"line/simple"
@@ -58,10 +58,5 @@ export const get_options = (chartid: string): any => {
   const chart_styles = chart_types[chart_style];
   const getOptionFunc = chart_styles[chart_name];
   // 3 调用图表的getOptionFunc函数，获取图表的option数据
-  const optionWrapper = getOptionFunc();
-  // 4 保存option数据到pinia中
-  const globalStore = useGlobalStore();
-  globalStore.setOption(optionWrapper.option);
-  // 5 返回option数据
-  return optionWrapper;
+  return getOptionFunc();
 };

@@ -7,8 +7,12 @@ class menu {
         label: "我的项目",
       },
       {
-        url: "/space/Datafiles",
-        label: "我的数据",
+        url: "/space/Connects",
+        label: "数据连接",
+      },
+      {
+        url: "/space/Datasets",
+        label: "我的数据集",
       },
       {
         url: "/space/Charts",

@@ -5,7 +5,7 @@ from flask import Response, Blueprint, session
 
 from api.auth import auth_dao
 from api.auth.auth_schema import login_schema, logout_schema, log_schema
-from base import mylogger
+from utils import mylogger
 
 auth_page = Blueprint('auth_page', __name__)
 

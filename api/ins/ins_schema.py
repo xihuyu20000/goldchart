@@ -4,6 +4,6 @@ ins_user_id_schema = {
 }
 ins_config_option_schema = {
     'ins_id': webargs.fields.Str(required=True),
-    'config': webargs.fields.Dict(required=True),
+    'setting': webargs.fields.Dict(required=True),
     'option': webargs.fields.Dict(required=True)
 }

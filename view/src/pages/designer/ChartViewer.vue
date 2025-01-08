@@ -38,13 +38,13 @@ const configWatcher = watch(
   },
   { deep: true }
 );
-const optionWatcher = watch(
-  () => globalStore.option,
-  (newVal, oldVal) => {
-    renderChart();
-  },
-  { deep: true }
-);
+// const optionWatcher = watch(
+//   () => globalStore.option,
+//   (newVal, oldVal) => {
+//     renderChart();
+//   },
+//   { deep: true }
+// );
 
 const renderChart = () => {
   if (myChart.value) {

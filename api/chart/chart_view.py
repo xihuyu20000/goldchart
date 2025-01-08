@@ -3,8 +3,8 @@ from flask import Response, Blueprint
 
 from api.chart import chart_helper as ss
 from api.chart.chart_schema import chart_token_schema
-from api.config import config_dao
-from base import mylogger
+from api.setting import setting_dao
+from utils import mylogger
 
 chart_page = Blueprint('chart_page', __name__)
 

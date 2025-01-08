@@ -5,7 +5,7 @@ from flask import Response, Blueprint
 
 from api.ins import ins_dao
 from api.ins.ins_schema import ins_config_option_schema, ins_user_id_schema
-from base import mylogger, uuidid
+from utils import mylogger, uuidid
 
 ins_page = Blueprint('ins_page', __name__)
 
@@ -24,8 +24,8 @@ def ins_load_by_userid(req_data):
 @webargs.flaskparser.use_args(ins_config_option_schema, location='json')
 def ins_save(req_data):
     mylogger.debug(f"{req_data=}")
-    ins_id = req_data['ins_id'] if req_data['ins_id'] else f'ins-{uuidid()}'
-    config = req_data['config']
+    ins_id = req_data['ins_id'] if req_data['ins_id'] else f'ins_{uuidid()}'
+    config = req_data['setting']
     config['ins_id'] = ins_id
     option = req_data['option']
     ins_dao.save_ins(ins_id, config['user_id'], json.dumps(config), json.dumps(option))

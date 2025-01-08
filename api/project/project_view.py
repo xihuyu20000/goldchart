@@ -1,13 +1,11 @@
 import json
-import os
 
 import webargs
-from flask import Blueprint, request, Response
-
+from flask import Blueprint, Response
 
 from api.project import project_dao
 from api.project.project_schema import user_id_schema, project_save_schema
-from base import uuidid, mylogger
+from utils import uuidid, mylogger
 
 project_page = Blueprint('project_page', __name__)
 
@@ -49,10 +47,8 @@ def project_save(req_data):
     mylogger.info(f"{insertRecords=}")
     mylogger.info(f"{updateRecords=}")
 
-    for record in insertRecords: record['id'] = 'project-'+uuidid()
+    for record in insertRecords: record['id'] = 'connect_' + uuidid()
     project_dao.save_projects(user_id, insertRecords, updateRecords, removeRecords)
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-
-

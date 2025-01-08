@@ -1,14 +1,6 @@
 import { reactive } from "vue";
-const globalStore = useGlobalStore();
-export async function BasicLineChart() {
-  const resp = await $chart({ chart_id: "/line/BasicLineChart" });
-  const config = reactive({
-    datafile_id: "",
-    xCols: [],
-    yCols: [],
-    columns: resp.data.columns,
-    dataset: resp.data.values,
-  });
+import * as echarts from "echarts";
+export function BasicLineChart(): echarts.EChartsOption {
   const option = {
     title: [
       {
@@ -85,6 +77,5 @@ export async function BasicLineChart() {
       },
     ],
   };
-  globalStore.setConfig(config);
-  globalStore.setOption(option);
+  return option;
 }

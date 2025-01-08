@@ -1,14 +1,6 @@
-export async function BasicAreaChart() {
-  const resp = await $chart({ chart_id: "/line/BasicAreaChart" });
-  const config = reactive({
-    datafile_id: "",
-    xCols: [],
-    yCols: [],
-    columns: resp.data.columns,
-    dataset: resp.data.values,
-  });
+import * as echarts from "echarts";
+export function BasicAreaChart(): echarts.EChartsOption {
   const option = {
-    columns: resp.data.columns,
     title: [
       {
         show: true,
@@ -56,7 +48,7 @@ export async function BasicAreaChart() {
         axisLabel: { show: true, fontSize: 12 },
         nameTextStyle: { fontSize: 12 },
         boundaryGap: true,
-        data: resp.data.index,
+        data: [],
       },
     ],
 
@@ -70,16 +62,19 @@ export async function BasicAreaChart() {
         nameTextStyle: { fontSize: 20 },
       },
     ],
-    series: resp.data.columns.map((curr, i, arr) => ({
-      name: resp.data.columns[i],
-      type: "line",
-      data: resp.data.values[i],
-      areaStyle: {},
-      label: { show: true, fontSize: 12 },
-      lineStyle: { width: 2, type: "solid", fontSize: 12 },
-      showSymbol: true,
-    })),
+    series: [
+      {
+        data: [150, 230, 224, 218, 135, 147, 260],
+        type: "line",
+        name: "",
+        nameGap: 50,
+        lineStyle: {},
+        label: { show: true, fontSize: 12 },
+        showSymbol: true,
+        symbolSize: 8,
+      },
+    ],
   };
-  globalStore.setConfig(config);
-  globalStore.setOption(option);
+
+  return option;
 }
