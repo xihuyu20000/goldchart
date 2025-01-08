@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from "axios";
-import { logger } from "./logger.ts";
+import { logger } from "./logger";
 
-// interface Response{
-//   code: number;
-//   message: string;
-//   data: { [key: string]: string }[] | { [key: string]: string };
-// }
+interface Response {
+  code: number;
+  message: string;
+  data: { [key: string]: any }[] | { [key: string]: any };
+}
 
 let http: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -51,7 +51,7 @@ http.interceptors.response.use(
 );
 
 //封装一个get请求
-const getHttp = (url, params) => {
+const getHttp = (url, params): Promise<Response> => {
   return http.get(url, {
     params,
     headers: {
@@ -60,7 +60,7 @@ const getHttp = (url, params) => {
   });
 };
 //封装一个post请求
-const postHttp = (url, data) => {
+const postHttp = (url, data): Promise<Response> => {
   logger.debug("[postHttp]", "请求路径", url, "参数", JSON.stringify(data));
   return http.post(url, data, {
     headers: {
@@ -69,7 +69,7 @@ const postHttp = (url, data) => {
   });
 };
 // 封装上传文件post请求
-const uploadHttp = (url, data) => {
+const uploadHttp = (url, data): Promise<Response> => {
   return http.post(url, data, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -78,7 +78,7 @@ const uploadHttp = (url, data) => {
 };
 
 // 封装查询数据的post请求
-const chartHttp = (data) => {
+const chartHttp = (data): Promise<Response> => {
   data.token = sessionStorage.getItem("token");
   logger.debug("[chartHttp]", "参数", JSON.stringify(data));
 

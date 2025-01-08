@@ -21,9 +21,12 @@ export default defineConfig({
           "vue-router": ["useRouter", "useRoute"],
           "@/utils/bus.ts": ["emitter"],
           "@/utils/global.ts": ["useGlobalStore"],
+          "@/utils/guard.ts": ["guard"],
           "@/utils/http.ts": ["$post", "$upload", "$chart"],
           "@/utils/logger.ts": ["logger"],
-          "@/utils/optionfactory.js": ["get_options"],
+          "@/utils/menu.ts": ["menu"],
+          "@/utils/optionfactory.ts": ["get_options"],
+          "@/utils/utils.ts": ["utils"],
         },
       ],
       dirs: [
@@ -38,6 +41,7 @@ export default defineConfig({
         //   exclude: ["**/index.js", "**/*.spec.js"],
         // },
       ],
+      dts: true, // 生成类型声明文件
     }),
     Components({
       resolvers: [ElementPlusResolver()],

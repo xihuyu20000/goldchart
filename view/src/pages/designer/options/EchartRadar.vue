@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const globalStore = useGlobalStore();
 
 const props = defineProps({

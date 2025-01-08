@@ -1,6 +1,12 @@
 export async function BasicAreaChart() {
   const resp = await $chart({ chart_id: "/line/BasicAreaChart" });
-
+  const config = reactive({
+    datafile_id: "",
+    xCols: [],
+    yCols: [],
+    columns: resp.data.columns,
+    dataset: resp.data.values,
+  });
   const option = {
     columns: resp.data.columns,
     title: [
@@ -74,6 +80,6 @@ export async function BasicAreaChart() {
       showSymbol: true,
     })),
   };
-
-  return option;
+  globalStore.setConfig(config);
+  globalStore.setOption(option);
 }

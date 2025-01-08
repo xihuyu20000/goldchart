@@ -19,11 +19,7 @@
     <router-view :key="$route.fullPath" />
   </el-container>
 </template>
-<script setup>
-import * as utils from "@/utils/utils";
-import { chart_menu_configs } from "@/utils/menu.ts";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
+<script setup lang="ts">
 const router = useRouter();
 const activeMenu = ref("");
 const activeUrl = ref("");

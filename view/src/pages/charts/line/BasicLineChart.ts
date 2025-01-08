@@ -1,4 +1,3 @@
-import * as utils from "@/utils/utils.js";
 import { reactive } from "vue";
 const globalStore = useGlobalStore();
 export async function BasicLineChart() {
@@ -86,7 +85,6 @@ export async function BasicLineChart() {
       },
     ],
   };
-  console.log("调用BasicLineChart.js");
   globalStore.setConfig(config);
   globalStore.setOption(option);
 }

@@ -36,7 +36,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { $post, $upload } from "@/utils/http.ts";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";

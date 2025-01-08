@@ -43,8 +43,7 @@
   </el-form>
 </template>
 
-<script setup>
-import * as utils from "@/utils/utils.js";
+<script setup lang="ts">
 
 const globalStore = useGlobalStore();
 </script>

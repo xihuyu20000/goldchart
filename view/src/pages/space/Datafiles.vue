@@ -17,9 +17,8 @@
   <Metadata></Metadata>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Metadata from "./Metadata.vue";
-import * as utils from "@/utils/utils.js";
 
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";

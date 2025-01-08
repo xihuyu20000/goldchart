@@ -38,7 +38,7 @@ const chart_types = {
   polar,
 };
 
-export const get_options = (chartid) => {
+export const get_options = (chartid: string): any => {
   /**
    * 在echarts页面中，调用get_options函数，传入chartid
    * @param {string} chartid 图表的id，格式为"chart_style/subchart_name"，如"line/simple"

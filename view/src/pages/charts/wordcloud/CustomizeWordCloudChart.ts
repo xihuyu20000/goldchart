@@ -1,4 +1,3 @@
-import { zip } from "@/utils/utils.js";
 export async function CustomizeWordCloudChart() {
   const resp = await $chart({ chart_id: "/wordcloud/CustomizeWordCloudChart" });
   let maskImage = new Image();

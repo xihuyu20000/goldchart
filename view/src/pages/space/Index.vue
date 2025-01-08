@@ -1,6 +1,5 @@
-<script setup>
-import * as utils from "@/utils/utils";
-import { space_menu_configs } from "@/utils/menu.ts";
+<script setup lang="ts">
+import { menu } from "@/utils/menu";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const activeMenu = ref("");
@@ -20,11 +19,7 @@ const clickMenuUrl = (name, url) => {
   <el-container class="space-index-page">
     <el-aside class="space-index-aside">
       <ol>
-        <li
-          v-for="(item, j) in space_menu_configs"
-          :key="j"
-          :class="{ 'active-url': activeUrl == item.url }"
-        >
+        <li v-for="(item, j) in menu.space_menu_configs()" :key="j" :class="{ 'active-url': activeUrl == item.url }">
           <router-link :to="item.url">{{ item.label }}</router-link>
         </li>
       </ol>

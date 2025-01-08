@@ -27,7 +27,7 @@ export class MyBaseOption {
 
   legend_show: boolean;
   legend_fontSize: number;
-  constructor(datafile_id: string = "", x_colnames: string[] = [], y_colnames: string[] = [], title_show: boolean = false, title_text = "", title_top = undefined, title_left = undefined, title_color = undefined, title_fontSize = undefined, title_fontFamily = undefined, title_fontWeight = undefined, grid_show = false, grid_width = "auto", grid_height = "auto", grid_top = 60, grid_left = "10%", grid_bottom = 60, grid_containLabel = true, legend_show = false, legend_fontSize = 18) {
+  constructor(datafile_id: string = "", x_colnames: string[] = [], y_colnames: string[] = [], title_show: boolean = false, title_text = "", title_top = "", title_left = "", title_color = "", title_fontSize = "", title_fontFamily = "", title_fontWeight = "", grid_show = false, grid_width = "auto", grid_height = "auto", grid_top = 60, grid_left = "10%", grid_bottom = 60, grid_containLabel = true, legend_show = false, legend_fontSize = 18) {
     this.datafile_id = datafile_id;
     this.x_colnames = x_colnames;
     this.y_colnames = y_colnames;

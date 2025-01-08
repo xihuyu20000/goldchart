@@ -17,9 +17,8 @@
   </el-form>
 </template>
 
-<script setup>
-import * as utils from "@/utils/utils.js";
-
+<script setup lang="ts">
+import { utils } from "@/utils/utils";
 const globalStore = useGlobalStore();
 </script>
 <style lang="less" scoped></style>

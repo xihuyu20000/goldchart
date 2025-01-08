@@ -1,35 +1,23 @@
-<script setup>
-import { chart_menu_configs } from "@/utils/menu.ts";
-import { useRouter } from "vue-router";
-const router = useRouter();
-const changeUrl = (path) => {
-  console.log("图表跳转", path);
-  // router.push(path);
-  window.open(path, "_blank");
-};
-</script>
 <template>
   <div class="welcome">
-    <div
-      v-for="(value, name, i) in chart_menu_configs"
-      :key="i"
-      class="menu-title"
-    >
+    <div v-for="(value, name, i) in menu.chart_menu_configs()" :key="i" class="menu-title">
       <div class="menu-label">
         {{ name }}
       </div>
-      <a
-        href="#"
-        v-for="(item, j) in value"
-        :key="j"
-        @click="() => changeUrl(item.url)"
-      >
+      <a :href="item.url" v-for="(item, j) in value" :key="j">
         {{ item.label }}
       </a>
     </div>
   </div>
 </template>
-
+<script setup lang="ts">
+import { menu } from "@/utils/menu";
+const router = useRouter();
+const changeUrl = (path) => {
+  console.log("图表跳转", path);
+  router.push(path);
+};
+</script>
 <style lang="less" scoped>
 .welcome {
   width: 100%;

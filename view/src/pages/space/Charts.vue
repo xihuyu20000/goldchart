@@ -14,9 +14,8 @@
   <Metadata></Metadata>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Metadata from "./Metadata.vue";
-import * as utils from "@/utils/utils.js";
 
 const globalStore = useGlobalStore();
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -28,18 +27,12 @@ const tableData = ref([]);
 const previewIns = (row) => {};
 
 const editIns = (row) => {
-  // 4-1 跳转到编辑器页面
-  router.push(row.config.chart_id);
-  // 4-2 一定要更新全局变量
+  // 3-1 一定要更新全局变量
+  globalStore.setCurrentIns(row);
+  // 3-2 记录ins_id
   globalStore.ins_id = row.config.ins_id;
-  // 4-3 延迟更新全局变量，这样编辑器会更新数据
-  setTimeout(() => {
-    globalStore.setConfig(reactive(row.config));
-    globalStore.setOption(reactive(row.option));
-    console.log("更新globalStore");
-    console.log(globalStore.config);
-    console.log(globalStore.option);
-  }, 1000);
+  // 3-3 跳转到编辑器页面
+  router.push(row.config.chart_id);
 };
 
 onMounted(async () => {
@@ -48,14 +41,14 @@ onMounted(async () => {
     user_id: sessionStorage.getItem("token"),
   });
   if (resp.code === 200) {
-    console.log(resp.data);
     tableData.value = resp.data.map((item, i, arr) => {
       return {
-        ins_id: item.ins_id,
+        ins_id: item.id,
         config: JSON.parse(item.config),
         option: JSON.parse(item.option),
       };
     });
+    console.log("所有实例列表", tableData.value);
   }
 });
 </script>

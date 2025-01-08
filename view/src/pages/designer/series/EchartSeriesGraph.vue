@@ -15,8 +15,7 @@
 </template>
 console.log("EchartSeriesLine.vue");
 
-<script setup>
-import * as utils from "@/utils/utils.js";
+<script setup lang="ts">
 
 const globalStore = useGlobalStore();
 </script>

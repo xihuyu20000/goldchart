@@ -2,23 +2,10 @@
   <el-container class="default-page">
     <el-aside class="default-aside">
       <el-collapse accordion v-model="activeMenu">
-        <el-collapse-item
-          :title="name"
-          :name="name"
-          v-for="(value, name, i) in chart_menu_configs"
-          :key="i"
-        >
-          <ol type="d" start="1">
-            <li
-              v-for="(item, j) in value"
-              :key="j"
-              :class="{ 'active-url': activeUrl == item.url }"
-            >
-              <router-link
-                :to="item.url"
-                @click="clickMenuUrl(name, item.url)"
-                >{{ item.label }}</router-link
-              >
+        <el-collapse-item :title="chartName" :name="chartName" v-for="(arr, chartName) in menu.chart_menu_configs()" :key="chartName">
+          <ol start="1">
+            <li v-for="(item, j) in arr" :key="j" :class="{ 'active-url': activeUrl == item.url }">
+              <router-link :to="item.url" @click="clickMenuUrl(chartName, item.url)">{{ item.label }}</router-link>
             </li>
           </ol>
         </el-collapse-item>
@@ -27,15 +14,15 @@
     <el-main id="default-main"><router-view :key="$route.fullPath" /></el-main>
   </el-container>
 </template>
-<script setup>
-import * as utils from "@/utils/utils";
-import { chart_menu_configs } from "@/utils/menu.ts";
+<script setup lang="ts">
+import { menu } from "@/utils/menu";
+import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const activeMenu = ref("");
 const activeUrl = ref("");
 
-const clickMenuUrl = (name, url) => {
+const clickMenuUrl = (name: string, url: string): void => {
   //点击菜单项时，更新当前激活的菜单项和url
   activeMenu.value = name;
   activeUrl.value = url;
@@ -45,25 +32,10 @@ const clickMenuUrl = (name, url) => {
   });
 };
 
-const handleLogout = async () => {
-  const resp = await $post("/api/logout", {
-    token: sessionStorage.getItem(utils.StorageKeys.token),
-  });
-  if (resp.code === 200) {
-    sessionStorage.clear();
-    router.push("/Login");
-  } else {
-    ElMessage({
-      type: "error",
-      message: "登录失败",
-    });
-  }
-};
-onMounted(() => {
+onMounted(async () => {
   // 还原菜单项和url
-
-  activeMenu.value = utils.getLocalItem("activeMenu");
-  activeUrl.value = utils.getLocalItem("activeUrl");
+  activeMenu.value = await utils.getLocalItem("activeMenu");
+  activeUrl.value = await utils.getLocalItem("activeUrl");
   const router = useRouter();
   router.push(activeUrl.value);
 });

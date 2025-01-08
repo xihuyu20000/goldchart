@@ -47,30 +47,60 @@
   </div>
   <!-- 添加这一行 -->
 </template>
-<script setup>
-import * as utils from "@/utils/utils";
-import $ from "jquery";
+<script setup lang="ts">
+import { Config, Ins } from "@/utils/types";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { onMounted } from "vue";
 const route = useRoute();
 const globalStore = useGlobalStore();
-// 5-1 图像id
-const chartid = ref(utils.uid());
-// 5-2 图表实例
-const myChart = ref({});
-
 onMounted(async () => {
   // 2-1 设置页面标题
-  document.title = route.meta.title;
-  // 2-2 如果ins_id为空，则为新建图表，否则为编辑图表
+  document.title = route.meta.title as string;
+  // 2-2 如果current_ins为空，则为新建图表，否则为编辑图表
   if (globalStore.ins_id === "") {
-    get_options(route.meta.chartid);
+    // 2-4 渲染图像
+    get_options(route.meta.chartid as string);
+  } else {
+    // 2-3 构建图表配置和图表选项
+    setTimeout(() => {
+      let startTime = Date.now();
+      globalStore.setConfig(globalStore.current_ins.config);
+      globalStore.setOption(globalStore.current_ins.option);
+      let endTime = Date.now();
+      console.log(`代码运行时间：${endTime - startTime}毫秒`);
+    }, 500);
   }
+});
+onUnmounted(() => {
+  ElMessage({
+    type: "success",
+    message: "您已经离开当前图表编辑，请记得保存您的工作！",
+  });
+  globalStore.ins_id = "";
+  globalStore.setConfig({
+    user_id: "",
+    chart_id: "",
+    ins_id: "",
+    title: "",
+    datafile_id: "",
+    xCols: [],
+    yCols: [],
+    columns: [],
+    dataset: [],
+  });
+  globalStore.setOption({});
+  globalStore.setCurrentIns({
+    id: "",
+    user_id: "",
+    config: undefined,
+    option: undefined
+  });
 });
 
 const saveOption = async () => {
   const token = sessionStorage.getItem(utils.StorageKeys.token);
   globalStore.config.user_id = token;
-  globalStore.config.chart_id = route.meta.chartid;
+  globalStore.config.chart_id = route.meta.chartid as string;
   console.log("当前ins_id", globalStore.ins_id);
   const resp = await $post("/api/ins/save", { ins_id: globalStore.ins_id, config: globalStore.config, option: globalStore.option });
   if (resp.code === 200) {

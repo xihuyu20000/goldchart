@@ -62,9 +62,9 @@
   </el-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { utils } from "@/utils/utils";
 import * as echarts from "echarts";
-import * as utils from "@/utils/utils.js";
 
 const globalStore = useGlobalStore();
 

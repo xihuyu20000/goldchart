@@ -1,4 +1,3 @@
-import { zip } from "@/utils/utils.js";
 export async function BasicWordCloudChart() {
   const resp = await $chart({ chart_id: "/wordcloud/BasicWordCloudChart" });
   let fruits = [

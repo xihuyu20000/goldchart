@@ -1,6 +1,5 @@
+import { menu } from "@/utils/menu";
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-
-import { space_menu_configs, chart_menu_configs } from "@/utils/menu.ts";
 
 const dynamicSpaceRoutes = () => {
   /**
@@ -10,7 +9,7 @@ const dynamicSpaceRoutes = () => {
   // 2-1 合并菜单配置
 
   // 2-2 动态路由
-  const spaceRoutes = space_menu_configs.map((item) => ({
+  const spaceRoutes = menu.space_menu_configs().map((item) => ({
     name: item.url,
     path: item.url,
     component: modules[`/src/pages${item.url}.vue`],
@@ -27,7 +26,7 @@ const dynamicChartRoutes = () => {
    */
 
   // 2-1 合并菜单配置
-  const combinedArray = Object.values(chart_menu_configs)
+  const combinedArray = Object.values(menu.chart_menu_configs())
     .filter((val) => Array.isArray(val))
     .reduce((acc, val) => acc.concat(val), []);
   // 2-2 动态路由，筛选style==='chart'

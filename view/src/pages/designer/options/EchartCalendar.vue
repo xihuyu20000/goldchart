@@ -3,7 +3,7 @@
   <div>图元配置</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const globalStore = useGlobalStore();
 
 const props = defineProps({

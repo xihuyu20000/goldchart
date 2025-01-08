@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="8">数据</el-col>
       <el-col :span="16">
-        <el-select v-model="globalStore.config.datafile_id"> <el-option v-for="item in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
+        <el-select v-model="globalStore.config.datafile_id"> <el-option v-for="(item, i) in datafilecols" :key="i" :label="item.rawname" :value="item.id" /> </el-select
       ></el-col>
     </el-row>
     <el-row>
@@ -24,86 +24,64 @@
     </el-row>
   </div>
 </template>
-<script setup>
-import * as utils from "@/utils/utils";
-import $ from "jquery";
-import { toRaw } from "vue";
+<script setup lang="ts">
+import * as echarts from "echarts";
+import { onMounted, onUnmounted, ref, toRaw, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useGlobalStore } from "@/utils/global";
+import { ElMessage } from "element-plus";
+
 const route = useRoute();
 const globalStore = useGlobalStore();
 
-// 5-4 选中的数据文件
-const activeDatafile = ref("");
 // 5-5 图表文件列数据
-const datafilecols = ref([]);
+interface Col {
+  id: string;
+  colname: string;
+  coltype: string;
+  colstyle: string;
+  datafile_id: string;
+}
+interface DatafileCol {
+  id: string;
+  rawname: string;
+  fpath: string;
+  user_id: string;
+  project_id: string;
+  project_name: string;
+  cols: Col[];
+}
+const datafilecols = ref<DatafileCol[]>([]);
 // 5-6 列数据
-const coldata = ref([]);
-
-// 监视数据文件变化
-watch(
-  () => globalStore.config.datafile_id,
-  (nv, ov) => {
-    const aaa = datafilecols.value.filter((item, index) => item.id === nv);
-    if (aaa && aaa.length > 0) {
-      coldata.value = aaa[0].cols;
-    }
-  }
-);
-
-// 监视图表配置变化
-watch(
-  () => globalStore.config,
-
-  (nv, ov) => {
-    // 1 根据xCols对xAxis赋值
-    globalStore.option.xAxis = [];
-    for (const xCol of "xCols" in globalStore.config ? globalStore.config.xCols : []) {
-      const index = globalStore.config.columns.findIndex((item) => item === xCol);
-      console.log("x轴数据", index, globalStore.config.dataset[index]);
-      const obj = {
-        show: true,
-        type: "category",
-        name: xCol,
-        nameLocation: "center",
-        nameGap: 35,
-        axisLabel: { show: true },
-        nameTextStyle: { fontSize: 20 },
-        data: globalStore.config.dataset[index],
-      };
-      globalStore.option.xAxis.push(obj);
-    }
-    // 2 根据yCols对series赋值
-    globalStore.option.series = [];
-    for (const xCol of "yCols" in globalStore.config ? globalStore.config.yCols : []) {
-      const index = globalStore.config.columns.findIndex((item) => item === xCol);
-      const obj = {
-        data: globalStore.config.dataset[index],
-        type: "line",
-        name: xCol,
-        nameGap: 50,
-        lineStyle: {},
-        label: { show: true, fontSize: 12 },
-        showSymbol: true,
-        symbolSize: 8,
-      };
-      globalStore.option.series.push(obj);
-    }
-  },
-  { deep: true }
-);
-
+const coldata = ref<Col[]>([]);
 // 加载数据文件列表
 const load_datafilecols = async () => {
   const resp = await $post("/api/datafile/loadallcols", {
     user_id: sessionStorage.getItem("token"),
   });
   if (resp.code === 200) {
-    datafilecols.value = resp.data;
+    datafilecols.value = resp.data as DatafileCol[];
+    console.log("加载数据文件列", datafilecols.value);
   }
 };
+
+// 监视数据文件变化，只有值变化后才触发重新加载列数据
+const datafileIdWatcher = watch(
+  () => globalStore.config.datafile_id,
+  (nv, ov) => {
+    if (nv && nv != ov) {
+      coldata.value = datafilecols.value.find((item: DatafileCol) => item.id === nv).cols;
+    }
+  }
+);
 
 onMounted(() => {
   // 6-3 加载数据文件列
   load_datafilecols();
+});
+onUnmounted(() => {
+  // 6-4 移除监视器
+  datafileIdWatcher();
 });
 </script>
 <style lang="less" scoped></style>

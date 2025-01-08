@@ -43,7 +43,7 @@
     </el-container>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const globalStore = useGlobalStore();
 const chartid = ref("radar/BasicRadarChart");
 let dataSource = reactive({});

@@ -36,7 +36,7 @@
     </vxe-table>
   </vxe-modal>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ElMessage } from "element-plus";
 
 import { v4 as uuidv4 } from "uuid";
