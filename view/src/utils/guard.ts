@@ -1,11 +1,11 @@
 import { useGlobalStore } from "@/utils/global";
 const globalStore = useGlobalStore();
-class guard {
-  static protect(): boolean {
+class Guard {
+  public protect(): boolean {
     console.warn("guard", toRaw(globalStore.config));
     // 1 根据xCols对xAxis赋值
     let is_xAxis_data: boolean = false;
-    if (globalStore.config.xCols.length > 0) {
+    if ("xCols" in globalStore.config && globalStore.config.xCols.length > 0) {
       globalStore.option.xAxis = [];
       for (const xCol of globalStore.config.xCols) {
         const index = globalStore.config.columns.findIndex((item) => item === xCol);
@@ -30,7 +30,7 @@ class guard {
 
     // 2 根据yCols对series赋值
     let is_series_data = false;
-    if (globalStore.config.yCols.length > 0) {
+    if ("yCols" in globalStore.config && globalStore.config.yCols.length > 0) {
       globalStore.option.series = [];
       for (const yCol of globalStore.config.yCols) {
         const index = globalStore.config.columns.findIndex((item) => item === yCol);
@@ -59,4 +59,4 @@ class guard {
   }
 }
 
-export { guard };
+export { Guard };

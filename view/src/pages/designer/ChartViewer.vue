@@ -5,10 +5,11 @@
 </template>
 <script setup lang="ts">
 import * as echarts from "echarts";
-import { guard } from "@/utils/guard";
+import { Guard } from "@/utils/guard";
 import { onMounted, onUnmounted, ref, toRaw, watch } from "vue";
 import { useGlobalStore } from "@/utils/global";
-
+const guard = new Guard();
+const globalStore = useGlobalStore();
 const uid = ref<string>(utils.uid());
 const myChart = ref<echarts.ECharts | null>(null);
 
@@ -28,19 +29,31 @@ onMounted(() => {
   init();
 });
 
-const globalStore = useGlobalStore();
 const configWatcher = watch(
   () => globalStore.config,
   (newVal, oldVal) => {
-    if (myChart.value && guard.protect(newVal, oldVal)) {
-      myChart.value.setOption(globalStore.option, { notMerge: true });
+    if (guard.protect()) {
+      renderChart();
     }
   },
   { deep: true }
 );
+const optionWatcher = watch(
+  () => globalStore.option,
+  (newVal, oldVal) => {
+    renderChart();
+  },
+  { deep: true }
+);
 
+const renderChart = () => {
+  if (myChart.value) {
+    myChart.value.setOption(globalStore.option, { notMerge: true });
+  }
+};
 onUnmounted(() => {
   configWatcher();
+  optionWatcher();
   myChart.value?.dispose();
 });
 </script>

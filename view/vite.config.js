@@ -21,7 +21,7 @@ export default defineConfig({
           "vue-router": ["useRouter", "useRoute"],
           "@/utils/bus.ts": ["emitter"],
           "@/utils/global.ts": ["useGlobalStore"],
-          "@/utils/guard.ts": ["guard"],
+          "@/utils/guard.ts": ["Guard"],
           "@/utils/http.ts": ["$post", "$upload", "$chart"],
           "@/utils/logger.ts": ["logger"],
           "@/utils/menu.ts": ["menu"],

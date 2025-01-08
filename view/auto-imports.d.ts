@@ -14,6 +14,7 @@ declare global {
   const /: typeof import('from')['/']
   const @: typeof import('from')['@']
   const EffectScope: typeof import('vue')['EffectScope']
+  const Guard: typeof import('@/utils/guard.ts')['Guard']
   const StorageKeys: typeof import('@/utils/utils.ts')['StorageKeys']
   const a: typeof import('from')['a']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
