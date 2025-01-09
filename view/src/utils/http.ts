@@ -65,7 +65,7 @@ const getHttp = (url, params): Promise<Response> => {
 };
 //封装一个post请求
 const postHttp = (url, data): Promise<Response> => {
-  logger.debug("[postHttp]", "请求路径", url, "参数", JSON.stringify(data));
+  console.log("[postHttp]", "请求路径", url, "参数", JSON.stringify(data));
   return http.post(url, data, {
     headers: {
       "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const uploadHttp = (url, data): Promise<Response> => {
 // 封装查询数据的post请求
 const chartHttp = (data): Promise<Response> => {
   data.token = sessionStorage.getItem("token");
-  logger.debug("[chartHttp]", "参数", JSON.stringify(data));
+  console.log("[chartHttp]", "参数", JSON.stringify(data));
 
   return http.post("/api/chart_getdata", data, {
     headers: {

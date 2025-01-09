@@ -25,7 +25,7 @@ def ins_load_by_userid(req_data):
 def ins_save(req_data):
     mylogger.debug(f"{req_data=}")
     ins_id = req_data['ins_id'] if req_data['ins_id'] else f'ins_{uuidid()}'
-    config = req_data['setting']
+    config = req_data['config']
     config['ins_id'] = ins_id
     option = req_data['option']
     ins_dao.save_ins(ins_id, config['user_id'], json.dumps(config), json.dumps(option))

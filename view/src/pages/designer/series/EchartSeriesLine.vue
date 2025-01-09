@@ -67,14 +67,5 @@ import { utils } from "@/utils/utils";
 import * as echarts from "echarts";
 
 const globalStore = useGlobalStore();
-
-// watch(
-//   () => globalStore.option,
-//   (newVal, oldVal) => {
-//     globalStore.setOption(newVal);
-//     console.log("newVal", newVal);
-//   },
-//   { deep: true }
-// );
 </script>
 <style lang="less" scoped></style>

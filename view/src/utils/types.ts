@@ -1,4 +1,12 @@
 import * as echarts from "echarts";
+class IChart {
+  get_option(): echarts.EChartsOption {
+    return null;
+  }
+  protect(): boolean {
+    return null;
+  }
+}
 
 type Config = {
   user_id: string;
@@ -19,4 +27,4 @@ type Ins = {
   option: echarts.EChartsOption;
 };
 
-export { Config, Ins };
+export { IChart, Config, Ins };

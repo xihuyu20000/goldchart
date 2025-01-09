@@ -39,6 +39,7 @@ declare global {
   const f: typeof import('from')['f']
   const g: typeof import('from')['g']
   const getActivePinia: typeof import('pinia')['getActivePinia']
+  const getChartWrapper: typeof import('@/utils/optionfactory.ts')['getChartWrapper']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getLocalItem: typeof import('@/utils/utils.ts')['getLocalItem']

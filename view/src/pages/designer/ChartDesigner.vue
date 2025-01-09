@@ -100,7 +100,34 @@ type resp_data_state = {
 const datasets = ref<Dataset[]>([]);
 // 禁用标志，下拉框是否禁用
 const isDisabled = ref<boolean>(false);
-
+let chart_class: IChart = null;
+onMounted(async () => {
+  // 4-1 设置页面标题
+  console.log("4-1 设置页面标题");
+  document.title = route.meta.title as string;
+  // 4-2 初始化echarts实例，并初始化图表大小
+  console.log("4-2 初始化echarts实例");
+  init_viewer();
+  // 4-3 如果current_ins为空，则为新建图表，否则为编辑图表
+  if (globalStore.ins_id === "") {
+    console.log("4-3 新建图表");
+    chart_class = getChartWrapper(route.meta.chartid as string);
+    utils.assert(chart_class instanceof IChart);
+    globalStore.setOption(toRaw(chart_class.get_option()));
+  } else {
+    console.log("4-3 加载图表");
+    // 异步执行
+    setTimeout(() => {
+      globalStore.setConfig(globalStore.current_ins.config);
+      globalStore.setOption(globalStore.current_ins.option);
+      // 因为还没有watch，必须手工调动
+      renderChart();
+    }, 500);
+  }
+  // 4-4 加载数据集列表，显示数据集下拉框
+  console.log("4-4 加载数据集列表");
+  load_datasets();
+});
 // 切换选项卡时，切换watch的执行
 const handleTabChange = (tabName: TabNameState) => {
   activeTabName.value = tabName;
@@ -111,7 +138,6 @@ const load_datasets = async () => {
   const resp = await $post("/api/dataset/loadall", { user_id: sessionStorage.getItem("token") });
   if (resp.code === 200) {
     datasets.value = resp.data as Dataset[];
-    console.log("加载数据集", datasets.value);
     isDisabled.value = true;
   }
 };
@@ -135,16 +161,12 @@ const datasetIdWatcher = watch(
     }
   }
 );
-type MenuItem = {
-  url: string;
-  label: string;
-};
 
 const configWatcher = watch(
   () => globalStore.config,
-  (newVal, oldVal) => {
+  async (newVal, oldVal) => {
     if (activeTabName.value === "config") {
-      if (guard.protect()) {
+      if (chart_class.protect()) {
         renderChart();
       }
     }
@@ -178,12 +200,12 @@ const saveOption = async () => {
   }
 };
 import * as echarts from "echarts";
-import { Guard } from "@/utils/guard";
-const guard = new Guard();
+import { IChart } from "@/utils/types";
+import { assert } from "console";
 const uid = ref<string>(utils.uid());
 const myChart = ref<echarts.ECharts | null>(null);
 
-const init = () => {
+const init_viewer = () => {
   // 2-1 初始化窗口大小
   const page = document.getElementById("chartviewer-page")!;
   let h: number = page.offsetHeight;
@@ -197,30 +219,12 @@ const init = () => {
 
 const renderChart = () => {
   if (myChart.value) {
-    myChart.value.setOption(globalStore.option, { notMerge: true });
+    setTimeout(() => {
+      myChart.value.setOption(globalStore.option, { notMerge: true });
+    }, 100);
   }
 };
 
-onMounted(async () => {
-  // 2-1 设置页面标题
-  document.title = route.meta.title as string;
-  // 2-2 如果current_ins为空，则为新建图表，否则为编辑图表
-  if (globalStore.ins_id === "") {
-    // 2-4 渲染图像
-    console.log("新建图表");
-    const option = get_options(route.meta.chartid as string);
-    console.log("option", toRaw(option));
-    globalStore.setOption(toRaw(option));
-  } else {
-    // 2-3 初始化图表配置和图表选项
-    setTimeout(() => {
-      globalStore.setConfig(globalStore.current_ins.config);
-      globalStore.setOption(globalStore.current_ins.option);
-    }, 500);
-  }
-  load_datasets();
-  init();
-});
 const init_global_config = (): void => {
   globalStore.setConfig({
     user_id: "",

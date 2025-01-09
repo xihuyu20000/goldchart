@@ -19,6 +19,7 @@ import * as river from "@/pages/charts/river/index";
 import * as wordcloud from "@/pages/charts/wordcloud/index";
 import * as map from "@/pages/charts/map/index";
 import * as polar from "@/pages/charts/polar/index";
+import { IChart } from "@/utils/types";
 
 const chart_types = {
   line,
@@ -38,13 +39,13 @@ const chart_types = {
   polar,
 };
 
-export const get_options = (chartid: string): echarts.EChartsOption => {
+export const getChartWrapper = (chartid: string): IChart => {
   /**
-   * 在echarts页面中，调用get_options函数，传入chartid
+   * 在echarts页面中，调用getChartWrapper函数，传入chartid
    * @param {string} chartid 图表的id，格式为"chart_style/subchart_name"，如"line/simple"
    * @returns {Promise<Object>} 返回一个Promise对象，resolve为echarts的option对象
    */
-  console.log(`"文件utils/optionfactory.js 函数get_options 参数chartid 值${chartid}"`);
+  console.log(`"文件utils/optionfactory.js 函数getChartWrapper 参数chartid 值${chartid}"`);
   // 1 去掉开头的"/"
   if (chartid.startsWith("/")) {
     chartid = chartid.slice(1);
@@ -56,7 +57,7 @@ export const get_options = (chartid: string): echarts.EChartsOption => {
   // 图表名称,如BasicLineChart等
   const chart_name = parts[1];
   const chart_styles = chart_types[chart_style];
-  const getOptionFunc = chart_styles[chart_name];
-  // 3 调用图表的getOptionFunc函数，获取图表的option数据
-  return getOptionFunc();
+  const getOptionClass = chart_styles[chart_name];
+  // 3 调用图表的getOptionFunc类，获取图表的option数据
+  return new getOptionClass();
 };

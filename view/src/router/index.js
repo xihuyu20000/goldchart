@@ -78,7 +78,7 @@ const router = createRouter({
 
 const whitelist = ["/Login"];
 router.beforeEach((to, from, next) => {
-  logger.debug(`[路由] 从${from.path}  到${to.path}`);
+  console.log(`[路由] 从${from.path}  到${to.path}`);
   // 3-1 白名单，放行
   if (whitelist.includes(to.path)) {
     next();

@@ -3,12 +3,8 @@
     <el-container class="cc-container">
       <el-aside class="cc-aside">
         <el-tabs model-value="Config">
-          <el-tab-pane label="说明" name="Remrak"
-            ><ChartArticle :chartid="chartid"
-          /></el-tab-pane>
-          <el-tab-pane label="数据" name="Data"
-            ><ChartData :chartid="chartid"
-          /></el-tab-pane>
+          <el-tab-pane label="说明" name="Remrak"><ChartArticle :chartid="chartid" /></el-tab-pane>
+          <el-tab-pane label="数据" name="Data"><ChartData :chartid="chartid" /></el-tab-pane>
           <el-tab-pane label="配置" name="Config">
             <el-tabs tab-position="left" model-value="title">
               <el-tab-pane label="标题" name="title">
@@ -49,7 +45,7 @@ const chartid = ref("radar/BasicRadarChart");
 let dataSource = reactive({});
 
 onMounted(async () => {
-  dataSource.value = await get_options(chartid.value);
+  dataSource.value = await getChartWrapper(chartid.value);
   globalStore.setOption(dataSource.value);
 });
 </script>

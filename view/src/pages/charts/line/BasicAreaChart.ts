@@ -1,6 +1,6 @@
 import * as echarts from "echarts";
 export function BasicAreaChart(): echarts.EChartsOption {
-  const option = {
+  const option: echarts.EChartsOption = {
     title: [
       {
         show: true,
@@ -43,7 +43,7 @@ export function BasicAreaChart(): echarts.EChartsOption {
         show: true,
         type: "category",
         name: "日期",
-        nameLocation: "center",
+        nameLocation: "middle",
         nameGap: 40,
         axisLabel: { show: true, fontSize: 12 },
         nameTextStyle: { fontSize: 12 },
@@ -56,7 +56,7 @@ export function BasicAreaChart(): echarts.EChartsOption {
       {
         show: true,
         name: "数量",
-        nameLocation: "center",
+        nameLocation: "middle",
         nameGap: 50,
         axisLabel: { show: true, fontSize: 12 },
         nameTextStyle: { fontSize: 20 },
@@ -67,11 +67,11 @@ export function BasicAreaChart(): echarts.EChartsOption {
         data: [150, 230, 224, 218, 135, 147, 260],
         type: "line",
         name: "",
-        nameGap: 50,
         lineStyle: {},
         label: { show: true, fontSize: 12 },
         showSymbol: true,
         symbolSize: 8,
+        areaStyle: {},
       },
     ],
   };

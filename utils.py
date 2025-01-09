@@ -6,6 +6,7 @@ import typing
 import uuid
 
 import pymysql
+import shortuuid
 from flask import g
 from loguru import logger
 
@@ -15,8 +16,8 @@ basepath = os.path.dirname(os.path.abspath(__file__))
 
 # 2 生成一个唯一的ID
 def uuidid():
-    return str(uuid.uuid1()).replace('-', '')
-
+    # return str(uuid.uuid1()).replace('-', '')
+    return  shortuuid.ShortUUID().random(length=22)
 
 class DbWrapper:
     lock = threading.Lock()
@@ -88,13 +89,19 @@ mylogger = LoguruFactory.create_logger("goldchart.log")
 class DatasetReader:
 
     def _run_sqlite(sql, params) -> typing.Tuple[typing.List, typing.List]:
-        conn = sqlite3.connect(params['path'], timeout=10, check_same_thread=False)
+        path = params['path'].replace('/', '\\')
+        mylogger.info(f"SQLite 数据库文件 {path}")
+
+        lock = threading.Lock()
+        lock.acquire(True)
+        conn = sqlite3.connect(path, timeout=10, check_same_thread=False)
         cs = conn.cursor()
         cs.execute(sql)
         result = db.fetchall()
         desc = cs.description
         cs.close()
         conn.close()
+        lock.release()
         return result, desc
 
     def _run_mysql(sql, params) -> typing.Tuple[typing.List, typing.List]:
