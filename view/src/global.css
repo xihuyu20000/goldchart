@@ -1,10 +1,27 @@
 :root {
   --public_chart_data_width: 150px;
-  --public_chart_option_width: 200px;
+  --public_chart_option_width: 300px;
   --public_chart_main_padding: 10px;
   --public_theme_dark_color: #f3f3f3;
-  --left_nav_width: 240px;
-  --project_options_width: 280px;
+  --left_nav_width: 200px;
+}
+/* 针对Webkit浏览器 */
+::-webkit-scrollbar {
+  width: 8px;
+  /* 设置滚动条的宽度 */
+}
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  /* 设置滚动条滑块的背景颜色 */
+  border-radius: 4px;
+  /* 设置滚动条滑块的圆角 */
+}
+/* 针对Firefox浏览器 */
+* {
+  scrollbar-width: thin;
+  /* 设置滚动条宽度为 'thin' */
+  scrollbar-color: darkgrey white;
+  /* 设置滚动条滑块和背景的颜色 */
 }
 * {
   margin: 0;

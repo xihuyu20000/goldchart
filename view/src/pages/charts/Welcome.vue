@@ -1,11 +1,11 @@
 <template>
-  <div class="welcome">
-    <div v-for="(value, name, i) in menu.chart_menu_configs()" :key="i" class="menu-title">
+  <div class="welcome-page">
+    <div v-for="(item, i) in menu.chart_menu_configs()" :key="i" class="menu-title">
       <div class="menu-label">
-        {{ name }}
+        {{ item.name }}
       </div>
-      <a :href="item.url" v-for="(item, j) in value" :key="j">
-        {{ item.label }}
+      <a :href="sub_item.url" v-for="(sub_item, j) in item.values" :key="j">
+        {{ sub_item.label }}
       </a>
     </div>
   </div>
@@ -19,7 +19,7 @@ const changeUrl = (path) => {
 };
 </script>
 <style lang="less" scoped>
-.welcome {
+.welcome-page {
   width: 100%;
   height: 100%;
   padding: 20px;

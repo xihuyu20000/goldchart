@@ -24,13 +24,8 @@ const dynamicChartRoutes = () => {
   /**
    * 动态图表路由
    */
-
-  // 2-1 合并菜单配置
-  const combinedArray = Object.values(menu.chart_menu_configs())
-    .filter((val) => Array.isArray(val))
-    .reduce((acc, val) => acc.concat(val), []);
-  // 2-2 动态路由，筛选style==='chart'
-  const chartRoutes = combinedArray.map((item) => ({
+  // 2-1 动态路由，筛选style==='chart'
+  const chartRoutes = menu.chart_menu_configs_array().map((item) => ({
     name: item.url,
     path: item.url,
     component: () => import("@/pages/designer/ChartDesigner.vue"),

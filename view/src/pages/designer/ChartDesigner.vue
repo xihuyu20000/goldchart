@@ -1,9 +1,9 @@
 <template>
-  <div class="chart-page">
-    <el-container class="chart-container">
-      <el-aside class="chart-option">
-        <ToggleButton :min="10" :max="200"></ToggleButton>
-        <div class="chart-title">
+  <div class="designer-page">
+    <el-container class="designer-container">
+      <el-aside class="designer-config-option">
+        <ToggleButton :min="15" :max="200"></ToggleButton>
+        <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
         <el-tabs tab-position="top" :stretch="true" @tab-change="handleTabChange">
@@ -17,7 +17,7 @@
             <el-row>
               <el-col :span="8">X轴</el-col>
               <el-col :span="16">
-                <el-select v-model="globalStore.config.xCols" multiple>
+                <el-select v-model="globalStore.config.xCols" multiple :disabled="isDisabled">
                   <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
                 </el-select>
               </el-col>
@@ -25,13 +25,20 @@
             <el-row>
               <el-col :span="8">Y轴</el-col>
               <el-col :span="16">
-                <el-select v-model="globalStore.config.yCols" multiple>
+                <el-select v-model="globalStore.config.yCols" multiple :disabled="isDisabled">
                   <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
                 </el-select>
               </el-col>
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="属性" name="option">
+            <el-row>
+              <el-col :span="8">图表</el-col>
+              <el-col :span="16">
+                <el-select v-model="globalStore.config.chart_id"> <el-option v-for="(item, i) in menu.chart_menu_configs_array()" :key="i" :label="item.label" :value="item.url" /> </el-select
+              ></el-col>
+            </el-row>
+            <hr />
             <el-tabs tab-position="left" model-value="title">
               <el-tab-pane label="标题" name="title">
                 <EchartTitle />
@@ -61,59 +68,60 @@
           <el-button type="primary" @click="saveOption">保存图表</el-button>
         </div>
       </el-aside>
-      <el-main class="chart-main">
-        <ChartViewer />
+      <el-main class="designer-main">
+        <div id="chartviewer-page">
+          <div :id="uid" class="chartviewer-chart"></div>
+        </div>
       </el-main>
     </el-container>
   </div>
   <!-- 添加这一行 -->
 </template>
 <script setup lang="ts">
-import { Config, Ins } from "@/utils/types";
+import { menu } from "@/utils/menu";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
 const route = useRoute();
 const globalStore = useGlobalStore();
 
-const handleTabChange = (tabName: string) => {
-  console.log("切换选项卡", tabName);
-};
+type TabNameState = "config" | "option";
+const activeTabName = ref<TabNameState>(null);
 
-// 5-5 图表文件列数据
-type Col = {
-  id: string;
-  colname: string;
-  coltype: string;
-  colstyle: string;
-  dataset_id: string;
-};
 type Dataset = {
   id: string;
   cunnect_id: string;
   sql: string;
   name: string;
 };
+type resp_data_state = {
+  columns: string[];
+  datas: any[];
+};
 const datasets = ref<Dataset[]>([]);
-// 5-6 列数据
-const coldata = ref<Col[]>([]);
-// **** 加载数据文件列表，当改变下拉表时，会对config.dataset_id赋值，引起变化
+// 禁用标志，下拉框是否禁用
+const isDisabled = ref<boolean>(false);
+
+// 切换选项卡时，切换watch的执行
+const handleTabChange = (tabName: TabNameState) => {
+  activeTabName.value = tabName;
+};
+
+// 加载数据集列表，当改变下拉表时，会对config.dataset_id赋值，引起变化
 const load_datasets = async () => {
   const resp = await $post("/api/dataset/loadall", { user_id: sessionStorage.getItem("token") });
   if (resp.code === 200) {
     datasets.value = resp.data as Dataset[];
     console.log("加载数据集", datasets.value);
+    isDisabled.value = true;
   }
 };
-type resp_data_state = {
-  columns: string[];
-  datas: any[];
-};
+
 // 监视数据文件变化，只有值变化后才触发重新加载列数据
 const datasetIdWatcher = watch(
   () => globalStore.config.dataset_id,
   async (nv, ov) => {
-    console.log("数据集变化", nv, ov);
-    if (globalStore.config.dataset_id.startsWith("dataset")) {
+    if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
+      isDisabled.value = true;
       const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
       if (resp.code === 200) {
         const resp_data = resp.data as resp_data_state;
@@ -121,59 +129,37 @@ const datasetIdWatcher = watch(
         globalStore.config.columns = resp_data.columns;
         globalStore.config.datas = resp_data.datas;
 
+        isDisabled.value = false;
         console.log("加载列数据", toRaw(globalStore.config));
       }
     }
   }
 );
+type MenuItem = {
+  url: string;
+  label: string;
+};
 
-onMounted(async () => {
-  // 2-1 设置页面标题
-  document.title = route.meta.title as string;
-  // 2-2 如果current_ins为空，则为新建图表，否则为编辑图表
-  if (globalStore.ins_id === "") {
-    // 2-4 渲染图像
-    console.log("新建图表");
-    const option = get_options(route.meta.chartid as string);
-    console.log("option", toRaw(option));
-    globalStore.setOption(toRaw(option));
-  } else {
-    // 2-3 初始化图表配置和图表选项
-    setTimeout(() => {
-      let startTime = Date.now();
-      globalStore.setConfig(globalStore.current_ins.config);
-      globalStore.setOption(globalStore.current_ins.option);
-      let endTime = Date.now();
-      console.log(`代码运行时间：${endTime - startTime}毫秒`);
-    }, 500);
-  }
-  load_datasets();
-});
-onUnmounted(() => {
-  ElMessage({
-    type: "success",
-    message: "您已经离开当前图表编辑，请记得保存您的工作！",
-  });
-  globalStore.ins_id = "";
-  globalStore.setConfig({
-    user_id: "",
-    chart_id: "",
-    ins_id: "",
-    title: "",
-    datafile_id: "",
-    xCols: [],
-    yCols: [],
-    columns: [],
-    dataset: [],
-  });
-  globalStore.setOption({});
-  globalStore.setCurrentIns({
-    id: "",
-    user_id: "",
-    config: undefined,
-    option: undefined,
-  });
-});
+const configWatcher = watch(
+  () => globalStore.config,
+  (newVal, oldVal) => {
+    if (activeTabName.value === "config") {
+      if (guard.protect()) {
+        renderChart();
+      }
+    }
+  },
+  { deep: true }
+);
+const optionWatcher = watch(
+  () => globalStore.option,
+  (newVal, oldVal) => {
+    if (activeTabName.value === "option") {
+      renderChart();
+    }
+  },
+  { deep: true }
+);
 
 const saveOption = async () => {
   const token = sessionStorage.getItem(utils.StorageKeys.token);
@@ -191,5 +177,134 @@ const saveOption = async () => {
     });
   }
 };
+import * as echarts from "echarts";
+import { Guard } from "@/utils/guard";
+const guard = new Guard();
+const uid = ref<string>(utils.uid());
+const myChart = ref<echarts.ECharts | null>(null);
+
+const init = () => {
+  // 2-1 初始化窗口大小
+  const page = document.getElementById("chartviewer-page")!;
+  let h: number = page.offsetHeight;
+  let w: number = page.offsetWidth;
+  // 2-2 基于准备好的dom，初始化echarts实例
+  myChart.value = echarts.init(document.getElementById(uid.value) as HTMLDivElement, null, {
+    width: w,
+    height: h,
+  });
+};
+
+const renderChart = () => {
+  if (myChart.value) {
+    myChart.value.setOption(globalStore.option, { notMerge: true });
+  }
+};
+
+onMounted(async () => {
+  // 2-1 设置页面标题
+  document.title = route.meta.title as string;
+  // 2-2 如果current_ins为空，则为新建图表，否则为编辑图表
+  if (globalStore.ins_id === "") {
+    // 2-4 渲染图像
+    console.log("新建图表");
+    const option = get_options(route.meta.chartid as string);
+    console.log("option", toRaw(option));
+    globalStore.setOption(toRaw(option));
+  } else {
+    // 2-3 初始化图表配置和图表选项
+    setTimeout(() => {
+      globalStore.setConfig(globalStore.current_ins.config);
+      globalStore.setOption(globalStore.current_ins.option);
+    }, 500);
+  }
+  load_datasets();
+  init();
+});
+const init_global_config = (): void => {
+  globalStore.setConfig({
+    user_id: "",
+    chart_id: "",
+    ins_id: "",
+    title: "",
+    dataset_id: "",
+    xCols: [],
+    yCols: [],
+    columns: [],
+    datas: [],
+  });
+};
+const init_global_option = (): void => {
+  globalStore.setOption({});
+};
+
+const init_global_ins = (): void => {
+  globalStore.setCurrentIns({
+    id: "",
+    user_id: "",
+    config: undefined,
+    option: undefined,
+  });
+};
+onUnmounted(() => {
+  ElMessage({
+    type: "success",
+    message: "您已经离开当前图表编辑，请记得保存您的工作！",
+  });
+  globalStore.ins_id = "";
+  init_global_config();
+  init_global_option();
+  init_global_ins();
+  datasetIdWatcher();
+  configWatcher();
+  optionWatcher();
+  myChart.value.dispose();
+});
 </script>
-<style lang="less" src="./ChartDesigner.less" scoped></style>
+<style lang="less" scoped>
+.designer-page {
+  height: 100%;
+  background-color: rgba(230, 250, 230, 0.5);
+
+  .designer-container {
+    width: 100%;
+    height: 100%;
+
+    .designer-config-option {
+      width: var(--public_chart_option_width);
+      height: 100%;
+      padding: 2px;
+      position: relative;
+      .designer-title {
+        margin-top: 30px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        width: 200px;
+        font-weight: bolder;
+      }
+      .save-option {
+        width: var(--left_nav_width);
+        .el-button {
+          width: 100px;
+          margin: 10px auto 0;
+          display: block;
+        }
+      }
+    }
+
+    .designer-main {
+      width: calc(100% - var(--public_chart_option_width));
+      height: 100%;
+      padding: 5px;
+      background-color: #d7d6d6;
+
+      #chartviewer-page {
+        width: calc(100%);
+        height: calc(100%);
+        background-color: #fff !important;
+      }
+    }
+  }
+}
+</style>

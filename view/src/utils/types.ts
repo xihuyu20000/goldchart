@@ -18,9 +18,5 @@ type Ins = {
   config: Config;
   option: echarts.EChartsOption;
 };
-type MenuItem = {
-  url: string;
-  label: string;
-};
 
-export { Config, Ins, MenuItem };
+export { Config, Ins };

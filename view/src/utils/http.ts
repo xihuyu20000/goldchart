@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { ElLoading } from "element-plus";
 import { logger } from "./logger";
 
 interface Response {
@@ -11,7 +12,7 @@ let http: AxiosInstance = axios.create({
   baseURL: "/api",
   timeout: 10000,
 });
-let LoadingInstance;
+let loading_el = undefined;
 http.interceptors.request.use(
   (config) => {
     // let token = XXX  // 获取token 进行验证
@@ -19,6 +20,7 @@ http.interceptors.request.use(
     // setting.headers['Content-Type'] = 'application/json;charset=UTF-8'
     // 在发送请求之前做些什么
     // console.log('request', setting)
+    loading_el = ElLoading.service({ fullscreen: true, text: "加载中..." });
     return config;
   },
   (error) => {
@@ -33,11 +35,13 @@ http.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
     // console.log('response', response)
+    loading_el.close();
     const { status, data = {}, config = {} } = response;
     return Promise.resolve(response.data);
   },
   (error) => {
     // 对响应错误做点什么
+    loading_el.close();
     const { status, data = {}, config = {} } = error.response;
     switch (status) {
       case 400:

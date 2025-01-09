@@ -1,4 +1,5 @@
-# goldchart
+# 可选的  https://ppchart.com/#/
+# goldchart   
 # 1 完整流程
 ## 1.1 点击所有图表的url时，显示 ChartDesigner.vue 
 ## 1.2 在ChartDesigner.vue中，点击图表的url时，显示 ChartDesigner.vue
