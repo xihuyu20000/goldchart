@@ -1,2 +1,2 @@
-export { SimpleParallelChart } from "@/pages/charts/parallel/SimpleParallelChart";
+export { BasicParallelChart } from "@/pages/charts/parallel/BasicParallelChart";
 export { AqiParallelChart } from "@/pages/charts/parallel/AqiParallelChart";

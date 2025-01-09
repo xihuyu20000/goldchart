@@ -1,6 +1,7 @@
 type MenuItem = {
   url: string;
   label: string;
+  rules?: { x: number[]; y: number[] };
 };
 type ChartStyle = {
   name: string;
@@ -41,100 +42,27 @@ class menu {
       {
         name: "折线图",
         values: [
-          { url: "/line/BasicLineChart", label: "基础折线图" },
-          { url: "/line/BasicAreaChart", label: "基础面积图" },
-          { url: "/line/MultiLinesChart", label: "多折线图" },
+          { url: "/line/BasicLineChart", label: "基础折线图", rules: { x: [1], y: [1] } },
+          { url: "/line/BasicAreaChart", label: "基础面积图", rules: { x: [1], y: [1] } },
+          { url: "/line/StackedLineChart", label: "堆叠折线图" },
           { url: "/line/StackedAreaChart", label: "堆叠面积图" },
-          {
-            url: "/line/GradientStackedAreaChart",
-            label: "渐变堆叠面积图",
-          },
-          { url: "/line/BumpChart", label: "凹凸图" },
-          { url: "/line/TemperatureChangeChart", label: "气温变化" },
-          { url: "/line/AreaPiecesChart", label: "折线图高亮面积图" },
-          { url: "/line/GradientLineChart", label: "渐变折线图" },
-          {
-            url: "/line/DistributionOfElectricityChart",
-            label: "用电量分布图",
-          },
-          {
-            url: "/line/RainfallAndEvaporationChart",
-            label: "降雨量和蒸发量",
-          },
-          {
-            url: "/line/RainfallAndFlowChart",
-            label: "降雨量和流量",
-          },
-          { url: "/line/BeijingAQIChart", label: "Beijing AQI" },
         ],
       },
       {
         name: "柱状图",
-        values: [
-          { url: "/bar/BasicBarChart", label: "基础柱状图" },
-          { url: "/bar/BgcolorBarChart", label: "柱状图背景色" },
-          { url: "/bar/BarColorBarChart", label: "柱状图颜色" },
-          { url: "/bar/WaterfallChart", label: "瀑布图" },
-          {
-            url: "/bar/NegativeValueBarChart",
-            label: "正负值柱状图",
-          },
-          {
-            url: "/bar/NegativeValueHorizontalBarChart",
-            label: "正负值多系列条形图",
-          },
-          {
-            url: "/bar/WorldPopulationBarChart",
-            label: "世界人口条状图",
-          },
-          { url: "/bar/LabelBarChart", label: "柱状图标签" },
-          { url: "/bar/StackedColumnChart", label: "堆叠柱状图" },
-          {
-            url: "/bar/StackedHorizontalBarChart",
-            label: "堆叠条形图",
-          },
-          { url: "/bar/MultipleYBarChart", label: "双Y轴折柱混合图" },
-        ],
+        values: [{ url: "/bar/BasicBarChart", label: "基础柱状图" }],
       },
       {
         name: "饼状图",
         values: [
           { url: "/pie/BasicPieChart", label: "基础饼图" },
-          { url: "/pie/RoundedCornerPieChart", label: "圆角饼图" },
           { url: "/pie/DoughnutChart", label: "甜甜圈图" },
-          { url: "/pie/HalfDoughnutChart", label: "半环图" },
           { url: "/pie/RoseChart", label: "玫瑰图" },
         ],
       },
       {
         name: "散点图",
-        values: [
-          { url: "/scatter/BasicScatterChart", label: "基础散点图" },
-          {
-            url: "/scatter/AnscombeQuartetChart",
-            label: "安斯科目四重奏",
-          },
-          {
-            url: "/scatter/ClusterScatterChart",
-            label: "聚类散点图",
-          },
-          {
-            url: "/scatter/PunchCardScatterChart",
-            label: "打卡散点图",
-          },
-          {
-            url: "/scatter/SingleAxisScatterChart",
-            label: "单轴散点图",
-          },
-          {
-            url: "/scatter/LabelRightScatterChart",
-            label: "标签右对齐散点图",
-          },
-          {
-            url: "/scatter/LabelTopScatterChart",
-            label: "标签顶对齐散点图",
-          },
-        ],
+        values: [{ url: "/scatter/BasicScatterChart", label: "基础散点图" }],
       },
       { name: "雷达图", values: [{ url: "/radar/BasicRadarChart", label: "基础雷达图" }] },
       {
@@ -148,21 +76,7 @@ class menu {
       },
       {
         name: "关系图",
-        values: [
-          { url: "/graph/SimpleGraphChart", label: "基础关系图" },
-          {
-            url: "/graph/CartesianGraphChart",
-            label: "笛卡尔坐标关系图",
-          },
-          {
-            url: "/graph/ForceLayoutGraphChart",
-            label: "力布局关系图",
-          },
-          {
-            url: "/graph/CircleLayoutGraphChart",
-            label: "圆布局关系图",
-          },
-        ],
+        values: [{ url: "/graph/BasicGraphChart", label: "基础关系图" }],
       },
       {
         name: "树状图",
@@ -179,7 +93,7 @@ class menu {
         name: "平行图",
         values: [
           {
-            url: "/parallel/SimpleParallelChart",
+            url: "/parallel/BasicParallelChart",
             label: "基础平行坐标图",
           },
           {
@@ -192,32 +106,16 @@ class menu {
         name: "桑吉图",
         values: [
           {
-            url: "/sankey/SimpleSankeyChart",
+            url: "/sankey/BasicSankeyChart",
             label: "基础桑吉图",
-          },
-          {
-            url: "/sankey/GradientSankeyChart",
-            label: "桑吉图渐变色",
-          },
-          {
-            url: "/sankey/LabelLeftSankeyChart",
-            label: "桑吉图标签左对齐",
           },
         ],
       },
       {
         name: "漏斗图",
-        values: [
-          { url: "/funnel/SimpleFunnelChart", label: "基础漏斗图" },
-          {
-            url: "/funnel/CustomizeFunnelChart",
-            label: "订制漏斗图",
-          },
-          { url: "/funnel/CompareFunnelChart", label: "对比漏斗图" },
-          { url: "/funnel/MultipleFunnelChart", label: "多个漏斗图" },
-        ],
+        values: [{ url: "/funnel/BasicFunnelChart", label: "基础漏斗图" }],
       },
-      { name: "河流图", values: [{ url: "/river/SimpleRiverChart", label: "基础河流图" }] },
+      { name: "河流图", values: [{ url: "/river/BasicRiverChart", label: "基础河流图" }] },
       {
         name: "词云图",
         values: [
@@ -233,17 +131,11 @@ class menu {
       },
       {
         name: "地图",
-        values: [{ url: "/map/SimpleWorldMapChart", label: "基础世界地图" }],
+        values: [{ url: "/map/BasicWorldMapChart", label: "基础世界地图" }],
       },
       {
         name: "极坐标图",
-        values: [
-          { url: "/polar/RadialPolarBarChart", label: "极坐标柱图" },
-          {
-            url: "/polar/RadialPolarStackedBarChart",
-            label: "极坐标堆叠图",
-          },
-        ],
+        values: [{ url: "/polar/RadialPolarBarChart", label: "极坐标柱图" }],
       },
     ];
   };

@@ -4,13 +4,13 @@ import * as echarts from "echarts";
 import { useGlobalStore } from "@/utils/global";
 const globalStore = useGlobalStore();
 
-export class StackedAreaChart extends IChart {
+export class StackedLineChart extends IChart {
   get_option(): echarts.EChartsOption {
     const option: echarts.EChartsOption = {
       title: [
         {
           show: false,
-          text: "堆叠面积图",
+          text: "堆叠折线图",
           top: "2%",
           left: "50%",
           textAlign: "center",
@@ -70,7 +70,6 @@ export class StackedAreaChart extends IChart {
           name: "Email",
           type: "line",
           stack: "Total",
-          areaStyle: {},
           data: [120, 132, 101, 134, 90, 230, 210],
           label: { show: true, fontSize: 12 },
         },
@@ -78,7 +77,6 @@ export class StackedAreaChart extends IChart {
           name: "Union Ads",
           type: "line",
           stack: "Total",
-          areaStyle: {},
           data: [220, 182, 191, 234, 290, 330, 310],
           label: { show: true, fontSize: 12 },
         },
@@ -86,7 +84,6 @@ export class StackedAreaChart extends IChart {
           name: "Video Ads",
           type: "line",
           stack: "Total",
-          areaStyle: {},
           data: [150, 232, 201, 154, 190, 330, 410],
           label: { show: true, fontSize: 12 },
         },
@@ -94,7 +91,6 @@ export class StackedAreaChart extends IChart {
           name: "Direct",
           type: "line",
           stack: "Total",
-          areaStyle: {},
           data: [320, 332, 301, 334, 390, 330, 320],
           label: { show: true, fontSize: 12 },
         },
@@ -102,7 +98,6 @@ export class StackedAreaChart extends IChart {
           name: "Search Engine",
           type: "line",
           stack: "Total",
-          areaStyle: {},
           data: [820, 932, 901, 934, 1290, 1330, 1320],
           label: { show: true, fontSize: 12 },
         },

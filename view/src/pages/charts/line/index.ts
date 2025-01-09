@@ -1,13 +1,4 @@
 export { BasicLineChart } from "@/pages/charts/line/BasicLineChart";
 export { BasicAreaChart } from "@/pages/charts/line/BasicAreaChart";
-export { MultiLinesChart } from "@/pages/charts/line/MultiLinesChart";
+export { StackedLineChart } from "@/pages/charts/line/StackedLineChart";
 export { StackedAreaChart } from "@/pages/charts/line/StackedAreaChart";
-export { GradientStackedAreaChart } from "@/pages/charts/line/GradientStackedAreaChart";
-export { BumpChart } from "@/pages/charts/line/BumpChart";
-export { TemperatureChangeChart } from "@/pages/charts/line/TemperatureChangeChart";
-export { AreaPiecesChart } from "@/pages/charts/line/AreaPiecesChart";
-export { GradientLineChart } from "@/pages/charts/line/GradientLineChart";
-export { DistributionOfElectricityChart } from "@/pages/charts/line/DistributionOfElectricityChart";
-export { RainfallAndEvaporationChart } from "@/pages/charts/line/RainfallAndEvaporationChart";
-export { RainfallAndFlowChart } from "@/pages/charts/line/RainfallAndFlowChart";
-export { BeijingAQIChart } from "@/pages/charts/line/BeijingAQIChart";

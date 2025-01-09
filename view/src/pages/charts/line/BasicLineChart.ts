@@ -84,7 +84,7 @@ export class BasicLineChart extends IChart {
   }
 
   protect(): boolean {
-    console.warn("guard", toRaw(globalStore.config));
+    console.warn("protect", toRaw(globalStore.config));
     // 1 根据xCols对xAxis赋值
     let is_xAxis_data: boolean = false;
     if ("xCols" in globalStore.config && globalStore.config.xCols.length > 0) {
@@ -133,9 +133,9 @@ export class BasicLineChart extends IChart {
         globalStore.option.series.push(obj);
       }
     }
-    console.warn("guard", is_xAxis_data, is_series_data);
+    console.warn("protect", is_xAxis_data, is_series_data);
     if (is_xAxis_data && is_series_data) {
-      console.warn("guard", "数据完整", toRaw(globalStore.option));
+      console.warn("protect", "数据完整", toRaw(globalStore.option));
       return true;
     }
     return false;

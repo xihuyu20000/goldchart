@@ -1,1 +1,1 @@
-export { SimpleRiverChart } from "@/pages/charts/river/SimpleRiverChart";
+export { BasicRiverChart } from "@/pages/charts/river/BasicRiverChart";

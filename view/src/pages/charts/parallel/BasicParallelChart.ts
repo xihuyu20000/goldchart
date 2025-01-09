@@ -3,13 +3,14 @@ import * as echarts from "echarts";
 import { useGlobalStore } from "@/utils/global";
 const globalStore = useGlobalStore();
 
-export class RadialPolarBarChart extends IChart {
+export class BasicParallelChart extends IChart {
   get_option(): echarts.EChartsOption {
     const option: echarts.EChartsOption = {
+      columns: [],
       title: [
         {
           show: true,
-          text: "极坐标柱图",
+          text: "基础平行坐标图",
           top: "2%",
           left: "50%",
           textAlign: "center",
@@ -22,31 +23,29 @@ export class RadialPolarBarChart extends IChart {
           },
         },
       ],
-      polar: {
-        radius: [30, "80%"],
-      },
-      radiusAxis: {
-        max: 4,
-      },
-      angleAxis: {
-        type: "category",
-        data: ["a", "b", "c", "d"],
-        startAngle: 75,
-      },
-      tooltip: {},
-      series: {
-        type: "bar",
-        data: [2, 1.2, 2.4, 3.6],
-        coordinateSystem: "polar",
-        label: {
-          show: true,
-          position: "middle",
-          formatter: "{b}: {c}",
+      parallelAxis: [
+        { dim: 0, name: "Price" },
+        { dim: 1, name: "Net Weight" },
+        { dim: 2, name: "Amount" },
+        {
+          dim: 3,
+          name: "Score",
+          type: "category",
+          data: ["Excellent", "Good", "OK", "Bad"],
         },
+      ],
+      series: {
+        type: "parallel",
+        lineStyle: {
+          width: 4,
+        },
+        data: [
+          [12.99, 100, 82, "Good"],
+          [9.99, 80, 77, "OK"],
+          [20, 120, 60, "Excellent"],
+        ],
       },
-      animation: false,
     };
-
     return option;
   }
   protect(): boolean {
