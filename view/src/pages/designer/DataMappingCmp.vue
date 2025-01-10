@@ -7,7 +7,6 @@
 </template>
 <script setup lang="ts">
 const innerDragging = ref(false);
-type FieldItem = { label: string; value: any };
 const props = defineProps({
   name: {
     type: String,
@@ -18,8 +17,19 @@ const props = defineProps({
     required: true,
   },
 });
+const globalStore = useGlobalStore();
 const newFieldList = ref<String[]>([]);
 const FieldItemValues: CallableFunction = inject("FieldItemValues");
+
+onMounted(() => {
+  // 如果有ins，则从ins中获取数据
+  if (props.name === "xAxis") {
+    newFieldList.value = globalStore.config.xCols;
+  } else if (props.name === "yAxis") {
+    newFieldList.value = globalStore.config.yCols;
+  }
+});
+
 // 切换数据集时，监听props.fieldList变化，清空newFieldList
 watch(
   () => props.fieldList,
@@ -35,6 +45,7 @@ watch(
   },
   { deep: true }
 );
+
 const handleDragStart = (event: DragEvent) => {
   if (event.target instanceof HTMLElement) {
     if ("field-wrapper" === event.target.getAttribute("class")) {

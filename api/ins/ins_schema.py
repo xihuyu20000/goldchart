@@ -7,3 +7,7 @@ ins_config_option_schema = {
     'config': webargs.fields.Dict(required=True),
     'option': webargs.fields.Dict(required=True)
 }
+
+ins_id_schema= {
+    'ins_id': webargs.fields.Str(required=True, validate=lambda x: len(x) > 0)
+}

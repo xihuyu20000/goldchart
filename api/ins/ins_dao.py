@@ -19,3 +19,8 @@ def select_by_userid(user_id):
     data = g.db.fetchall()
     mylogger.debug(f"查询所有的实例 {data=}")
     return data
+
+
+def delete_ins(ins_id: str):
+    g.db.execute("DELETE FROM ins WHERE id=?", (ins_id,))
+    g.db.commit()

@@ -103,7 +103,7 @@ const gridOptions = reactive({
     { type: "seq", width: 70 },
     { field: "name", title: "名称", editRender: { name: "input" } },
     { field: "type", title: "类型", editRender: typeListEditRender },
-    { field: "params", title: "参数", editRender: { name: "input" } },
+    { field: "params", title: "参数", editRender: { name: "textarea" } },
     { title: "操作", slots: { default: "action" } },
   ],
   proxyConfig: {

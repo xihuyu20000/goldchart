@@ -3,7 +3,7 @@
     <el-container class="designer-container">
       <!-- 左侧数据集选择区 -->
       <el-aside class="designer-dataset-option">
-        <ToggleButton :min="15" :max="200"> </ToggleButton>
+        <ToggleButton :min="20" :max="200"> </ToggleButton>
         <div class="left-part">
           <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
             <el-option :value="item.id" :label="item.name" v-for="item in datasetList" :key="item.id"></el-option>
@@ -15,7 +15,7 @@
       </el-aside>
       <!-- 左侧图表配置区 -->
       <el-aside class="designer-config-option">
-        <ToggleButton :min="15" :max="200"></ToggleButton>
+        <ToggleButton :min="20" :max="200"></ToggleButton>
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
@@ -96,6 +96,7 @@ type Dataset = {
   name: string;
 };
 type ResponseState = {
+  ins_id?:string;
   columns: string[];
   datas: any[];
 };
@@ -212,9 +213,10 @@ const saveOption = async () => {
   console.log("当前ins_id", globalStore.ins_id);
   const resp = await $post("/api/ins/save", { ins_id: globalStore.ins_id, config: globalStore.config, option: globalStore.option });
   if (resp.code === 200) {
+    const resp_data = resp.data as ResponseState;
     // 保存成功后，更新ins_id，否则重复保存时，记录会重复
-    globalStore.ins_id = resp.data.ins_id;
-    globalStore.config.ins_id = resp.data.ins_id;
+    globalStore.ins_id = resp_data.ins_id;
+    globalStore.config.ins_id = resp_data.ins_id;
     ElMessage({
       type: "success",
       message: "保存成功",
@@ -358,7 +360,7 @@ onUnmounted(() => {
   margin-top: 30px;
   color: red;
   .field-list {
-    margin-top: 20px;
+    margin-top: 5px;
     min-height: 50px;
     .field-item {
       border: 2px solid #fff;

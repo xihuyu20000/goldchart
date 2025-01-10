@@ -115,7 +115,7 @@ const gridOptions = reactive({
     { type: "seq", width: 70 },
     { field: "name", title: "名称", editRender: { name: "input" } },
     { field: "connect_id", title: "连接", editRender: connectListEditRender },
-    { field: "sql", title: "查询语句", editRender: { name: "input" } },
+    { field: "sql", title: "查询语句", editRender: { name: "textarea" } },
     { title: "操作", slots: { default: "action" } },
   ],
   proxyConfig: {

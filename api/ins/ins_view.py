@@ -4,7 +4,7 @@ import webargs
 from flask import Response, Blueprint
 
 from api.ins import ins_dao
-from api.ins.ins_schema import ins_config_option_schema, ins_user_id_schema
+from api.ins.ins_schema import ins_config_option_schema, ins_user_id_schema, ins_id_schema
 from utils import mylogger, uuidid
 
 ins_page = Blueprint('ins_page', __name__)
@@ -30,5 +30,20 @@ def ins_save(req_data):
     option = req_data['option']
     ins_dao.save_ins(ins_id, config['user_id'], json.dumps(config), json.dumps(option))
     data = {'code': 200, 'data': {'ins_id': ins_id}}
+    json_response = json.dumps(data, ensure_ascii=False)
+    return Response(json_response, content_type='application/json')
+
+
+@ins_page.post('/ins/remove')
+@webargs.flaskparser.use_args(ins_id_schema, location='json')
+def ins_remove(req_data):
+    """
+    根据ins_id删除该文件
+    :param req_data:
+    :return:
+    """
+    ins_id = req_data['ins_id']
+    ins_dao.delete_ins(ins_id)
+    data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')

@@ -6,6 +6,7 @@
       <vxe-column field="active" title="按钮" width="200">
         <template #default="{ row }">
           <vxe-button mode="text" status="warning" @click="editIns(row)">编辑</vxe-button>
+          <vxe-button mode="text" status="error" @click="removeIns(row)">删除</vxe-button>
         </template>
       </vxe-column>
     </vxe-table>
@@ -30,7 +31,7 @@ onMounted(async () => {
     console.log("2-2 实例列表获取成功", resp.data);
     tableData.value = resp.data.map((item, i, arr) => {
       return {
-        ins_id: item.id,
+        id: item.id,
         config: JSON.parse(item.config),
         option: JSON.parse(item.option),
       };
@@ -44,6 +45,21 @@ const editIns = (ins: Ins) => {
   globalStore.setCurrentIns(ins);
   console.log("2-2 跳转到编辑器页面");
   router.push(ins.config.chart_id);
+};
+const removeIns = async (ins: Ins) => {
+  console.log("2-1 删除实例", ins);
+  const resp = await $post("/api/ins/remove", {
+    ins_id: ins.id,
+  });
+  if (resp.code === 200) {
+    tableData.value = tableData.value.filter((item) => {
+      item.id !== ins.id;
+    });
+    ElMessage.success("删除成功");
+  } else {
+    console.log("删除失败");
+    ElMessage.error("删除失败");
+  }
 };
 </script>
 
