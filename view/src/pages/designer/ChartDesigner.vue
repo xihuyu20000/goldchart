@@ -1,6 +1,15 @@
 <template>
   <div class="designer-page">
     <el-container class="designer-container">
+      <el-aside class="designer-dataset-option">
+        <ToggleButton :min="15" :max="200"> </ToggleButton>
+        <el-select v-model="datasetId" @change="handleDatasetChange">
+          <el-option :value="item.id" :label="item.name" v-for="item in datasetList" :key="item.id"></el-option>
+        </el-select>
+        <div class="field-list">
+          <div class="field-item" draggable="true" v-for="(item, i) in fieldList" :key="i" :i="i" @dragstart="handleDragStart">{{ item.label }}</div>
+        </div>
+      </el-aside>
       <el-aside class="designer-config-option">
         <ToggleButton :min="15" :max="200"></ToggleButton>
         <div class="designer-title">
@@ -11,23 +20,25 @@
             <el-row>
               <el-col :span="8">数据集</el-col>
               <el-col :span="16">
-                <el-select v-model="globalStore.config.dataset_id"> <el-option v-for="(item, i) in datasets" :key="i" :label="item.name" :value="item.id" /> </el-select
+                <el-select v-model="globalStore.config.dataset_id"> <el-option v-for="(item, i) in datasetList" :key="i" :label="item.name" :value="item.id" /> </el-select
               ></el-col>
             </el-row>
             <el-row>
               <el-col :span="8">X轴</el-col>
               <el-col :span="16">
-                <el-select v-model="globalStore.config.xCols" multiple :disabled="isDisabled">
+                <FieldItem name="xAxis" :fieldList="fieldList"></FieldItem>
+                <!-- <el-select v-model="globalStore.config.xCols" multiple :disabled="isDisabled">
                   <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
-                </el-select>
+                </el-select> -->
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">Y轴</el-col>
               <el-col :span="16">
-                <el-select v-model="globalStore.config.yCols" multiple :disabled="isDisabled">
+                <FieldItem name="yAxis" :fieldList="fieldList"></FieldItem>
+                <!-- <el-select v-model="globalStore.config.yCols" multiple :disabled="isDisabled">
                   <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
-                </el-select>
+                </el-select> -->
               </el-col>
             </el-row>
           </el-tab-pane>
@@ -78,15 +89,6 @@
   <!-- 添加这一行 -->
 </template>
 <script setup lang="ts">
-import { menu } from "@/utils/menu";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { onMounted } from "vue";
-const route = useRoute();
-const globalStore = useGlobalStore();
-
-type TabNameState = "config" | "option";
-const activeTabName = ref<TabNameState>(null);
-
 type Dataset = {
   id: string;
   cunnect_id: string;
@@ -97,7 +99,29 @@ type resp_data_state = {
   columns: string[];
   datas: any[];
 };
-const datasets = ref<Dataset[]>([]);
+import { menu } from "@/utils/menu";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { onMounted } from "vue";
+const route = useRoute();
+const globalStore = useGlobalStore();
+const datasetId = ref("");
+const fieldList = ref([]);
+type TabNameState = "config" | "option";
+const activeTabName = ref<TabNameState>(null);
+
+const handleDatasetChange = (value: number) => {
+  fieldList.value = datasetList.value.find((item) => item.id === value)?.values || [];
+};
+const handleDragStart = (event: DragEvent) => {
+  if (event.target instanceof HTMLElement) {
+    const i = event.target.getAttribute("i");
+    event.dataTransfer.setData("i", i);
+  }
+};
+provide("FieldItemValues", (name, values) => {
+  console.log("接收子组件的内容", name, values);
+});
+const datasetList = ref<Dataset[]>([]);
 // 禁用标志，下拉框是否禁用
 const isDisabled = ref<boolean>(false);
 let chart_class: IChart = null;
@@ -137,7 +161,7 @@ const handleTabChange = (tabName: TabNameState) => {
 const load_datasets = async () => {
   const resp = await $post("/api/dataset/loadall", { user_id: sessionStorage.getItem("token") });
   if (resp.code === 200) {
-    datasets.value = resp.data as Dataset[];
+    datasetList.value = resp.data as Dataset[];
     isDisabled.value = true;
   }
 };
@@ -274,6 +298,12 @@ onUnmounted(() => {
     width: 100%;
     height: 100%;
 
+    .designer-dataset-option {
+      width: var(--public_chart_option_width);
+      height: 100%;
+      padding: 2px;
+      position: relative;
+    }
     .designer-config-option {
       width: var(--public_chart_option_width);
       height: 100%;

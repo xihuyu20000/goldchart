@@ -1,7 +1,7 @@
 type MenuItem = {
   url: string;
   label: string;
-  rules?: { x: number[]; y: number[] };
+  rules?: { name: string; range: number[] }[];
 };
 type ChartStyle = {
   name: string;
@@ -42,15 +42,52 @@ class menu {
       {
         name: "折线图",
         values: [
-          { url: "/line/BasicLineChart", label: "基础折线图", rules: { x: [1], y: [1] } },
-          { url: "/line/BasicAreaChart", label: "基础面积图", rules: { x: [1], y: [1] } },
-          { url: "/line/StackedLineChart", label: "堆叠折线图" },
-          { url: "/line/StackedAreaChart", label: "堆叠面积图" },
+          {
+            url: "/line/BasicLineChart",
+            label: "基础折线图",
+            rules: [
+              { name: "x", range: [1, 1] },
+              { name: "y", range: [1, 99] },
+            ],
+          },
+          {
+            url: "/line/BasicAreaChart",
+            label: "基础面积图",
+            rules: [
+              { name: "x", range: [1, 1] },
+              { name: "y", range: [1, 99] },
+            ],
+          },
+          {
+            url: "/line/StackedLineChart",
+            label: "堆叠折线图",
+            rules: [
+              { name: "x", range: [1, 1] },
+              { name: "y", range: [1, 99] },
+            ],
+          },
+          {
+            url: "/line/StackedAreaChart",
+            label: "堆叠面积图",
+            rules: [
+              { name: "x", range: [1, 1] },
+              { name: "y", range: [1, 99] },
+            ],
+          },
         ],
       },
       {
         name: "柱状图",
-        values: [{ url: "/bar/BasicBarChart", label: "基础柱状图" }],
+        values: [
+          {
+            url: "/bar/BasicBarChart",
+            label: "基础柱状图",
+            rules: [
+              { name: "x", range: [1, 99] },
+              { name: "y", range: [1, 99] },
+            ],
+          },
+        ],
       },
       {
         name: "饼状图",
