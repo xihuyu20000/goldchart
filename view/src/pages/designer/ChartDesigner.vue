@@ -32,7 +32,7 @@
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">X轴</el-col>
-                <el-col :span="20"> <FieldItemWrapper name="xAxis" :fieldList="globalStore.config.columns"></FieldItemWrapper></el-col>
+                <el-col :span="20"> <DataMappingWrapper name="xAxis" :fieldList="globalStore.config.columns"></DataMappingWrapper></el-col>
               </el-row>
             </div>
             <div class="left-config-row">
