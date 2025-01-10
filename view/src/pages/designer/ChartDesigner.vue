@@ -3,11 +3,13 @@
     <el-container class="designer-container">
       <el-aside class="designer-dataset-option">
         <ToggleButton :min="15" :max="200"> </ToggleButton>
-        <el-select v-model="datasetId" @change="handleDatasetChange">
-          <el-option :value="item.id" :label="item.name" v-for="item in datasetList" :key="item.id"></el-option>
-        </el-select>
-        <div class="field-list">
-          <div class="field-item" draggable="true" v-for="(item, i) in fieldList" :key="i" :i="i" @dragstart="handleDragStart">{{ item.label }}</div>
+        <div class="left-part">
+          <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
+            <el-option :value="item.id" :label="item.name" v-for="item in datasetList" :key="item.id"></el-option>
+          </el-select>
+          <div class="field-list">
+            <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
+          </div>
         </div>
       </el-aside>
       <el-aside class="designer-config-option">
@@ -15,32 +17,20 @@
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
-        <el-tabs tab-position="top" :stretch="true" @tab-change="handleTabChange">
+        <el-tabs tab-position="top" :stretch="true" v-model="activeLeftTabName" @tab-change="handleTabChange">
           <el-tab-pane label="数据" name="config">
-            <el-row>
-              <el-col :span="8">数据集</el-col>
-              <el-col :span="16">
-                <el-select v-model="globalStore.config.dataset_id"> <el-option v-for="(item, i) in datasetList" :key="i" :label="item.name" :value="item.id" /> </el-select
-              ></el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">X轴</el-col>
-              <el-col :span="16">
-                <FieldItem name="xAxis" :fieldList="fieldList"></FieldItem>
-                <!-- <el-select v-model="globalStore.config.xCols" multiple :disabled="isDisabled">
-                  <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
-                </el-select> -->
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8">Y轴</el-col>
-              <el-col :span="16">
-                <FieldItem name="yAxis" :fieldList="fieldList"></FieldItem>
-                <!-- <el-select v-model="globalStore.config.yCols" multiple :disabled="isDisabled">
-                  <el-option :value="item" v-for="(item, i) in globalStore.config.columns" :key="i" :label="item" />
-                </el-select> -->
-              </el-col>
-            </el-row>
+            <div class="left-config-row">
+              <el-row>
+                <el-col :span="4">X轴</el-col>
+                <el-col :span="20"> <FieldItemWrapper name="xAxis" :fieldList="globalStore.config.columns"></FieldItemWrapper></el-col>
+              </el-row>
+            </div>
+            <div class="left-config-row">
+              <el-row>
+                <el-col :span="4">Y轴</el-col>
+                <el-col :span="20"><FieldItemWrapper name="yAxis" :fieldList="globalStore.config.columns"></FieldItemWrapper> </el-col>
+              </el-row>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="属性" name="option">
             <el-row>
@@ -104,13 +94,21 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
 const route = useRoute();
 const globalStore = useGlobalStore();
-const datasetId = ref("");
-const fieldList = ref([]);
-type TabNameState = "config" | "option";
-const activeTabName = ref<TabNameState>(null);
 
-const handleDatasetChange = (value: number) => {
-  fieldList.value = datasetList.value.find((item) => item.id === value)?.values || [];
+type TabNameState = "config" | "option";
+const activeLeftTabName = ref<TabNameState>("config");
+const handleDatasetChange = async (value: string) => {
+  if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
+    const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
+    if (resp.code === 200) {
+      const resp_data = resp.data as resp_data_state;
+
+      globalStore.config.columns = resp_data.columns;
+      globalStore.config.datas = resp_data.datas;
+
+      console.log("加载列数据", toRaw(globalStore.config));
+    }
+  }
 };
 const handleDragStart = (event: DragEvent) => {
   if (event.target instanceof HTMLElement) {
@@ -118,12 +116,9 @@ const handleDragStart = (event: DragEvent) => {
     event.dataTransfer.setData("i", i);
   }
 };
-provide("FieldItemValues", (name, values) => {
-  console.log("接收子组件的内容", name, values);
-});
+
 const datasetList = ref<Dataset[]>([]);
-// 禁用标志，下拉框是否禁用
-const isDisabled = ref<boolean>(false);
+
 let chart_class: IChart = null;
 onMounted(async () => {
   // 4-1 设置页面标题
@@ -152,44 +147,33 @@ onMounted(async () => {
   console.log("4-4 加载数据集列表");
   load_datasets();
 });
+provide("FieldItemValues", (name, values) => {
+  if (name === "xAxis") {
+    globalStore.config.xCols = values;
+  } else if (name === "yAxis") {
+    globalStore.config.yCols = values;
+  } else {
+    console.error("接收子组件的内容，不存在的类型=", name);
+  }
+  console.log("接收子组件的内容", name, values);
+});
 // 切换选项卡时，切换watch的执行
 const handleTabChange = (tabName: TabNameState) => {
-  activeTabName.value = tabName;
+  activeLeftTabName.value = tabName;
 };
 
-// 加载数据集列表，当改变下拉表时，会对config.dataset_id赋值，引起变化
+// 4-4 加载数据集列表，当改变下拉表时，会对config.dataset_id赋值，引起变化
 const load_datasets = async () => {
   const resp = await $post("/api/dataset/loadall", { user_id: sessionStorage.getItem("token") });
   if (resp.code === 200) {
     datasetList.value = resp.data as Dataset[];
-    isDisabled.value = true;
   }
 };
-
-// 监视数据文件变化，只有值变化后才触发重新加载列数据
-const datasetIdWatcher = watch(
-  () => globalStore.config.dataset_id,
-  async (nv, ov) => {
-    if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
-      isDisabled.value = true;
-      const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
-      if (resp.code === 200) {
-        const resp_data = resp.data as resp_data_state;
-
-        globalStore.config.columns = resp_data.columns;
-        globalStore.config.datas = resp_data.datas;
-
-        isDisabled.value = false;
-        console.log("加载列数据", toRaw(globalStore.config));
-      }
-    }
-  }
-);
 
 const configWatcher = watch(
   () => globalStore.config,
   async (newVal, oldVal) => {
-    if (activeTabName.value === "config") {
+    if (activeLeftTabName.value === "config") {
       if (chart_class.protect()) {
         renderChart();
       }
@@ -200,7 +184,7 @@ const configWatcher = watch(
 const optionWatcher = watch(
   () => globalStore.option,
   (newVal, oldVal) => {
-    if (activeTabName.value === "option") {
+    if (activeLeftTabName.value === "option") {
       renderChart();
     }
   },
@@ -283,16 +267,17 @@ onUnmounted(() => {
   init_global_config();
   init_global_option();
   init_global_ins();
-  datasetIdWatcher();
   configWatcher();
   optionWatcher();
   myChart.value.dispose();
 });
 </script>
 <style lang="less" scoped>
+.left-config-row {
+  margin-top: 20px;
+}
 .designer-page {
   height: 100%;
-  background-color: rgba(230, 250, 230, 0.5);
 
   .designer-container {
     width: 100%;
@@ -303,6 +288,7 @@ onUnmounted(() => {
       height: 100%;
       padding: 2px;
       position: relative;
+      border: 1px solid #ccc;
     }
     .designer-config-option {
       width: var(--public_chart_option_width);
@@ -331,13 +317,27 @@ onUnmounted(() => {
       width: calc(100% - var(--public_chart_option_width));
       height: 100%;
       padding: 5px;
-      background-color: #d7d6d6;
 
       #chartviewer-page {
+        margin: 0;
         width: calc(100%);
         height: calc(100%);
-        background-color: #fff !important;
+        border: 1px solid #ccc;
       }
+    }
+  }
+}
+.left-part {
+  margin-top: 30px;
+  color: red;
+  .field-list {
+    margin-top: 20px;
+    min-height: 50px;
+    .field-item {
+      border: 2px solid #fff;
+      padding: 5px;
+      background-color: rgba(230, 230, 230, 0.5);
+      cursor: pointer;
     }
   }
 }

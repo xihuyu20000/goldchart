@@ -1,7 +1,7 @@
 <template>
   <div class="field-container" @dragstart="handleDragStart" @dragover="(event) => event.preventDefault()" @drop="handleDrop" @dblclick="handleDblClick">
     <div class="field-wrapper" draggable="true" v-for="(item, i) in newFieldList" :key="i">
-      {{ item.label }}
+      {{ item }}
     </div>
   </div>
 </template>
@@ -14,11 +14,11 @@ const props = defineProps({
     required: true,
   },
   fieldList: {
-    type: Array as PropType<FieldItem[]>,
+    type: Array as PropType<String[]>,
     required: true,
   },
 });
-const newFieldList = ref<FieldItem[]>([]);
+const newFieldList = ref<String[]>([]);
 const FieldItemValues: CallableFunction = inject("FieldItemValues");
 // 切换数据集时，监听props.fieldList变化，清空newFieldList
 watch(
@@ -28,8 +28,9 @@ watch(
   }
 );
 watch(
-  () => newFieldList,
+  () => newFieldList.value,
   (newVal) => {
+    console.log("子组件列表变化", props.name, newFieldList.value);
     FieldItemValues(props.name, newFieldList.value);
   },
   { deep: true }
@@ -46,6 +47,7 @@ const handleDrop = (event: DragEvent) => {
 
   if (event.target instanceof HTMLElement) {
     const i = event.dataTransfer.getData("i");
+
     if (innerDragging.value) {
       const moved = newFieldList.value.splice(Number(i), 1)[0];
       newFieldList.value.push(moved);
@@ -62,7 +64,7 @@ const handleDblClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     const i = target.getAttribute("i");
     console.log(props.fieldList[Number(i)]);
-    const index = props.fieldList.findIndex((item) => item.label === props.fieldList[Number(i)].label);
+    const index = props.fieldList.findIndex((item) => item === props.fieldList[Number(i)]);
     if (index !== -1) {
       newFieldList.value.splice(index, 1);
     }
