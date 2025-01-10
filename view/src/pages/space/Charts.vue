@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 const globalStore = useGlobalStore();
+import { Ins } from "@/utils/types";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { VxeUI } from "vxe-pc-ui";
 const router = useRouter();
@@ -38,12 +39,11 @@ onMounted(async () => {
   }
 });
 
-const editIns = (row) => {
-  console.log("2-1 全局变量中记录当前实例", row);
-  globalStore.setCurrentIns(row);
-  globalStore.ins_id = row.config.ins_id;
+const editIns = (ins: Ins) => {
+  console.log("2-1 全局变量中记录当前实例", ins);
+  globalStore.setCurrentIns(ins);
   console.log("2-2 跳转到编辑器页面");
-  router.push(row.config.chart_id);
+  router.push(ins.config.chart_id);
 };
 </script>
 

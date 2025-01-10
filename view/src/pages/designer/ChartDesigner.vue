@@ -1,6 +1,7 @@
 <template>
   <div class="designer-page">
     <el-container class="designer-container">
+      <!-- 左侧数据集选择区 -->
       <el-aside class="designer-dataset-option">
         <ToggleButton :min="15" :max="200"> </ToggleButton>
         <div class="left-part">
@@ -12,12 +13,13 @@
           </div>
         </div>
       </el-aside>
+      <!-- 左侧图表配置区 -->
       <el-aside class="designer-config-option">
         <ToggleButton :min="15" :max="200"></ToggleButton>
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
-        <div>
+        <div style="margin-top: 10px;">
           <h3>图表类型</h3>
           <div class="designer-chart-types">
             <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
@@ -32,24 +34,17 @@
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">X轴</el-col>
-                <el-col :span="20"> <DataMappingWrapper name="xAxis" :fieldList="globalStore.config.columns"></DataMappingWrapper></el-col>
+                <el-col :span="20"> <DataMappingCmp name="xAxis" :fieldList="globalStore.config.columns"></DataMappingCmp></el-col>
               </el-row>
             </div>
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">Y轴</el-col>
-                <el-col :span="20"><DataMappingWrapper name="yAxis" :fieldList="globalStore.config.columns"></DataMappingWrapper> </el-col>
+                <el-col :span="20"><DataMappingCmp name="yAxis" :fieldList="globalStore.config.columns"></DataMappingCmp> </el-col>
               </el-row>
             </div>
           </el-tab-pane>
           <el-tab-pane label="图表属性" name="option">
-            <el-row>
-              <el-col :span="8">图表</el-col>
-              <el-col :span="16">
-                <el-select v-model="globalStore.config.chart_id"> <el-option v-for="(item, i) in menu.chart_menu_configs_array()" :key="i" :label="item.label" :value="item.url" /> </el-select
-              ></el-col>
-            </el-row>
-            <hr />
             <el-tabs tab-position="left" model-value="title">
               <el-tab-pane label="标题" name="title">
                 <EchartTitle />
@@ -79,6 +74,7 @@
           <el-button type="primary" @click="saveOption">保存图表</el-button>
         </div>
       </el-aside>
+      <!-- 右侧图表显示区 -->
       <el-main class="designer-main">
         <div id="chartviewer-page">
           <div :id="uid" class="chartviewer-chart"></div>
@@ -89,29 +85,40 @@
   <!-- 添加这一行 -->
 </template>
 <script setup lang="ts">
+import { menu } from "@/utils/menu";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { onMounted } from "vue";
+
 type Dataset = {
   id: string;
   cunnect_id: string;
   sql: string;
   name: string;
 };
-type resp_data_state = {
+type ResponseState = {
   columns: string[];
   datas: any[];
 };
-import { menu } from "@/utils/menu";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { onMounted } from "vue";
+type TabNameState = "config" | "option";
+
+
+
 const route = useRoute();
 const globalStore = useGlobalStore();
 
-type TabNameState = "config" | "option";
+
 const activeLeftTabName = ref<TabNameState>("config");
+const datasetList = ref<Dataset[]>([]);
+
+const chart_class: IChart = getChartWrapper(route.meta.chartid as string);
+console.log('特定图表类型',chart_class);
+utils.assert(chart_class instanceof IChart);
+
 const handleDatasetChange = async (value: string) => {
   if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
     const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
     if (resp.code === 200) {
-      const resp_data = resp.data as resp_data_state;
+      const resp_data = resp.data as ResponseState;
 
       globalStore.config.columns = resp_data.columns;
       globalStore.config.datas = resp_data.datas;
@@ -127,9 +134,7 @@ const handleDragStart = (event: DragEvent) => {
   }
 };
 
-const datasetList = ref<Dataset[]>([]);
 
-let chart_class: IChart = null;
 onMounted(async () => {
   // 4-1 设置页面标题
   console.log("4-1 设置页面标题");
@@ -140,15 +145,11 @@ onMounted(async () => {
   // 4-3 如果current_ins为空，则为新建图表，否则为编辑图表
   if (globalStore.ins_id === "") {
     console.log("4-3 新建图表");
-    chart_class = getChartWrapper(route.meta.chartid as string);
-    utils.assert(chart_class instanceof IChart);
     globalStore.setOption(toRaw(chart_class.get_option()));
   } else {
     console.log("4-3 加载图表");
     // 异步执行
     setTimeout(() => {
-      globalStore.setConfig(globalStore.current_ins.config);
-      globalStore.setOption(globalStore.current_ins.option);
       // 因为还没有watch，必须手工调动
       renderChart();
     }, 500);
@@ -222,7 +223,7 @@ const saveOption = async () => {
 };
 import * as echarts from "echarts";
 import { IChart } from "@/utils/types";
-import { assert } from "console";
+
 const uid = ref<string>(utils.uid());
 const myChart = ref<echarts.ECharts | null>(null);
 
@@ -263,14 +264,7 @@ const init_global_option = (): void => {
   globalStore.setOption({});
 };
 
-const init_global_ins = (): void => {
-  globalStore.setCurrentIns({
-    id: "",
-    user_id: "",
-    config: undefined,
-    option: undefined,
-  });
-};
+
 onUnmounted(() => {
   ElMessage({
     type: "success",
@@ -279,16 +273,14 @@ onUnmounted(() => {
   globalStore.ins_id = "";
   init_global_config();
   init_global_option();
-  init_global_ins();
   configWatcher();
   optionWatcher();
   myChart.value.dispose();
 });
 </script>
 <style lang="less" scoped>
-.left-config-row {
-  margin-top: 20px;
-}
+
+
 .designer-page {
   height: 100%;
 
@@ -308,6 +300,9 @@ onUnmounted(() => {
       height: 100%;
       padding: 2px;
       position: relative;
+      .left-config-row {
+        margin-bottom: 15px;
+      }
       .designer-title {
         margin-top: 30px;
         text-align: center;

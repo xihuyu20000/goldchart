@@ -85,28 +85,6 @@ CREATE TABLE IF NOT EXISTS columns
     TEXT
 );
 
--- 图表实例的配置信息
-CREATE TABLE IF NOT EXISTS configs
-(
-    id
-    TEXT,
-    user_id
-    TEXT,
-    ins_id
-    TEXT,
-    chart_id
-    TEXT,
-    dataset_id
-    TEXT,
-    title
-    TEXT,
-    xCols
-    TEXT,
-    yCols
-    TEXT,
-    columns
-    TEXT
-);
 
 
 -- 配置

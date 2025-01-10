@@ -8,11 +8,10 @@ type GlobalState = {
   ins_id: string;
   config: Config;
   option: echarts.EChartsOption;
-  current_ins: Ins;
 };
 export const useGlobalStore = defineStore("global", {
   // 必须有默认值，不能使用undefined、null等
-  state: () => reactive<GlobalState>({ ins_id: "" as string, config: {} as Config, option: {} as echarts.EChartsOption, current_ins: {} as Ins }),
+  state: () => reactive<GlobalState>({ ins_id: "" as string, config: {} as Config, option: {} as echarts.EChartsOption }),
   actions: {
     setConfig(nv: Config): void {
       this.config = { ...nv };
@@ -23,7 +22,9 @@ export const useGlobalStore = defineStore("global", {
 
     // 在我的空间——>实例列表，调用该方法，将当前实例信息保存到全局状态中
     setCurrentIns(nv: Ins): void {
-      this.current_ins = { ...nv };
+      this.ins_id = nv.config.ins_id;
+      this.setConfig(nv.config);
+      this.setOption(nv.option);
     },
   },
   getters: {},

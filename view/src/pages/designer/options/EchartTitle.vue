@@ -16,6 +16,8 @@
         <div class="position-container">
           水平
           <el-input v-model="title.left"></el-input>
+        </div>
+        <div class="position-container">
           垂直
           <el-input v-model="title.top"></el-input>
         </div>
@@ -43,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import {utils} from "@/utils/utils"
+import { utils } from "@/utils/utils";
 const globalStore = useGlobalStore();
 const route = useRoute();
 </script>
