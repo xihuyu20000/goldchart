@@ -1,9 +1,0 @@
---index-url https://pypi.tuna.tsinghua.edu.cn/simple
-
-loguru
-numpy
-pandas
-xlrd
-openpyxl
-flask
-Webargs
