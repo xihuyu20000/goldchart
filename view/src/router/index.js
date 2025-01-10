@@ -38,7 +38,6 @@ const dynamicChartRoutes = () => {
 };
 const routes = [
   { path: "/", name: "/", redirect: "/Home" },
-  { path: "/Test", name: "Test", component: () => import("@/pages/designer/DesignerLeft.vue") },
   {
     path: "/Home",
     name: "Home",

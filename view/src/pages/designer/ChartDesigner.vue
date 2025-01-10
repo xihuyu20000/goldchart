@@ -17,8 +17,18 @@
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
+        <div>
+          <h3>图表类型</h3>
+          <div class="designer-chart-types">
+            <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
+              <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark">
+              <span class="tooltip" data-tooltip="第一行&#xa第二行">{{ item.label }}</span>
+              </el-tooltip>
+            </div>
+          </div>
+        </div>
         <el-tabs tab-position="top" :stretch="true" v-model="activeLeftTabName" @tab-change="handleTabChange">
-          <el-tab-pane label="数据" name="config">
+          <el-tab-pane label="数据映射" name="config">
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">X轴</el-col>
@@ -28,11 +38,11 @@
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">Y轴</el-col>
-                <el-col :span="20"><FieldItemWrapper name="yAxis" :fieldList="globalStore.config.columns"></FieldItemWrapper> </el-col>
+                <el-col :span="20"><DataMappingWrapper name="yAxis" :fieldList="globalStore.config.columns"></DataMappingWrapper> </el-col>
               </el-row>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="属性" name="option">
+          <el-tab-pane label="图表属性" name="option">
             <el-row>
               <el-col :span="8">图表</el-col>
               <el-col :span="16">
@@ -191,6 +201,9 @@ const optionWatcher = watch(
   { deep: true }
 );
 
+const handleChartTypeClick = (item: any) => {
+  console.log("点击图表类型", item);
+}
 const saveOption = async () => {
   const token = sessionStorage.getItem(utils.StorageKeys.token);
   globalStore.config.user_id = token;
@@ -302,6 +315,25 @@ onUnmounted(() => {
         line-height: 30px;
         width: 200px;
         font-weight: bolder;
+      }
+      .designer-chart-types {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: space-start;
+        justify-content: space-start;
+        .chart-item {
+          width: 35px;
+          height: 30px;
+          margin: 5px;
+          background-color: #eee;
+          cursor: pointer;
+          &:hover {
+            border: 2px solid blue;
+          }
+        }
       }
       .save-option {
         width: var(--left_nav_width);

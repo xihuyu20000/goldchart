@@ -7,18 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BasicRadarChart: typeof import('./src/pages/charts/radar/BasicRadarChart.vue')['default']
     ChartDesigner: typeof import('./src/pages/designer/ChartDesigner.vue')['default']
     Charts: typeof import('./src/pages/space/Charts.vue')['default']
-    ChartViewer: typeof import('./src/pages/designer/ChartViewer.vue')['default']
     Connects: typeof import('./src/pages/space/Connects.vue')['default']
-    copy: typeof import('./src/pages/space/Connects.vue')['default']
-    Datafiles: typeof import('./src/pages/space/--Datafiles.vuea')['default']
+    DataMappingWrapper: typeof import('./src/pages/designer/DataMappingWrapper.vue')['default']
     Datasets: typeof import('./src/pages/space/Datasets.vue')['default']
-    Default: typeof import('./src/p./src/pages/designer/DatasetWrapper.vue
-    DesignerLeft: typeof import('./src/pages/designer/DesignerLeft.vue')['default']
+    DatasetWrapper: typeof import('./src/pages/designer/DatasetWrapper.vue')['default']
     EchartCalendar: typeof import('./src/pages/designer/options/EchartCalendar.vue')['default']
-    EchartColumn: typeof import('./src/pages/designer/options/EchartColumn.vue')['default']
     EchartGraphics: typeof import('./src/pages/designer/options/EchartGraphics.vue')['default']
     EchartGrid: typeof import('./src/pages/designer/options/EchartGrid.vue')['default']
     EchartLegend: typeof import('./src/pages/designer/options/EchartLegend.vue')['default']
@@ -48,7 +43,6 @@ declare module 'vue' {
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElContainer: typeof import('element-plus/es')['ElContainer']
-    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
@@ -65,8 +59,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    FieldItem: typeof import('./src/pages/designer/FieldItemWrapper.vue')['default']
-    FieldItemWrapper: typeof import('./src/pages/designer/FieldItemWrapper.vue')['default']
+    FieldItemWrapper: typeof import('./src/pages/designer/DataMappingWrapper.vue')['default']
     Home: typeof import('./src/pages/Home.vue')['default']
     Index: typeof import('./src/pages/space/Index.vue')['default']
     Login: typeof import('./src/pages/Login.vue')['default']
@@ -76,12 +69,8 @@ declare module 'vue' {
     ResizeTpl: typeof import('./src/pages/ResizeTpl.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SaveOption: typeof import('./src/pages/designer/SaveOption.vue')['default']
     Setting: typeof import('./src/pages/space/Setting.vue')['default']
-    SpaceCharts: typeof import('./src/pages/space/SpaceCharts.vue')['default']
-    Test: typeof import('./src/pages/designer/DesignerLeft.vue')['default']
     ToggleButton: typeof import('./src/pages/designer/ToggleButton.vue')['default']
-    UpdateOption: typeof import('./src/pages/designer/UpdateOption.vue')['default']
     Welcome: typeof import('./src/pages/charts/Welcome.vue')['default']
   }
 }
