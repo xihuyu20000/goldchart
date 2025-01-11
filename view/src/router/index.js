@@ -5,19 +5,22 @@ const dynamicSpaceRoutes = () => {
   /**
    * 我的空间路由
    */
-  let modules = import.meta.glob(`@/pages/space/*.vue`);
+  let modules = import.meta.glob(`@/pages/*/*/*Index.vue`);
   // 2-1 合并菜单配置
 
   // 2-2 动态路由
-  const spaceRoutes = menu.space_menu_configs().map((item) => ({
-    name: item.url,
-    path: item.url,
-    component: modules[`/src/pages${item.url}.vue`],
-    meta: {
-      title: item.label,
-      chartid: item.url,
-    },
-  }));
+  const spaceRoutes = menu.space_menu_configs().map((item) => {
+    const url = "/" + item.namespace + "/" + item.url;
+    return {
+      name: url,
+      path: url,
+      component: modules[`/src/pages/${item.namespace}/${item.url}/${item.url}Index.vue`],
+      meta: {
+        title: item.label,
+        chartid: url,
+      },
+    };
+  });
   return spaceRoutes;
 };
 const dynamicChartRoutes = () => {

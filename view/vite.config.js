@@ -22,7 +22,6 @@ export default defineConfig({
           "@/utils/bus.ts": ["emitter"],
           "@/utils/global.ts": ["useGlobalStore"],
           "@/utils/http.ts": ["$post", "$upload", "$chart"],
-          "@/utils/logger.ts": ["logger"],
           "@/utils/menu.ts": ["menu"],
           "@/utils/optionfactory.ts": ["getChartWrapper"],
           "@/utils/utils.ts": ["utils"],

@@ -19,7 +19,7 @@ const clickMenuUrl = (name, url) => {
   <el-container class="space-index-page">
     <el-aside class="space-index-aside">
       <ol>
-        <li v-for="(item, j) in menu.space_menu_configs()" :key="j" :class="{ 'active-url': activeUrl == item.url }">
+        <li v-for="(item, j) in menu.space_menu_configs_array()" :key="j" :class="{ 'active-url': activeUrl == item.url }">
           <router-link :to="item.url">{{ item.label }}</router-link>
         </li>
       </ol>

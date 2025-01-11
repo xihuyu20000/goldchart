@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import sqlite3
@@ -129,3 +130,17 @@ class DatasetReader:
         mylogger.warning(desc)
 
         return result, desc
+
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, datetime.datetime):
+                return obj.isoformat()
+            if isinstance(obj, datetime.date):
+                return obj.isoformat()
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return json.JSONEncoder.default(self, obj)

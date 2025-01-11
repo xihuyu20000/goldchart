@@ -1,5 +1,4 @@
 import { $post } from "./http";
-import { logger } from "./logger";
 
 class utils {
   static StorageKeys = {

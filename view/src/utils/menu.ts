@@ -1,4 +1,5 @@
 type MenuItem = {
+  namespace?: string;
   url: string;
   label: string;
   rules?: { name: string; range: number[] }[];
@@ -10,32 +11,19 @@ type ChartStyle = {
 class menu {
   static space_menu_configs = (): MenuItem[] => {
     return [
-      {
-        url: "/space/Projects",
-        label: "我的项目",
-      },
-      {
-        url: "/space/Connects",
-        label: "数据连接",
-      },
-      {
-        url: "/space/Datasets",
-        label: "我的数据集",
-      },
-      {
-        url: "/space/Charts",
-        label: "我的图表",
-      },
-      {
-        url: "/space/Setting",
-        label: "设置",
-      },
-      {
-        url: "/space/Profile",
-        label: "个人资料",
-      },
+      { namespace: "space", url: "Project", label: "我的项目" },
+      { namespace: "space", url: "Connect", label: "数据连接" },
+      { namespace: "space", url: "Dataset", label: "我的数据集" },
+      { namespace: "space", url: "Chart", label: "我的图表" },
+      { namespace: "space", url: "Setting", label: "设置" },
+      { namespace: "space", url: "Profile", label: "个人资料" },
     ];
   };
+
+  static space_menu_configs_array = (): MenuItem[] =>
+    menu.space_menu_configs().map((item) => {
+      return { url: "/" + item.namespace + "/" + item.url, label: item.label };
+    });
 
   static chart_menu_configs = (): ChartStyle[] => {
     return [

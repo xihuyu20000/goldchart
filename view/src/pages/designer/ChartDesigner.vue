@@ -23,7 +23,7 @@
           <h3>图表类型</h3>
           <div class="designer-chart-types">
             <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
-              <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark">
+              <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark"  :show-after="800"  :offset="16">
               <span class="tooltip" data-tooltip="第一行&#xa第二行">{{ item.label }}</span>
               </el-tooltip>
             </div>
@@ -216,7 +216,6 @@ const saveOption = async () => {
     const resp_data = resp.data as ResponseState;
     // 保存成功后，更新ins_id，否则重复保存时，记录会重复
     globalStore.ins_id = resp_data.ins_id;
-    globalStore.config.ins_id = resp_data.ins_id;
     ElMessage({
       type: "success",
       message: "保存成功",
@@ -224,7 +223,7 @@ const saveOption = async () => {
   }
 };
 import * as echarts from "echarts";
-import { IChart } from "@/utils/types";
+import { Config, IChart } from "@/utils/types";
 
 const uid = ref<string>(utils.uid());
 const myChart = ref<echarts.ECharts | null>(null);
@@ -322,8 +321,8 @@ onUnmounted(() => {
         align-content: space-start;
         justify-content: space-start;
         .chart-item {
-          width: 35px;
-          height: 30px;
+          width: 47px;
+          height: 40px;
           margin: 5px;
           background-color: #eee;
           cursor: pointer;

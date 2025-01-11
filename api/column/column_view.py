@@ -7,7 +7,7 @@ from api.column import column_dao
 from api.column.column_model import Column
 from api.column.column_schema import dataset_id_schema, column_schema
 from api.dataset import dataset_dao
-from utils import uuidid, mylogger, DatasetReader
+from utils import uuidid, mylogger, DatasetReader, CustomJSONEncoder
 
 column_page = Blueprint('column_page', __name__)
 
@@ -27,7 +27,7 @@ def column_loadby(req_data):
     columns = [item['colname'] for item in data]
     datas, _ = DatasetReader.read(dataset_id)
     data = {'code': 200, 'data': {'columns': columns, 'datas': datas}}
-    json_response = json.dumps(data, ensure_ascii=False)
+    json_response = json.dumps(data, ensure_ascii=False, cls=CustomJSONEncoder)
     return Response(json_response, content_type='application/json')
 
 

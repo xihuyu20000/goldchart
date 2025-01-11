@@ -4,7 +4,7 @@ import webargs
 from flask import Blueprint, Response
 
 from api.connect import connect_dao
-from api.connect.connect_schema import user_id_schema, connect_save_schema
+from api.connect.connect_schema import user_id_schema, connect_save_schema, id_schema
 from utils import mylogger, uuidid
 
 connect_page = Blueprint('connect_page', __name__)
@@ -23,7 +23,14 @@ def connect_loadall(req_data):
     data = {'code': 200, 'data': connects}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-
+@connect_page.post('/connect/delete')
+@webargs.flaskparser.use_args(id_schema, location='json')
+def dataset_delete(req_data):
+    id = req_data['id']
+    connect_dao.delete_by(id)
+    data = {'code': 200, 'data': {}}
+    json_response = json.dumps(data, ensure_ascii=False)
+    return Response(json_response, content_type='application/json')
 @connect_page.post('/connect/save')
 @webargs.flaskparser.use_args(connect_save_schema, location='json')
 def connect_save(req_data):
@@ -32,22 +39,7 @@ def connect_save(req_data):
     :param req_data:
     :return:
     """
-    user_id = req_data['user_id']
-
-    removeRecords = req_data['removeRecords']
-    insertRecords = req_data['insertRecords']
-    updateRecords = req_data['updateRecords']
-
-    removeRecords = json.loads(removeRecords)
-    insertRecords = json.loads(insertRecords)
-    updateRecords = json.loads(updateRecords)
-
-    mylogger.info(f"{removeRecords=}")
-    mylogger.info(f"{insertRecords=}")
-    mylogger.info(f"{updateRecords=}")
-
-    for record in insertRecords: record['id'] = 'connect_'+uuidid()
-    connect_dao.save_connects(user_id, insertRecords, updateRecords, removeRecords)
+    connect_dao.save_connects(req_data)
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
