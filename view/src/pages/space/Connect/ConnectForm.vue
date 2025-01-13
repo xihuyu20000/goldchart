@@ -47,7 +47,6 @@ const props = defineProps({
     required: true,
   },
 });
-
 onMounted(async () => {});
 </script>
 

@@ -1,15 +1,18 @@
 import datetime
+import decimal
 import json
 import os
 import sqlite3
 import threading
 import typing
 import uuid
+from decimal import Decimal
 
 import pymysql
 import shortuuid
 from flask import g
 from loguru import logger
+from marshmallow.utils import is_aware
 
 # 1 获取当前模块的根目录
 basepath = os.path.dirname(os.path.abspath(__file__))
@@ -118,29 +121,58 @@ class DatasetReader:
         return result, desc
 
     @staticmethod
-    def read(dataset_id: str) -> typing.Tuple[typing.List, typing.List]:
+    def read(dataset_id: str, sql:str=None) -> typing.Tuple[typing.List, typing.List]:
         g.db.execute("SELECT ds.*, cs.type, cs.params FROM datasets ds LEFT JOIN connects cs ON ds.connect_id = cs.id WHERE ds.id=:id", (dataset_id,))
         ds = g.db.fetchone()
 
+        run_sql = sql if sql else ds['sql']
         if ds['type'] == 'mysql':
-            result, desc = DatasetReader._run_mysql(ds['sql'], json.loads(ds['params']))
+            result, desc = DatasetReader._run_mysql(run_sql, json.loads(ds['params']))
         if ds['type'] == 'sqlite':
-            result, desc = DatasetReader._run_sqlite(ds['sql'], json.loads(ds['params']))
+            result, desc = DatasetReader._run_sqlite(run_sql, json.loads(ds['params']))
         mylogger.warning(result)
         mylogger.warning(desc)
 
         return result, desc
 
+
+
+# def CustomJSONEncoder(obj):
+#     try:
+#         if isinstance(obj, datetime.datetime):
+#             return obj.isoformat()
+#         if isinstance(obj, datetime.date):
+#             return obj.isoformat()
+#         if isinstance(obj, Decimal):
+#             return float(obj)
+#         iterable = iter(obj)
+#     except TypeError:
+#         pass
+#     else:
+#         return list(iterable)
+#     return json.JSONEncoder.default
+
 class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        try:
-            if isinstance(obj, datetime.datetime):
-                return obj.isoformat()
-            if isinstance(obj, datetime.date):
-                return obj.isoformat()
-            iterable = iter(obj)
-        except TypeError:
-            pass
+
+    def default(self, o):
+        # See "Date Time String Format" in the ECMA-262 specification.
+        if isinstance(o, datetime.datetime):
+            r = o.isoformat()
+            if o.microsecond:
+                r = r[:23] + r[26:]
+            if r.endswith('+00:00'):
+                r = r[:-6] + 'Z'
+            return r
+        elif isinstance(o, datetime.date):
+            return o.isoformat()
+        elif isinstance(o, datetime.time):
+            if is_aware(o):
+                raise ValueError("JSON can't represent timezone-aware times.")
+            r = o.isoformat()
+            if o.microsecond:
+                r = r[:12]
+            return r
+        elif isinstance(o, (decimal.Decimal, uuid.UUID)):
+            return str(o)
         else:
-            return list(iterable)
-        return json.JSONEncoder.default(self, obj)
+            return super().default(o)

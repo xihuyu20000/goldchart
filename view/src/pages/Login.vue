@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-
 const router = useRouter();
 
 const eusername = ref("");
@@ -37,6 +36,8 @@ const handleLogin = async () => {
     });
   }
 };
+// import { ElLoading } from "element-plus";
+// ElLoading.service({ fullscreen: true, text: "加载中..." });
 </script>
 <style lang="less" scoped>
 .login-page {

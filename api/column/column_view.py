@@ -3,6 +3,7 @@ import json
 import webargs
 from flask import Blueprint, Response
 
+import utils
 from api.column import column_dao
 from api.column.column_model import Column
 from api.column.column_schema import dataset_id_schema, column_schema
@@ -25,9 +26,8 @@ def column_loadby(req_data):
     dataset_id = req_data['dataset_id']
     data = column_dao.load_by_dataset(dataset_id)
     columns = [item['colname'] for item in data]
-    datas, _ = DatasetReader.read(dataset_id)
-    data = {'code': 200, 'data': {'columns': columns, 'datas': datas}}
-    json_response = json.dumps(data, ensure_ascii=False, cls=CustomJSONEncoder)
+    data = {'code': 200, 'data': {'columns': columns}}
+    json_response = json.dumps(data, ensure_ascii=False, cls=utils.CustomJSONEncoder)
     return Response(json_response, content_type='application/json')
 
 

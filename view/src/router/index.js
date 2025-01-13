@@ -101,7 +101,7 @@ router.beforeEach((to, from, next) => {
     next();
     return;
   }
-  logger.warn("未登录，跳转登录页");
+  console.warn("未登录，跳转登录页");
   // 3-3 未登录，跳转登录页
   next("/Login");
 });

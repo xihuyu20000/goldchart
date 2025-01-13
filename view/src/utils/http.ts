@@ -1,11 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import { ElLoading } from "element-plus";
-import { logger } from "./logger";
 
 interface Response {
   code: number;
   message: string;
-  data: { [key: string]: any }[] | { [key: string]: any };
+  data?: { [key: string]: any }[] | { [key: string]: any };
+  chart_datas?: any[];
+  chart_columns?: string[];
 }
 
 let http: AxiosInstance = axios.create({
@@ -14,18 +15,19 @@ let http: AxiosInstance = axios.create({
 });
 let loading_el = undefined;
 http.interceptors.request.use(
-  (config) => {
-    // let token = XXX  // 获取token 进行验证
+  (setting) => {
+    let token = sessionStorage.getItem("token"); // 获取token 进行验证
     // //定义请求或响应中媒体类型的信息
-    // setting.headers['Content-Type'] = 'application/json;charset=UTF-8'
+    setting.headers["Content-Type"] = "application/json;charset=UTF-8";
     // 在发送请求之前做些什么
     // console.log('request', setting)
     loading_el = ElLoading.service({ fullscreen: true, text: "加载中..." });
-    return config;
+    console.warn("请求路径", setting.url, "参数", JSON.stringify(setting.data));
+    return setting;
   },
   (error) => {
     // 对请求错误做些什么
-    // console.log('requesterror', error)
+    console.log("请求出现错误", error);
     return Promise.reject(error);
   }
 );
@@ -34,21 +36,22 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
-    // console.log('response', response)
+    console.log("应答内容", response);
     loading_el.close();
     const { status, data = {}, config = {} } = response;
     return Promise.resolve(response.data);
   },
   (error) => {
     // 对响应错误做点什么
+    console.log("应答错误", error);
     loading_el.close();
-    const { status, data = {}, config = {} } = error.response;
-    switch (status) {
-      case 400:
-        break;
-      default:
-        break;
-    }
+    // const { status, data = {}, config = {} } = error.response;
+    // switch (status) {
+    //   case 400:
+    //     break;
+    //   default:
+    //     break;
+    // }
     // console.log('responseerror', error)
     return Promise.reject(error);
   }

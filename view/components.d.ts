@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AggregateField: typeof import('./src/pages/designer/AggregateField.vue')['default']
     ChartDesigner: typeof import('./src/pages/designer/ChartDesigner.vue')['default']
     ChartIndex: typeof import('./src/pages/space/Chart/ChartIndex.vue')['default']
     Charts: typeof import('./src/pages/space/Charts/ChartsIndex.vue')['default']
@@ -77,6 +78,7 @@ declare module 'vue' {
     Index: typeof import('./src/pages/space/Index.vue')['default']
     Login: typeof import('./src/pages/Login.vue')['default']
     Metadata: typeof import('./src/pages/space/Metadata.vue')['default']
+    MysqlConnectForm: typeof import('./src/pages/space/Connect/cmps/MysqlConnectForm.vue')['default']
     Profile: typeof import('./src/pages/space/Profile/ProfileIndex.vue')['default']
     ProfileIndex: typeof import('./src/pages/space/Profile/ProfileIndex.vue')['default']
     ProjectIndex: typeof import('./src/pages/space/Project/ProjectIndex.vue')['default']
@@ -88,6 +90,7 @@ declare module 'vue' {
     Setting: typeof import('./src/pages/space/Setting/SettingIndex.vue')['default']
     SettingIndex: typeof import('./src/pages/space/Setting/SettingIndex.vue')['default']
     SqlEditor: typeof import('./src/pages/designer/SqlEditor.vue')['default']
+    SqliteConnectForm: typeof import('./src/pages/space/Connect/cmps/SqliteConnectForm.vue')['default']
     Test: typeof import('./src/pages/Test.vue')['default']
     ToggleButton: typeof import('./src/pages/designer/ToggleButton.vue')['default']
     Welcome: typeof import('./src/pages/charts/Welcome.vue')['default']

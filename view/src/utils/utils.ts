@@ -26,7 +26,7 @@ class utils {
       if (typeof resp.data === "object" && resp.data !== null && "value" in resp.data) {
         return resp.data.value;
       } else {
-        logger.error("[getLocalItem]", "响应数据格式不正确", resp.data);
+        console.error("[getLocalItem]", "响应数据格式不正确", resp.data);
         return "";
       }
     }
@@ -336,6 +336,18 @@ class utils {
     { label: "底部", value: "bottom" },
     { label: "右侧", value: "right" },
   ];
+  static aggrFields = ref([
+    { label: "最大值", value: "max" },
+    { label: "最小值", value: "min" },
+    { label: "平均值", value: "avg" },
+    { label: "总和", value: "sum" },
+    { label: "计数", value: "count" },
+  ]);
+  static sortFields = ref([
+    { label: "不排序", value: "" },
+    { label: "升序", value: "asc" },
+    { label: "降序", value: "desc" },
+  ]);
 }
 
 export { utils };

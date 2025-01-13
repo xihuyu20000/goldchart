@@ -49,6 +49,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@charts": path.resolve(__dirname, "./src/pages/charts"),
+      "@designer": path.resolve(__dirname, "./src/pages/designer"),
+      "@space": path.resolve(__dirname, "./src/pages/space"),
     },
   },
   server: {

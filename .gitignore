@@ -172,3 +172,4 @@ cython_debug/
 view/components.d.ts
 db.sqlite
 goldchart.2025-01-10_07-38-54_913803.log.zip
+*.zip

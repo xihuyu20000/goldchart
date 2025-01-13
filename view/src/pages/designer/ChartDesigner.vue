@@ -6,7 +6,7 @@
         <ToggleButton :min="20" :max="200"> </ToggleButton>
         <div class="left-part">
           <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
-            <el-option :value="item.id" :label="item.name" v-for="item in datasetList" :key="item.id"></el-option>
+            <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
           </el-select>
           <div class="field-list">
             <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
@@ -88,52 +88,22 @@
 import { menu } from "@/utils/menu";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
-
-type Dataset = {
-  id: string;
-  cunnect_id: string;
-  sql: string;
-  name: string;
-};
-type ResponseState = {
-  ins_id?:string;
-  columns: string[];
-  datas: any[];
-};
-type TabNameState = "config" | "option";
-
-
-
+import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option} from "./ChartDesigner"
 const route = useRoute();
 const globalStore = useGlobalStore();
 
+type TabNameState = "config" | "option";
+
+globalStore.setConfig({user_id:sessionStorage.getItem("token"),chart_id:route.meta.chartid as string} as Config)
 
 const activeLeftTabName = ref<TabNameState>("config");
-const datasetList = ref<Dataset[]>([]);
 
 const chart_class: IChart = getChartWrapper(route.meta.chartid as string);
 console.log('特定图表类型',chart_class);
 utils.assert(chart_class instanceof IChart);
 
-const handleDatasetChange = async (value: string) => {
-  if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
-    const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
-    if (resp.code === 200) {
-      const resp_data = resp.data as ResponseState;
 
-      globalStore.config.columns = resp_data.columns;
-      globalStore.config.datas = resp_data.datas;
 
-      console.log("加载列数据", toRaw(globalStore.config));
-    }
-  }
-};
-const handleDragStart = (event: DragEvent) => {
-  if (event.target instanceof HTMLElement) {
-    const i = event.target.getAttribute("i");
-    event.dataTransfer.setData("i", i);
-  }
-};
 
 
 onMounted(async () => {
@@ -159,11 +129,11 @@ onMounted(async () => {
   console.log("4-4 加载数据集列表");
   load_datasets();
 });
-provide("FieldItemValues", (name, values) => {
+provide("SetFieldItemValues", (name, values) => {
   if (name === "xAxis") {
-    globalStore.config.xCols = values;
+    globalStore.config.xCols = values.map((item) => ({name:item.name}));
   } else if (name === "yAxis") {
-    globalStore.config.yCols = values;
+    globalStore.config.yCols = values.map((item) => ({name:item.name, aggr:item.aggr, sort:item.sort}));
   } else {
     console.error("接收子组件的内容，不存在的类型=", name);
   }
@@ -174,13 +144,7 @@ const handleTabChange = (tabName: TabNameState) => {
   activeLeftTabName.value = tabName;
 };
 
-// 4-4 加载数据集列表，当改变下拉表时，会对config.dataset_id赋值，引起变化
-const load_datasets = async () => {
-  const resp = await $post("/api/dataset/loadall", { user_id: sessionStorage.getItem("token") });
-  if (resp.code === 200) {
-    datasetList.value = resp.data as Dataset[];
-  }
-};
+
 
 const configWatcher = watch(
   () => globalStore.config,
@@ -206,24 +170,9 @@ const optionWatcher = watch(
 const handleChartTypeClick = (item: any) => {
   console.log("点击图表类型", item);
 }
-const saveOption = async () => {
-  const token = sessionStorage.getItem(utils.StorageKeys.token);
-  globalStore.config.user_id = token;
-  globalStore.config.chart_id = route.meta.chartid as string;
-  console.log("当前ins_id", globalStore.ins_id);
-  const resp = await $post("/api/ins/save", { ins_id: globalStore.ins_id, config: globalStore.config, option: globalStore.option });
-  if (resp.code === 200) {
-    const resp_data = resp.data as ResponseState;
-    // 保存成功后，更新ins_id，否则重复保存时，记录会重复
-    globalStore.ins_id = resp_data.ins_id;
-    ElMessage({
-      type: "success",
-      message: "保存成功",
-    });
-  }
-};
+
 import * as echarts from "echarts";
-import { Config, IChart } from "@/utils/types";
+import { Config, Dataset, IChart, ResponseState } from "@/utils/types";
 
 const uid = ref<string>(utils.uid());
 const myChart = ref<echarts.ECharts | null>(null);
@@ -248,22 +197,7 @@ const renderChart = () => {
   }
 };
 
-const init_global_config = (): void => {
-  globalStore.setConfig({
-    user_id: "",
-    chart_id: "",
-    ins_id: "",
-    title: "",
-    dataset_id: "",
-    xCols: [],
-    yCols: [],
-    columns: [],
-    datas: [],
-  });
-};
-const init_global_option = (): void => {
-  globalStore.setOption({});
-};
+
 
 
 onUnmounted(() => {
