@@ -56,10 +56,6 @@ export const init_global_option = (): void => {
   globalStore.setOption({});
 };
 
-export const renderChart = () => {
-  if (globalStore.myChart) {
-    setTimeout(() => {
-      globalStore.myChart.setOption(globalStore.option, { notMerge: true });
-    }, 100);
-  }
-};
+
+
+

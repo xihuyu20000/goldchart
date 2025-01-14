@@ -8,7 +8,7 @@
           <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
             <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
           </el-select>
-          <div class="preview-dataset"  v-show="globalStore.config.columns.length>0"><a href="#">预览数据</a></div>
+          <div class="preview-dataset"  v-show="globalStore.config.columns.length>0"><a href="#" @click="showPreviewData">预览数据</a></div>
           <div class="field-list">
             <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
           </div>
@@ -21,8 +21,8 @@
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
         <div style="margin-top: 10px;">
-          <h2 @click="showChartTypes=!showChartTypes" style="cursor: pointer;">图表类型</h2>
-          <div class="designer-chart-types" v-show="showChartTypes">
+          <h2 @click="isShowChartTypes=!isShowChartTypes" style="cursor: pointer;">图表类型</h2>
+          <div class="designer-chart-types" v-show="isShowChartTypes">
             <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
               <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark"  :show-after="800"  :offset="16">
               <span class="tooltip" data-tooltip="第一行&#xa第二行">{{ item.label }}</span>
@@ -35,13 +35,13 @@
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">X轴</el-col>
-                <el-col :span="20"> <DataMappingCmp name="xAxis" :fieldList="globalStore.config.columns"></DataMappingCmp></el-col>
+                <el-col :span="20"> <DataMapping name="xAxis" :fieldList="globalStore.config.columns"></DataMapping></el-col>
               </el-row>
             </div>
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">Y轴</el-col>
-                <el-col :span="20"><DataMappingCmp name="yAxis" :fieldList="globalStore.config.columns"></DataMappingCmp> </el-col>
+                <el-col :span="20"><DataMapping name="yAxis" :fieldList="globalStore.config.columns"></DataMapping> </el-col>
               </el-row>
             </div>
           </el-tab-pane>
@@ -77,11 +77,12 @@
       </el-aside>
       <!-- 右侧图表显示区 -->
       <el-main class="designer-main">
-        <div id="chartviewer-page">
-          <div :id="uid" class="chartviewer-chart"></div>
-        </div>
+        <ChartViewer></ChartViewer>
       </el-main>
     </el-container>
+    <vxe-modal v-model="isShowPreviewData" title="预览数据" resize destroy-on-close show-footer show-confirm-button show-cancel-button  width="60vw" height="60vh" :confirm-closable="false" >
+      <vxe-grid v-bind="previewGridOptions"></vxe-grid>
+    </vxe-modal>
   </div>
   <!-- 添加这一行 -->
 </template>
@@ -89,7 +90,8 @@
 import { menu } from "@/utils/menu";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
-import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option, renderChart} from "./ChartDesigner"
+import { VxeGridProps, VxeGridInstance } from 'vxe-table'
+import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option} from "./ChartDesigner"
 const route = useRoute();
 const globalStore = useGlobalStore();
 
@@ -99,34 +101,36 @@ globalStore.setConfig({user_id:sessionStorage.getItem("token"),chart_id:route.me
 
 const activeLeftTabName = ref<TabNameState>("config");
 
-const chart_class: IChart = getChartWrapper(route.meta.chartid as string);
-utils.assert(chart_class instanceof IChart);
+const isShowChartTypes=ref<boolean>(false);
+const isShowPreviewData = ref<boolean>(false);
+let previewGridOptions = null;
+const showPreviewData = async () => {
+  const resp = await $post('/api/dataset/readata', {dataset_id:globalStore.config.dataset_id as string});
+  const grid_columns = resp.columns.map(item => ({field: item, title: item}));
+  const grid_datas = resp.datas.slice(0, 100).map((item) =>
+    resp.columns.reduce((obj, key, index) => {
+      obj[key] = item[index];
+      return obj;
+    }, {})
+  );
+  
+  previewGridOptions = reactive<VxeGridProps<any>>({
 
-const showChartTypes=ref<boolean>(false);
-
-
+  border: true,
+  height: '100%',
+  rowConfig: {
+    keyField: 'id'
+  },
+  columns: grid_columns,
+  data: grid_datas,
+  pagerConfig:{enabled:true},
+});
+  isShowPreviewData.value=true;
+}
 
 onMounted(async () => {
-  // 4-1 设置页面标题
-  console.log("4-1 设置页面标题");
   document.title = route.meta.title as string;
-  // 4-2 初始化echarts实例，并初始化图表大小
-  console.log("4-2 初始化echarts实例");
-  init_viewer();
-  // 4-3 如果current_ins为空，则为新建图表，否则为编辑图表
-  if (globalStore.ins_id === "") {
-    console.log("4-3 新建图表");
-    globalStore.setOption(toRaw(chart_class.get_option()));
-  } else {
-    console.log("4-3 加载图表");
-    // 异步执行
-    setTimeout(() => {
-      // 因为还没有watch，必须手工调动
-      renderChart();
-    }, 500);
-  }
-  // 4-4 加载数据集列表，显示数据集下拉框
-  console.log("4-4 加载数据集列表");
+
   load_datasets();
 });
 
@@ -135,53 +139,11 @@ const handleTabChange = (tabName: TabNameState) => {
   activeLeftTabName.value = tabName;
 };
 
-const configWatcher = watch(
-  () => globalStore.config,
-  async (newVal, oldVal) => {
-    if (activeLeftTabName.value === "config") {
-      if (chart_class.protect()) {
-        renderChart();
-      }
-    }
-  },
-  { deep: true }
-);
-const optionWatcher = watch(
-  () => globalStore.option,
-  (newVal, oldVal) => {
-    if (activeLeftTabName.value === "option") {
-      renderChart();
-    }
-  },
-  { deep: true }
-);
-
 const handleChartTypeClick = (item: any) => {
   console.log("点击图表类型", item);
 }
 
-import * as echarts from "echarts";
-import { Config, Dataset, IChart, ResponseState } from "@/utils/types";
-
-const uid = ref<string>(utils.uid());
-
-const init_viewer = () => {
-  // 2-1 初始化窗口大小
-  const page = document.getElementById("chartviewer-page")!;
-  let h: number = page.offsetHeight;
-  let w: number = page.offsetWidth;
-  // 2-2 基于准备好的dom，初始化echarts实例
-  const ins = echarts.init(document.getElementById(uid.value) as HTMLDivElement, null, {
-    width: w,
-    height: h,
-  });
-  globalStore.setMyChart(ins);
-};
-
-
-
-
-
+import { Config} from "@/utils/types";
 
 onUnmounted(() => {
   ElMessage({
@@ -191,13 +153,10 @@ onUnmounted(() => {
   globalStore.ins_id = "";
   init_global_config();
   init_global_option();
-  configWatcher();
-  optionWatcher();
-  globalStore.myChart.dispose();
+
 });
 </script>
 <style lang="less" scoped>
-
 
 .designer-page {
   height: 100%;
@@ -263,12 +222,6 @@ onUnmounted(() => {
       height: 100%;
       padding: 5px;
 
-      #chartviewer-page {
-        margin: 0;
-        width: calc(100%);
-        height: calc(100%);
-        border: 1px solid #ccc;
-      }
     }
   }
 }

@@ -123,8 +123,7 @@ export class StackedAreaChart extends IChart {
     const req_config = Object.assign({}, globalStore.config);
     const resp = await $post("/api/chart/getdata_by", req_config);
 
-    globalStore.setChartColumns(resp.chart_columns);
-    globalStore.setChartDatas(resp.chart_datas);
+    globalStore.setChart(resp.chart_columns, resp.chart_datas);
 
     // 2.1 处理数据
     const datas = {};

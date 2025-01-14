@@ -3,9 +3,11 @@ import json
 import webargs
 from flask import Blueprint, Response
 
+import utils
 from api.column import column_dao
 from api.dataset import dataset_dao
 from api.dataset.dataset_schema import dataset_save_schema, dataset_id_schema, user_id_schema, id_schema
+from utils import DatasetReader
 
 dataset_page = Blueprint('dataset_page', __name__)
 
@@ -66,4 +68,11 @@ def dataset_save(req_data):
     dataset_dao.save_datasets(req_data)
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
+    return Response(json_response, content_type='application/json')
+
+@dataset_page.post('/dataset/readata')
+@webargs.flaskparser.use_args(dataset_id_schema, location='json')
+def dataset_readata(req_data):
+    result, desc = DatasetReader.read(req_data['dataset_id'])
+    json_response = json.dumps({'columns': desc, 'datas': result}, ensure_ascii=False, cls=utils.CustomJSONEncoder)
     return Response(json_response, content_type='application/json')

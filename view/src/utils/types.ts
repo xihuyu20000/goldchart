@@ -50,4 +50,5 @@ type ResponseState = {
   chart_columns: any[];
   chart_datas: any[];
 };
+
 export { IChart, Field, Dataset, Config, Chart, Ins, ResponseState };

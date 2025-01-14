@@ -2,7 +2,7 @@
 import * as echarts from "echarts";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
-import { Config, Chart, Dataset, Ins } from "./types";
+import { Config, Chart, Dataset, Ins,  } from "./types";
 import { set } from "@vueuse/core";
 
 type GlobalState = {
@@ -10,7 +10,6 @@ type GlobalState = {
   ins_id: string;
   config: Config;
   chart: Chart;
-
   option: echarts.EChartsOption;
   datasetList: Dataset[];
 };
@@ -28,17 +27,16 @@ export const useGlobalStore = defineStore("global", {
     }),
   actions: {
     setMyChart(myChart: echarts.ECharts): void {
-      this.myChart = ref(myChart);
+      this.myChart = myChart;
     },
     setConfig(nv: Config): void {
       this.config = Object.assign(this.config, nv);
     },
-    setChartColumns(cols: string[]): void {
+    setChart(cols: string[], datas: any[]): void {
       this.chart.columns = ref(cols);
-    },
-    setChartDatas(datas: any[]): void {
       this.chart.datas = ref(datas);
     },
+
     setOption(option: echarts.EChartsOption): void {
       this.option = { ...option };
     },

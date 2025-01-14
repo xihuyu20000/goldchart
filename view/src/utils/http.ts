@@ -5,6 +5,8 @@ interface Response {
   code: number;
   message: string;
   data?: { [key: string]: any }[] | { [key: string]: any };
+  columns?: string[];
+  datas?: any[];
   chart_datas?: any[];
   chart_columns?: string[];
 }
