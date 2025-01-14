@@ -6,6 +6,7 @@ import { Config, Chart, Dataset, Ins } from "./types";
 import { set } from "@vueuse/core";
 
 type GlobalState = {
+  myChart: echarts.ECharts | null;
   ins_id: string;
   config: Config;
   chart: Chart;
@@ -16,8 +17,19 @@ type GlobalState = {
 
 export const useGlobalStore = defineStore("global", {
   // 必须有默认值，不能使用undefined、null等
-  state: () => reactive<GlobalState>({ ins_id: "" as string, config: new Config(), chart: new Chart(), option: {} as echarts.EChartsOption, datasetList: [] }),
+  state: () =>
+    reactive<GlobalState>({
+      myChart: null,
+      ins_id: "" as string,
+      config: new Config(),
+      chart: new Chart(),
+      option: {} as echarts.EChartsOption,
+      datasetList: [],
+    }),
   actions: {
+    setMyChart(myChart: echarts.ECharts): void {
+      this.myChart = ref(myChart);
+    },
     setConfig(nv: Config): void {
       this.config = Object.assign(this.config, nv);
     },

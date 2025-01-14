@@ -12,6 +12,7 @@ declare module 'vue' {
     ChartIndex: typeof import('./src/pages/space/Chart/ChartIndex.vue')['default']
     Charts: typeof import('./src/pages/space/Charts/ChartsIndex.vue')['default']
     ChartsIndex: typeof import('./src/pages/space/Chart/ChartIndex.vue')['default']
+    ChartViewer: typeof import('./src/pages/designer/ChartViewer.vue')['default']
     ConnectForm: typeof import('./src/pages/space/Connect/ConnectForm.vue')['default']
     ConnectIndex: typeof import('./src/pages/space/Connect/ConnectIndex.vue')['default']
     Connects: typeof import('./src/pages/space/Connects/ConnectsIndex.vue')['default']

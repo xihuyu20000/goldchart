@@ -8,6 +8,7 @@
           <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
             <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
           </el-select>
+          <div class="preview-dataset"  v-show="globalStore.config.columns.length>0"><a href="#">预览数据</a></div>
           <div class="field-list">
             <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
           </div>
@@ -20,8 +21,8 @@
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
         <div style="margin-top: 10px;">
-          <h3>图表类型</h3>
-          <div class="designer-chart-types">
+          <h2 @click="showChartTypes=!showChartTypes" style="cursor: pointer;">图表类型</h2>
+          <div class="designer-chart-types" v-show="showChartTypes">
             <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
               <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark"  :show-after="800"  :offset="16">
               <span class="tooltip" data-tooltip="第一行&#xa第二行">{{ item.label }}</span>
@@ -88,7 +89,7 @@
 import { menu } from "@/utils/menu";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
-import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option} from "./ChartDesigner"
+import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option, renderChart} from "./ChartDesigner"
 const route = useRoute();
 const globalStore = useGlobalStore();
 
@@ -99,10 +100,9 @@ globalStore.setConfig({user_id:sessionStorage.getItem("token"),chart_id:route.me
 const activeLeftTabName = ref<TabNameState>("config");
 
 const chart_class: IChart = getChartWrapper(route.meta.chartid as string);
-console.log('特定图表类型',chart_class);
 utils.assert(chart_class instanceof IChart);
 
-
+const showChartTypes=ref<boolean>(false);
 
 
 
@@ -129,22 +129,11 @@ onMounted(async () => {
   console.log("4-4 加载数据集列表");
   load_datasets();
 });
-provide("SetFieldItemValues", (name, values) => {
-  if (name === "xAxis") {
-    globalStore.config.xCols = values.map((item) => ({name:item.name}));
-  } else if (name === "yAxis") {
-    globalStore.config.yCols = values.map((item) => ({name:item.name, aggr:item.aggr, sort:item.sort}));
-  } else {
-    console.error("接收子组件的内容，不存在的类型=", name);
-  }
-  console.log("接收子组件的内容", name, values);
-});
+
 // 切换选项卡时，切换watch的执行
 const handleTabChange = (tabName: TabNameState) => {
   activeLeftTabName.value = tabName;
 };
-
-
 
 const configWatcher = watch(
   () => globalStore.config,
@@ -175,7 +164,6 @@ import * as echarts from "echarts";
 import { Config, Dataset, IChart, ResponseState } from "@/utils/types";
 
 const uid = ref<string>(utils.uid());
-const myChart = ref<echarts.ECharts | null>(null);
 
 const init_viewer = () => {
   // 2-1 初始化窗口大小
@@ -183,19 +171,14 @@ const init_viewer = () => {
   let h: number = page.offsetHeight;
   let w: number = page.offsetWidth;
   // 2-2 基于准备好的dom，初始化echarts实例
-  myChart.value = echarts.init(document.getElementById(uid.value) as HTMLDivElement, null, {
+  const ins = echarts.init(document.getElementById(uid.value) as HTMLDivElement, null, {
     width: w,
     height: h,
   });
+  globalStore.setMyChart(ins);
 };
 
-const renderChart = () => {
-  if (myChart.value) {
-    setTimeout(() => {
-      myChart.value.setOption(globalStore.option, { notMerge: true });
-    }, 100);
-  }
-};
+
 
 
 
@@ -210,7 +193,7 @@ onUnmounted(() => {
   init_global_option();
   configWatcher();
   optionWatcher();
-  myChart.value.dispose();
+  globalStore.myChart.dispose();
 });
 </script>
 <style lang="less" scoped>
@@ -292,6 +275,12 @@ onUnmounted(() => {
 .left-part {
   margin-top: 30px;
   color: red;
+  .preview-dataset{
+    margin:5px 10px;
+    a{
+      text-decoration: none;
+    }
+  }
   .field-list {
     margin-top: 5px;
     min-height: 50px;
