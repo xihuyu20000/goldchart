@@ -26,7 +26,7 @@ def api_login(req_data):
     del user['password']
     session['token'] = user['id']
     mylogger.debug(f"用户登录成功, {user=}")
-    data = {'code': 200, 'data': {'token': session['token'], 'user':user}}
+    data = {'code': 200, 'data': {'token': session['token'], 'user': user}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
 

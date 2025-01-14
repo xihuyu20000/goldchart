@@ -1,4 +1,5 @@
 import webargs
+
 id_schema = {
     'id': webargs.fields.Str(required=True, validate=lambda x: len(x) > 0)
 }

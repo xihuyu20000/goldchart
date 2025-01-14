@@ -14,5 +14,5 @@ file_id_schema = {
 upload_schema = {
     'user_id': webargs.fields.Str(required=True, validate=lambda x: len(x) > 0),
     'project_id': webargs.fields.Str(required=True, validate=lambda x: len(x) > 0),
-    'file':webargs.fields.Raw(required=False)
+    'file': webargs.fields.Raw(required=False)
 }

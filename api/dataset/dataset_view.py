@@ -3,9 +3,9 @@ import json
 import webargs
 from flask import Blueprint, Response
 
+from api.column import column_dao
 from api.dataset import dataset_dao
 from api.dataset.dataset_schema import dataset_save_schema, dataset_id_schema, user_id_schema, id_schema
-from utils import mylogger, uuidid
 
 dataset_page = Blueprint('dataset_page', __name__)
 
@@ -20,9 +20,15 @@ def dataset_loadall(req_data):
     """
     user_id = req_data['user_id']
     datasets = dataset_dao.select_all()
+    for ds in datasets:
+        data = column_dao.load_by_dataset(ds['id'])
+        columns = [item['colname'] for item in data]
+        ds['columns'] = columns
     data = {'code': 200, 'data': datasets}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
+
 @dataset_page.post('/dataset/loadby')
 @webargs.flaskparser.use_args(dataset_id_schema, location='json')
 def dataset_load_by(req_data):
@@ -36,6 +42,8 @@ def dataset_load_by(req_data):
     data = {'code': 200, 'data': datasets}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
+
 @dataset_page.post('/dataset/delete')
 @webargs.flaskparser.use_args(id_schema, location='json')
 def dataset_delete(req_data):
@@ -44,6 +52,8 @@ def dataset_delete(req_data):
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
+
 @dataset_page.post('/dataset/save')
 @webargs.flaskparser.use_args(dataset_save_schema, location='json')
 def dataset_save(req_data):
@@ -57,5 +67,3 @@ def dataset_save(req_data):
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-
-

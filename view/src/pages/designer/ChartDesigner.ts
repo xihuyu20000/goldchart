@@ -6,13 +6,7 @@ const route = useRoute();
 const globalStore = useGlobalStore();
 
 export const handleDatasetChange = async (value: string) => {
-  if (globalStore.config.dataset_id && globalStore.config.dataset_id.startsWith("dataset")) {
-    const resp = await $post("/api/column/loadby", { dataset_id: globalStore.config.dataset_id });
-    if (resp.code === 200) {
-      const resp_data = resp.data as ResponseState;
-      globalStore.config.columns = resp_data.columns;
-    }
-  }
+  globalStore.config.columns = globalStore.datasetList.find((item) => item.id === value).columns;
 };
 export const handleDragStart = (event: DragEvent) => {
   if (event.target instanceof HTMLElement) {
@@ -56,8 +50,6 @@ export const init_global_config = (): void => {
     xCols: [],
     yCols: [],
     columns: [],
-    chart_columns: [],
-    chart_datas: [],
   });
 };
 export const init_global_option = (): void => {

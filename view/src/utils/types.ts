@@ -22,6 +22,7 @@ class Dataset {
   connect_id: string;
   sql: string;
   name: string;
+  columns: string[];
 }
 class Config {
   user_id: string = "";

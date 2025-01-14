@@ -3,32 +3,12 @@ import json
 import webargs
 from flask import Blueprint, Response
 
-import utils
 from api.column import column_dao
 from api.column.column_model import Column
-from api.column.column_schema import dataset_id_schema, column_schema
-from api.dataset import dataset_dao
-from utils import uuidid, mylogger, DatasetReader, CustomJSONEncoder
+from api.column.column_schema import column_schema
+from utils import mylogger
 
 column_page = Blueprint('column_page', __name__)
-
-
-
-@column_page.post('/column/loadby')
-@webargs.flaskparser.use_args(dataset_id_schema, location='json')
-def column_loadby(req_data):
-    """
-    根据dataset_id查询元数据
-    :param req_data:
-    :return:
-    """
-
-    dataset_id = req_data['dataset_id']
-    data = column_dao.load_by_dataset(dataset_id)
-    columns = [item['colname'] for item in data]
-    data = {'code': 200, 'data': {'columns': columns}}
-    json_response = json.dumps(data, ensure_ascii=False, cls=utils.CustomJSONEncoder)
-    return Response(json_response, content_type='application/json')
 
 
 @column_page.post('/column/save')

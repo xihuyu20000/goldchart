@@ -3,9 +3,9 @@
     <div class="field-wrapper" draggable="true" v-for="(item, i) in newFieldList" :key="i">
       <span class="delete-span" @click="handleDeleteClick"><i class="iconfont icon-shanchu1"></i></span>
       <span>{{ item.aggr + "(" + item.name + ")" }}</span>
-      <span class="delete-span" v-show="showAggrFieldIcon" @click="handleAggregateClick"><i class="iconfont icon-sangedian"></i></span>
-      <div style="width: 12px" v-show="!showAggrFieldIcon"></div>
-      <vxe-modal v-model="showAggrFieldPanel" @confirm="handleAggrField" @cancel="showAggrFieldPanel = false" resize destroy-on-close show-footer show-confirm-button show-cancel-button width="30vw" height="30vh" title="聚合方式" :confirm-closable="false">
+      <span class="delete-span" @click="handleAggregateClick"><i class="iconfont icon-sangedian"></i></span>
+
+      <vxe-modal v-model="showAggrFieldPanel" @cancel="showAggrFieldPanel = false" resize destroy-on-close show-footer show-confirm-button show-cancel-button width="30vw" height="30vh" title="聚合方式" :confirm-closable="false">
         <div>聚合方式</div>
         <el-radio-group v-model="item.aggr">
           <el-radio :value="ff.value" v-for="(ff, i) in utils.aggrFields.value" :key="i">{{ ff.label }}</el-radio>
@@ -35,16 +35,13 @@ const props = defineProps({
 
 const globalStore = useGlobalStore();
 const newFieldList = ref<Field[]>([]);
-const SetFieldItemValues: CallableFunction = inject("SetFieldItemValues");
-const showAggrFieldIcon = ref(false);
 const showAggrFieldPanel = ref(false);
+
 onMounted(() => {
   // 如果有ins，则从ins中获取数据
   if (props.name === "xAxis") {
-    showAggrFieldIcon.value = false;
     newFieldList.value = globalStore.config.xCols;
   } else if (props.name === "yAxis") {
-    showAggrFieldIcon.value = true;
     newFieldList.value = globalStore.config.yCols;
   }
 });
@@ -60,15 +57,19 @@ watch(
 watch(
   () => newFieldList,
   (newVal) => {
-    console.log("子组件列表变化", props.name, newFieldList.value);
-    SetFieldItemValues(props.name, newFieldList.value);
+    const name = props.name;
+    const values = newFieldList.value;
+    if (name === "xAxis") {
+      globalStore.config.xCols = values.map((item) => ({ name: item.name }));
+    } else if (name === "yAxis") {
+      globalStore.config.yCols = values.map((item) => ({ name: item.name, aggr: item.aggr, sort: item.sort }));
+    } else {
+      console.error("不存在的类型=", name);
+    }
   },
   { deep: true }
 );
 
-const handleAggrField = () => {
-  console.log("聚合方式", newFieldList.value);
-};
 const handleDragStart = (event: DragEvent) => {
   if (event.target instanceof HTMLElement) {
     if ("field-wrapper" === event.target.getAttribute("class")) {
@@ -112,7 +113,6 @@ const handleAggregateClick = (event: MouseEvent) => {
   if (event.target instanceof HTMLElement) {
     const target = event.target as HTMLElement;
     const i = target.getAttribute("i");
-    console.log("聚合", props.fieldList[Number(i)]);
     showAggrFieldPanel.value = true;
   }
 };

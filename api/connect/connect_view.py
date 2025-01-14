@@ -5,7 +5,6 @@ from flask import Blueprint, Response
 
 from api.connect import connect_dao
 from api.connect.connect_schema import user_id_schema, connect_save_schema, id_schema
-from utils import mylogger, uuidid
 
 connect_page = Blueprint('connect_page', __name__)
 
@@ -23,6 +22,8 @@ def connect_loadall(req_data):
     data = {'code': 200, 'data': connects}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
+
 @connect_page.post('/connect/delete')
 @webargs.flaskparser.use_args(id_schema, location='json')
 def dataset_delete(req_data):
@@ -31,6 +32,8 @@ def dataset_delete(req_data):
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
+
 @connect_page.post('/connect/save')
 @webargs.flaskparser.use_args(connect_save_schema, location='json')
 def connect_save(req_data):
@@ -43,5 +46,3 @@ def connect_save(req_data):
     data = {'code': 200, 'data': {}}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
-
-

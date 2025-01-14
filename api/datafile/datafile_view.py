@@ -6,10 +6,8 @@ from flask import Blueprint, Response, request
 
 from api.chart import chart_dao
 from api.chart.chart_model import Chart
-from api.column import column_dao
 from api.datafile import datafile_dao
 from api.datafile.datafile_schema import user_id_schema, file_id_schema, upload_schema
-
 from utils import basepath, uuidid, mylogger
 
 datafile_page = Blueprint('datafile_page', __name__)
@@ -28,6 +26,7 @@ def datafiles_loadall(req_data):
     data = {'code': 200, 'data': datafiles}
     json_response = json.dumps(data, ensure_ascii=False)
     return Response(json_response, content_type='application/json')
+
 
 @datafile_page.post('/datafile/remove')
 @webargs.flaskparser.use_args(file_id_schema, location='json')

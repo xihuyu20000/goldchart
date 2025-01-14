@@ -30,7 +30,8 @@ def save_projects(user_id, insertRecords, updateRecords, removeRecords):
             mylogger.debug(f"删除项目 {record=}")
     g.db.commit()
 
-def add_project(project:Project) -> None:
+
+def add_project(project: Project) -> None:
     g.db.execute("INSERT INTO projects VALUES (:id, :name, :user_id)", project)
 
     g.db.commit()
@@ -40,7 +41,7 @@ def add_project(project:Project) -> None:
     return project
 
 
-def update_project(project:Project) -> None:
+def update_project(project: Project) -> None:
     g.db.execute("UPDATE projects SET name=:name WHERE id=:id", (project.name, project.id))
 
     g.db.commit()
@@ -50,8 +51,7 @@ def update_project(project:Project) -> None:
     return project
 
 
-def drop_project(project_id:str) -> None:
+def drop_project(project_id: str) -> None:
     g.db.execute("DELETE FROM projects WHERE id=:id", (project_id,))
     g.db.commit()
     mylogger.debug(f"丢弃项目 {project_id=}")
-
