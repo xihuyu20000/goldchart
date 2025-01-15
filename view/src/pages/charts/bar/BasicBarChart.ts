@@ -65,8 +65,75 @@ export class BasicBarChart extends IChart {
 
     return option;
   }
-  protect(): boolean {
+  async protect(): Promise<boolean> {
     console.warn("protect", toRaw(globalStore.config));
-    return true;
+    // 1 判断config是否完整
+    if (globalStore.config.user_id.length == 0 || globalStore.config.chart_id.length == 0 || globalStore.config.xCols.length == 0 || globalStore.config.yCols.length == 0) {
+      console.warn("protect", "数据集不完整", toRaw(globalStore.config));
+      return false;
+    }
+    // 2 后端获取数据集
+    const req_config = Object.assign({}, globalStore.config);
+    const resp = await $post("/api/chart/getdata_by", req_config);
+
+    globalStore.setChart(resp.chart_columns, resp.chart_datas);
+
+    // 2.1 处理数据
+    const datas = {};
+    for (let i = 0; i < globalStore.chart.columns.length; i++) {
+      const col = globalStore.chart.columns[i];
+      datas[col] = globalStore.chart.datas.map((item) => item[i]);
+    }
+    // 3 根据xCols对xAxis赋值
+    let is_xAxis_data: boolean = false;
+    if (globalStore.chart.columns.length > 0) {
+      globalStore.option.xAxis = [];
+
+      const intersection = globalStore.config.xCols.map((item) => item.name).filter((element) => globalStore.chart.columns.includes(element));
+
+      for (const col of intersection) {
+        const obj: echarts.XAXisComponentOption = {
+          show: true,
+          type: "category",
+          name: col,
+          nameLocation: "middle",
+          nameGap: 35,
+          axisLabel: { show: true },
+          nameTextStyle: { fontSize: 20 },
+          data: datas[col],
+        };
+        globalStore.option.xAxis.push(obj);
+      }
+      if (globalStore.option.xAxis.length > 0) {
+        is_xAxis_data = true;
+      }
+    }
+
+    // 4 根据yCols对series赋值
+    let is_series_data = false;
+    if (globalStore.chart.datas.length > 0) {
+      globalStore.option.series = [];
+
+      const intersection = globalStore.config.yCols.map((item) => item.name).filter((element) => globalStore.chart.columns.includes(element));
+
+      for (const col of intersection) {
+        const obj: echarts.BarSeriesOption = {
+          data: datas[col],
+          type: "bar",
+          name: col,
+          label: { show: true, fontSize: 12 },
+        };
+        if (obj.data.length > 0) {
+          is_series_data = true;
+        }
+        globalStore.option.series.push(obj);
+      }
+    }
+    console.warn("protect", is_xAxis_data, is_series_data);
+    if (is_xAxis_data && is_series_data) {
+      console.warn("protect", "数据完整", toRaw(globalStore.option));
+      return true;
+    }
+    return false;
   }
 }

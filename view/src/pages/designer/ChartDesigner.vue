@@ -8,7 +8,7 @@
           <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
             <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
           </el-select>
-          <div class="preview-dataset"  v-show="globalStore.config.columns.length>0"><a href="#" @click="showPreviewData">预览数据</a></div>
+          <div class="preview-dataset" v-show="globalStore.config.columns.length > 0"><a href="#" @click="showPreviewData">预览数据</a></div>
           <div class="field-list">
             <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
           </div>
@@ -20,13 +20,11 @@
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
-        <div style="margin-top: 10px;">
-          <h2 @click="isShowChartTypes=!isShowChartTypes" style="cursor: pointer;">图表类型</h2>
+        <div style="margin-top: 10px">
+          <h2 @click="isShowChartTypes = !isShowChartTypes" style="cursor: pointer">图表类型</h2>
           <div class="designer-chart-types" v-show="isShowChartTypes">
             <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
-              <el-tooltip class="box-item" :content="item.label" placement="right" effect="dark"  :show-after="800"  :offset="16">
-              <span class="tooltip" data-tooltip="第一行&#xa第二行">{{ item.label }}</span>
-              </el-tooltip>
+              <span class="tooltip" :title="utils.chartRuleStr(item.rules)">{{ item.label }}</span>
             </div>
           </div>
         </div>
@@ -80,53 +78,53 @@
         <ChartViewer></ChartViewer>
       </el-main>
     </el-container>
-    <vxe-modal v-model="isShowPreviewData" title="预览数据" resize destroy-on-close show-footer show-confirm-button show-cancel-button  width="60vw" height="60vh" :confirm-closable="false" >
+    <vxe-modal v-model="isShowPreviewData" title="预览数据" resize destroy-on-close show-footer show-confirm-button show-cancel-button width="60vw" height="60vh" :confirm-closable="false">
       <vxe-grid v-bind="previewGridOptions"></vxe-grid>
     </vxe-modal>
   </div>
   <!-- 添加这一行 -->
 </template>
 <script setup lang="ts">
+import { utils } from "@/utils/utils";
 import { menu } from "@/utils/menu";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onMounted } from "vue";
-import { VxeGridProps, VxeGridInstance } from 'vxe-table'
-import {handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option} from "./ChartDesigner"
+import { VxeGridProps, VxeGridInstance } from "vxe-table";
+import { handleDatasetChange, handleDragStart, load_datasets, saveOption, init_global_config, init_global_option } from "./ChartDesigner";
 const route = useRoute();
 const globalStore = useGlobalStore();
 
 type TabNameState = "config" | "option";
 
-globalStore.setConfig({user_id:sessionStorage.getItem("token"),chart_id:route.meta.chartid as string} as Config)
+globalStore.setConfig({ user_id: sessionStorage.getItem("token"), chart_id: route.meta.chartid as string } as Config);
 
 const activeLeftTabName = ref<TabNameState>("config");
 
-const isShowChartTypes=ref<boolean>(false);
+const isShowChartTypes = ref<boolean>(true);
 const isShowPreviewData = ref<boolean>(false);
 let previewGridOptions = null;
 const showPreviewData = async () => {
-  const resp = await $post('/api/dataset/readata', {dataset_id:globalStore.config.dataset_id as string});
-  const grid_columns = resp.columns.map(item => ({field: item, title: item}));
+  const resp = await $post("/api/dataset/readata", { dataset_id: globalStore.config.dataset_id as string });
+  const grid_columns = resp.columns.map((item) => ({ field: item, title: item }));
   const grid_datas = resp.datas.slice(0, 100).map((item) =>
     resp.columns.reduce((obj, key, index) => {
       obj[key] = item[index];
       return obj;
     }, {})
   );
-  
-  previewGridOptions = reactive<VxeGridProps<any>>({
 
-  border: true,
-  height: '100%',
-  rowConfig: {
-    keyField: 'id'
-  },
-  columns: grid_columns,
-  data: grid_datas,
-  pagerConfig:{enabled:true},
-});
-  isShowPreviewData.value=true;
-}
+  previewGridOptions = reactive<VxeGridProps<any>>({
+    border: true,
+    height: "100%",
+    rowConfig: {
+      keyField: "id",
+    },
+    columns: grid_columns,
+    data: grid_datas,
+    pagerConfig: { enabled: true },
+  });
+  isShowPreviewData.value = true;
+};
 
 onMounted(async () => {
   document.title = route.meta.title as string;
@@ -141,9 +139,9 @@ const handleTabChange = (tabName: TabNameState) => {
 
 const handleChartTypeClick = (item: any) => {
   console.log("点击图表类型", item);
-}
+};
 
-import { Config} from "@/utils/types";
+import { Config } from "@/utils/types";
 
 onUnmounted(() => {
   ElMessage({
@@ -153,11 +151,9 @@ onUnmounted(() => {
   globalStore.ins_id = "";
   init_global_config();
   init_global_option();
-
 });
 </script>
 <style lang="less" scoped>
-
 .designer-page {
   height: 100%;
 
@@ -221,16 +217,15 @@ onUnmounted(() => {
       width: calc(100% - var(--public_chart_option_width));
       height: 100%;
       padding: 5px;
-
     }
   }
 }
 .left-part {
   margin-top: 30px;
   color: red;
-  .preview-dataset{
-    margin:5px 10px;
-    a{
+  .preview-dataset {
+    margin: 5px 10px;
+    a {
       text-decoration: none;
     }
   }

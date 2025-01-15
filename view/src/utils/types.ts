@@ -38,6 +38,10 @@ class Chart {
   columns: string[] = [];
   datas: any[] = [];
 }
+type ChartRule = {
+  name: string;
+  range: [number, number];
+};
 type Ins = {
   id: string;
   user_id: string;
@@ -51,4 +55,4 @@ type ResponseState = {
   chart_datas: any[];
 };
 
-export { IChart, Field, Dataset, Config, Chart, Ins, ResponseState };
+export { IChart, Field, Dataset, Config, Chart, ChartRule, Ins, ResponseState };

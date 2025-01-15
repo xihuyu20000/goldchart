@@ -1,5 +1,5 @@
 import { $post } from "./http";
-
+import { ChartRule } from "./types";
 class utils {
   static StorageKeys = {
     activeProjectId: "activeProjectId",
@@ -60,6 +60,28 @@ class utils {
   static getType = (val) => {
     return Object.prototype.toString.call(val).slice(8, -1);
   };
+
+  static chartRuleStr = (rules: ChartRule[]): string => {
+    let arr: string[] = [];
+    if (rules != undefined && rules.length > 0) {
+      for (let i = 0; i < rules.length; i++) {
+        let item = rules[i];
+        if (item.name === "x") {
+          if (item.range[0] == 1 && item.range[1] == 1) {
+            arr.push("x轴只能有1个");
+          }
+        }
+        if (item.name === "y") {
+          if (item.range[0] == 1 && item.range[1] == 99) {
+            arr.push("y轴至少有1个");
+          }
+        }
+      }
+    }
+
+    return arr.join("，");
+  };
+
   static titleTextStyleFontFamilies = [
     { label: "宋体", value: "SimSun" },
     { label: "黑体", value: "SimHei" },
