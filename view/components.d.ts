@@ -7,9 +7,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ChartAttr: typeof import('./src/pages/designer/ChartAttr.vue')['default']
     ChartDesigner: typeof import('./src/pages/designer/ChartDesigner.vue')['default']
     ChartIndex: typeof import('./src/pages/space/Chart/ChartIndex.vue')['default']
     ChartViewer: typeof import('./src/pages/designer/ChartViewer.vue')['default']
+    ConfigField: typeof import('./src/pages/designer/ConfigField.vue')['default']
     ConnectForm: typeof import('./src/pages/space/Connect/ConnectForm.vue')['default']
     ConnectIndex: typeof import('./src/pages/space/Connect/ConnectIndex.vue')['default']
     DataMapping: typeof import('./src/pages/designer/DataMapping.vue')['default']

@@ -1,49 +1,44 @@
 <template>
   <div class="designer-page">
     <el-container class="designer-container">
-      <!-- 左侧数据集选择区 -->
-      <el-aside class="designer-dataset-option">
-        <ToggleButton :min="20" :max="200"> </ToggleButton>
-        <div class="left-part">
-          <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
-            <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
-          </el-select>
-          <div class="preview-dataset" v-show="globalStore.config.columns.length > 0"><a href="#" @click="showPreviewData">预览数据</a></div>
-          <div class="field-list">
-            <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
-          </div>
-        </div>
-      </el-aside>
       <!-- 左侧图表配置区 -->
       <el-aside class="designer-config-option">
-        <ToggleButton :min="20" :max="200"></ToggleButton>
         <div class="designer-title">
           <el-input v-model="globalStore.config.title" placeholder="请输入标题"></el-input>
         </div>
-        <div style="margin-top: 10px">
-          <h2 @click="isShowChartTypes = !isShowChartTypes" style="cursor: pointer">图表类型</h2>
-          <div class="designer-chart-types" v-show="isShowChartTypes">
-            <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
-              <span class="tooltip" :title="utils.chartRuleStr(item.rules)">{{ item.label }}</span>
-            </div>
-          </div>
-        </div>
-        <el-tabs tab-position="top" :stretch="true" v-model="activeLeftTabName" @tab-change="handleTabChange">
+        <el-tabs tab-position="top" :stretch="true">
           <el-tab-pane label="数据映射" name="config">
+            <div class="left-part">
+              <el-select v-model="globalStore.config.dataset_id" @change="handleDatasetChange">
+                <el-option :value="item.id" :label="item.name" v-for="item in globalStore.datasetList" :key="item.id"></el-option>
+              </el-select>
+              <div class="preview-dataset" v-show="globalStore.config.columns.length > 0"><a href="#" @click="showPreviewData">预览数据</a></div>
+              <div class="field-list">
+                <div class="field-item" draggable="true" v-for="(item, i) in globalStore.config.columns" :key="i" :i="i" @dragstart="handleDragStart">{{ item }}</div>
+              </div>
+            </div>
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">X轴</el-col>
-                <el-col :span="20"> <DataMapping name="xAxis" :fieldList="globalStore.config.columns"></DataMapping></el-col>
+                <el-col :span="20"> <ConfigField name="xAxis" :fieldList="globalStore.config.columns"></ConfigField></el-col>
               </el-row>
             </div>
             <div class="left-config-row">
               <el-row>
                 <el-col :span="4">Y轴</el-col>
-                <el-col :span="20"><DataMapping name="yAxis" :fieldList="globalStore.config.columns"></DataMapping> </el-col>
+                <el-col :span="20"><ConfigField name="yAxis" :fieldList="globalStore.config.columns"></ConfigField> </el-col>
               </el-row>
             </div>
           </el-tab-pane>
           <el-tab-pane label="图表属性" name="option">
+            <div style="margin-top: 10px">
+              <h2 @click="isShowChartTypes = !isShowChartTypes" style="cursor: pointer">图表类型</h2>
+            </div>
+            <div class="designer-chart-types" v-show="isShowChartTypes">
+              <div class="chart-item" v-for="(item, i) in menu.chart_menu_configs_array()" @click="handleChartTypeClick(item)">
+                <span class="tooltip" :title="utils.chartRuleStr(item.rules)">{{ item.label }}</span>
+              </div>
+            </div>
             <el-tabs tab-position="left" model-value="title">
               <el-tab-pane label="标题" name="title">
                 <EchartTitle />
@@ -98,8 +93,6 @@ type TabNameState = "config" | "option";
 
 globalStore.setConfig({ user_id: sessionStorage.getItem("token"), chart_id: route.meta.chartid as string } as Config);
 
-const activeLeftTabName = ref<TabNameState>("config");
-
 const isShowChartTypes = ref<boolean>(true);
 const isShowPreviewData = ref<boolean>(false);
 let previewGridOptions = null;
@@ -132,11 +125,6 @@ onMounted(async () => {
   load_datasets();
 });
 
-// 切换选项卡时，切换watch的执行
-const handleTabChange = (tabName: TabNameState) => {
-  activeLeftTabName.value = tabName;
-};
-
 const handleChartTypeClick = (item: any) => {
   console.log("点击图表类型", item);
 };
@@ -160,14 +148,6 @@ onUnmounted(() => {
   .designer-container {
     width: 100%;
     height: 100%;
-
-    .designer-dataset-option {
-      width: var(--public_chart_option_width);
-      height: 100%;
-      padding: 2px;
-      position: relative;
-      border: 1px solid #ccc;
-    }
     .designer-config-option {
       width: var(--public_chart_option_width);
       height: 100%;
@@ -177,11 +157,11 @@ onUnmounted(() => {
         margin-bottom: 15px;
       }
       .designer-title {
-        margin-top: 30px;
+        margin-top: 10px;
         text-align: center;
         height: 30px;
         line-height: 30px;
-        width: 200px;
+        width: 340px;
         font-weight: bolder;
       }
       .designer-chart-types {

@@ -1,6 +1,6 @@
 :root {
   --public_chart_data_width: 150px;
-  --public_chart_option_width: 300px;
+  --public_chart_option_width: 350px;
   --public_chart_main_padding: 10px;
   --public_theme_dark_color: #f3f3f3;
   --left_nav_width: 200px;
@@ -27,7 +27,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-size: 12px !important;
 }
 #app {
   height: 100vh;
