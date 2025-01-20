@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import { utils } from "@/utils/utils";
-import { Field } from "@/utils/types";
+import { ConfigField } from "@/utils/types";
 const innerDragging = ref(false);
 const props = defineProps({
   name: {
@@ -34,7 +34,7 @@ const props = defineProps({
 });
 
 const globalStore = useGlobalStore();
-const newFieldList = ref<Field[]>([]);
+const newFieldList = ref<ConfigField[]>([]);
 const showAggrFieldPanel = ref(false);
 
 onMounted(() => {
@@ -87,7 +87,7 @@ const handleDrop = (event: DragEvent) => {
       const moved = newFieldList.value.splice(Number(i), 1)[0];
       newFieldList.value.push(moved);
     } else {
-      const field = ref<Field>({ name: props.fieldList[Number(i)], aggr: "", sort: "" });
+      const field = ref<ConfigField>({ name: props.fieldList[Number(i)], aggr: "", sort: "" });
       newFieldList.value.push(field.value);
     }
   }

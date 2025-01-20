@@ -38,7 +38,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
-    console.log("应答内容", response);
+    // console.log("应答内容", response);
     loading_el.close();
     const { status, data = {}, config = {} } = response;
     return Promise.resolve(response.data);
@@ -70,7 +70,7 @@ const getHttp = (url, params): Promise<Response> => {
 };
 //封装一个post请求
 const postHttp = (url, data): Promise<Response> => {
-  console.log("[postHttp]", "请求路径", url, "参数", JSON.stringify(data));
+  // console.log("[postHttp]", "请求路径", url, "参数", JSON.stringify(data));
   return http.post(url, data, {
     headers: {
       "Content-Type": "application/json",

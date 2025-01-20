@@ -1,4 +1,4 @@
-import { Field, IChart, ResponseState } from "@/utils/types";
+import { ConfigField, IChart, ResponseState } from "@/utils/types";
 import * as echarts from "echarts";
 import { useGlobalStore } from "@/utils/global";
 const globalStore = useGlobalStore();
@@ -83,18 +83,52 @@ export class BasicLineChart extends IChart {
     return option;
   }
 
-  async protect(): Promise<boolean> {
-    console.warn("protect", toRaw(globalStore.config));
-    // 1 判断config是否完整
-    if (globalStore.config.user_id.length == 0 || globalStore.config.chart_id.length == 0 || globalStore.config.xCols.length == 0 || globalStore.config.yCols.length == 0) {
-      console.warn("protect", "数据集不完整", toRaw(globalStore.config));
+  check_config = async (): Promise<boolean> => {
+    // 7-1 config.user_id
+    if (globalStore.config.user_id.length == 0) {
+      console.warn("check_config", "配置check_config.user_id不完整", globalStore.config.user_id);
       return false;
     }
-    // 2 后端获取数据集
+    // 7-2 config.chart_id
+    if (globalStore.config.chart_id.length == 0) {
+      console.warn("check_config", "配置check_config.chart_id不完整", globalStore.config.chart_id);
+      return false;
+    }
+    // 7-3 config.dataset_id
+    if (globalStore.config.dataset_id.length == 0) {
+      console.warn("check_config", "配置check_config.dataset_id不完整", globalStore.config.dataset_id);
+      return false;
+    }
+    // 7-4 config.xCols
+    if (globalStore.config.xCols.length == 0) {
+      console.warn("check_config", "配置check_config.xCols不完整", globalStore.config.xCols);
+      return false;
+    }
+    // 7-5 config.yCols
+    if (globalStore.config.yCols.length == 0) {
+      console.warn("check_config", "配置check_config.yCols不完整", globalStore.config.yCols);
+      return false;
+    }
+
     const req_config = Object.assign({}, globalStore.config);
     const resp = await $post("/api/chart/getdata_by", req_config);
 
     globalStore.setChart(resp.chart_columns, resp.chart_datas);
+    // 7-6 chart.columns
+    if (globalStore.chart.columns.length == 0) {
+      console.warn("check_config", "配置check_config.chart.columns不完整", globalStore.chart.columns);
+      return false;
+    }
+    // 7-7 chart.datas
+    if (globalStore.chart.datas.length == 0) {
+      console.warn("check_config", "配置check_config.chart.datas不完整", globalStore.chart.datas);
+      return false;
+    }
+
+    return true;
+  };
+  async wrap_option(): Promise<boolean> {
+    console.warn("protect", toRaw(globalStore.config));
 
     // 2.1 处理数据
     const datas = {};
@@ -150,7 +184,7 @@ export class BasicLineChart extends IChart {
         globalStore.option.series.push(obj);
       }
     }
-    console.warn("protect", is_xAxis_data, is_series_data);
+
     if (is_xAxis_data && is_series_data) {
       console.warn("protect", "数据完整", toRaw(globalStore.option));
       return true;

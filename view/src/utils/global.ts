@@ -2,8 +2,7 @@
 import * as echarts from "echarts";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
-import { Config, Chart, Dataset, Ins,  } from "./types";
-import { set } from "@vueuse/core";
+import { Config, Chart, Dataset, Ins } from "./types";
 
 type GlobalState = {
   myChart: echarts.ECharts | null;

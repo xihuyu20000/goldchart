@@ -4,6 +4,7 @@ type MenuItem = {
   namespace?: string;
   url: string;
   label: string;
+  icon?: string;
   rules?: ChartRule[];
 };
 type ChartStyle = {
@@ -13,18 +14,18 @@ type ChartStyle = {
 class menu {
   static space_menu_configs = (): MenuItem[] => {
     return [
-      { namespace: "space", url: "Project", label: "我的项目" },
-      { namespace: "space", url: "Connect", label: "数据连接" },
-      { namespace: "space", url: "Dataset", label: "我的数据集" },
-      { namespace: "space", url: "Chart", label: "我的图表" },
-      { namespace: "space", url: "Setting", label: "设置" },
-      { namespace: "space", url: "Profile", label: "个人资料" },
+      { namespace: "space", url: "Project", label: "我的项目", icon: "icon-xiangmu1" },
+      { namespace: "space", url: "Connect", label: "数据连接", icon: "icon-shujulianjie" },
+      { namespace: "space", url: "Dataset", label: "我的数据集", icon: "icon-shujuji" },
+      { namespace: "space", url: "Chart", label: "我的图表", icon: "icon-a-tubiao3" },
+      { namespace: "space", url: "Setting", label: "设置", icon: "icon-shezhi" },
+      { namespace: "space", url: "Profile", label: "个人资料", icon: "icon-iconfontzhizuobiaozhun0252" },
     ];
   };
 
   static space_menu_configs_array = (): MenuItem[] =>
     menu.space_menu_configs().map((item) => {
-      return { url: "/" + item.namespace + "/" + item.url, label: item.label };
+      return { url: "/" + item.namespace + "/" + item.url, label: item.label, icon: item.icon };
     });
 
   static chart_menu_configs = (): ChartStyle[] => {

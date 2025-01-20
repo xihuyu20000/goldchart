@@ -2,6 +2,7 @@ import { useGlobalStore } from "@/utils/global";
 
 const globalStore = useGlobalStore();
 
+
 export const renderChart = () => {
   if (globalStore.myChart) {
     setTimeout(() => {
@@ -12,7 +13,7 @@ export const renderChart = () => {
 
 export const export_image = () => {
   let img = new Image();
-  
+
   img.src = globalStore.myChart.getDataURL({
     type: "png",
     pixelRatio: 1.5, //放大2倍

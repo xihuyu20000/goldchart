@@ -50,7 +50,7 @@ const init_viewer = () => {
 const configWatcher = watch(
   [globalStore.config, globalStore.option],
   async () => {
-    if (chart_class.protect()) {
+    if (chart_class.can_run()) {
       renderChart();
     }
   },

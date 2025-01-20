@@ -62,7 +62,7 @@ export class DoughnutChart extends IChart {
 
     return option;
   }
-  async protect(): Promise<boolean> {
+  async wrap_option(): Promise<boolean> {
     console.warn("protect", toRaw(globalStore.config));
     // 1 判断config是否完整
     if (globalStore.config.user_id.length == 0 || globalStore.config.chart_id.length == 0 || globalStore.config.xCols.length == 0 || globalStore.config.yCols.length == 0) {

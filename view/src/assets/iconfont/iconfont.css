@@ -1,9 +1,9 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4797493 */
-  src: url('iconfont.woff2?t=1736648006578') format('woff2'),
-       url('iconfont.woff?t=1736648006578') format('woff'),
-       url('iconfont.ttf?t=1736648006578') format('truetype'),
-       url('iconfont.svg?t=1736648006578#iconfont') format('svg');
+  src: url('iconfont.woff2?t=1737359747784') format('woff2'),
+       url('iconfont.woff?t=1737359747784') format('woff'),
+       url('iconfont.ttf?t=1737359747784') format('truetype'),
+       url('iconfont.svg?t=1737359747784#iconfont') format('svg');
 }
 
 .iconfont {
@@ -12,6 +12,34 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-iconfontzhizuobiaozhun0252:before {
+  content: "\e6a8";
+}
+
+.icon-shujuji:before {
+  content: "\e6ad";
+}
+
+.icon-shezhi:before {
+  content: "\e892";
+}
+
+.icon-xiangmu1:before {
+  content: "\e651";
+}
+
+.icon-gerenziliao:before {
+  content: "\e603";
+}
+
+.icon-shujulianjie:before {
+  content: "\e6df";
+}
+
+.icon-a-tubiao3:before {
+  content: "\eb42";
 }
 
 .icon-sangedian:before {

@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1177830",
+      "name": "个人资料",
+      "font_class": "iconfontzhizuobiaozhun0252",
+      "unicode": "e6a8",
+      "unicode_decimal": 59048
+    },
+    {
+      "icon_id": "1789130",
+      "name": "数据集",
+      "font_class": "shujuji",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    },
+    {
+      "icon_id": "2076270",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e892",
+      "unicode_decimal": 59538
+    },
+    {
+      "icon_id": "4406894",
+      "name": "项目",
+      "font_class": "xiangmu1",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "7474673",
+      "name": "个人资料",
+      "font_class": "gerenziliao",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "28363253",
+      "name": "数据连接",
+      "font_class": "shujulianjie",
+      "unicode": "e6df",
+      "unicode_decimal": 59103
+    },
+    {
+      "icon_id": "35585108",
+      "name": "图表 (3)",
+      "font_class": "a-tubiao3",
+      "unicode": "eb42",
+      "unicode_decimal": 60226
+    },
+    {
       "icon_id": "9335553",
       "name": "三个点",
       "font_class": "sangedian",

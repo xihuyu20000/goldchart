@@ -49,7 +49,7 @@ const routes = [
       {
         path: "/Space",
         name: "Space",
-        component: () => import("@/pages/space/Index.vue"),
+        component: () => import("@/pages/space/SpaceIndex.vue"),
         children: dynamicSpaceRoutes(),
       },
       {

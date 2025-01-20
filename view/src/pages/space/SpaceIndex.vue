@@ -2,15 +2,15 @@
 import { menu } from "@/utils/menu";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const activeMenu = ref("");
+
 const activeUrl = ref("");
 
-const clickMenuUrl = (name, url) => {
-  //点击菜单项时，更新当前激活的菜单项和url
-  activeMenu.value = name;
+onMounted(async () => {
+  activeUrl.value = await utils.getLocalItem("activeUrl");
+});
+const clickMenuUrl = (url) => {
   activeUrl.value = url;
   utils.setLocalItem({
-    activeMenu: activeMenu.value,
     activeUrl: activeUrl.value,
   });
 };
@@ -19,8 +19,8 @@ const clickMenuUrl = (name, url) => {
   <el-container class="space-index-page">
     <el-aside class="space-index-aside">
       <ol>
-        <li v-for="(item, j) in menu.space_menu_configs_array()" :key="j" :class="{ 'active-url': activeUrl == item.url }">
-          <router-link :to="item.url">{{ item.label }}</router-link>
+        <li v-for="(item, j) in menu.space_menu_configs_array()" :key="j" :class="{ 'active-url': activeUrl == item.url }" @click="clickMenuUrl(item.url)">
+          <span :class="`icon iconfont ${item.icon}`" style="margin-right: 10px"></span><router-link :to="item.url">{{ item.label }}</router-link>
         </li>
       </ol>
     </el-aside>
@@ -32,11 +32,12 @@ const clickMenuUrl = (name, url) => {
 .space-index-page {
   width: 100%;
   height: 100vh;
-
+  background-color: #f6f7f8;
   .space-index-aside {
     width: var(--left_nav_width);
     height: calc(100vh - 60px);
-    background-color: rgba(120, 120, 120, 0.8);
+    background-color: #fff;
+    padding-top: 10px;
     ol {
       list-style: none;
       li {
@@ -45,15 +46,20 @@ const clickMenuUrl = (name, url) => {
         padding-left: 10px;
 
         a {
+          display: inline-block;
           font-size: 1.2em !important;
           text-decoration: none;
-          color: rgba(250, 250, 250, 0.8);
-        }
-        a:hover {
-          background-color: dodgerblue;
+          color: rgba(1, 1, 1, 0.8);
         }
       }
     }
+    li:hover {
+      background-color: #f3f5f9;
+      cursor: pointer;
+    }
+  }
+  .active-url {
+    background-color: #f3f5f9;
   }
 }
 </style>

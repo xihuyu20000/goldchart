@@ -17,7 +17,7 @@ class utils {
     });
   };
   static getLocalItem = async (key): Promise<string> => {
-    console.log("[getLocalItem]", "参数", key);
+    // console.log("[getLocalItem]", "参数", key);
     const resp = await $post("/api/setting/get", {
       user_id: sessionStorage.getItem("token"),
       key: key,
